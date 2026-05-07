@@ -258,7 +258,6 @@ export const SlotGrid: React.FC<SlotGridProps> = ({ testParam }) => {
           open
           onClose={closePopup}
           onExternalVisit={handleExternalVisit}
-          onMockVisit={handleMockVisit}
         />
       )}
 

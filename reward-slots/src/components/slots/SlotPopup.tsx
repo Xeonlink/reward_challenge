@@ -29,10 +29,7 @@ interface SlotPopupProps {
   isExtra?: boolean;
   open: boolean;
   onClose: () => void;
-  /** 실제 외부 방문: sessionStorage 타임스탬프 저장 후 새 탭 열기 */
   onExternalVisit: (key: SlotKey) => void;
-  /** 목업 테스트: 실제 방문 없이 결과 시뮬레이션 → RewardPopup 표시 */
-  onMockVisit: (key: SlotKey, success: boolean) => void;
 }
 
 export const SlotPopup: React.FC<SlotPopupProps> = ({
@@ -41,14 +38,11 @@ export const SlotPopup: React.FC<SlotPopupProps> = ({
   open,
   onClose,
   onExternalVisit,
-  onMockVisit,
 }) => {
   const c = SLOT_CFG[slotKey];
   const Icon = SLOT_ICON[slotKey];
 
-  const handleRealVisit  = useCallback(() => onExternalVisit(slotKey),       [onExternalVisit, slotKey]);
-  const handleMockSuccess = useCallback(() => onMockVisit(slotKey, true),    [onMockVisit, slotKey]);
-  const handleMockFail    = useCallback(() => onMockVisit(slotKey, false),   [onMockVisit, slotKey]);
+  const handleRealVisit = useCallback(() => onExternalVisit(slotKey), [onExternalVisit, slotKey]);
 
   return (
     <Popup
@@ -149,19 +143,6 @@ export const SlotPopup: React.FC<SlotPopupProps> = ({
           강남철학관 운세 보러 가기
         </Button>
 
-        {/* 테스트 버튼 */}
-        <div className={css({ display: "flex", gap: "8px" })}>
-          <Button variant="secondary" size="sm" fullWidth onClick={handleMockSuccess}>
-            ✓ 테스트: 성공
-          </Button>
-          <Button variant="ghost" size="sm" fullWidth onClick={handleMockFail}>
-            ✕ 테스트: 실패
-          </Button>
-        </div>
-
-        <p className={css({ fontSize: "0.62rem", color: "var(--colors-brand-textMuted)", textAlign: "center" })}>
-          테스트 버튼은 실제 방문 없이 결과를 시뮬레이션합니다
-        </p>
       </div>
     </Popup>
   );
