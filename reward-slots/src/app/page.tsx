@@ -17,14 +17,14 @@ function LoadingScreen() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        background: "#0A0A0F",
-        color: "#FFD700",
-        fontFamily: "Orbitron, sans-serif",
-        fontSize: "1.2rem",
-        letterSpacing: "0.1em",
+        background: "#07091A",
+        color: "#FFD166",
+        fontFamily: "'Orbitron', sans-serif",
+        fontSize: "1.1rem",
+        letterSpacing: "0.2em",
       }}
     >
-      LOADING...
+      별모아
     </div>
   );
 }

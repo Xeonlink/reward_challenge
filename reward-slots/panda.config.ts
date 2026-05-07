@@ -9,39 +9,59 @@ export default defineConfig({
       tokens: {
         colors: {
           brand: {
-            gold: { value: "#FFD700" },
-            goldLight: { value: "#FFE566" },
-            goldDark: { value: "#CC9900" },
-            amber: { value: "#FF8C00" },
-            bg: { value: "#0A0A0F" },
-            surface: { value: "#12121A" },
-            surfaceHigh: { value: "#1C1C2E" },
-            border: { value: "#2A2A40" },
-            text: { value: "#F0E8FF" },
-            textMuted: { value: "#8080A0" },
-            morning: { value: "#FF6B35" },
-            morningLight: { value: "#FF9A6C" },
-            lunch: { value: "#00D4AA" },
-            lunchLight: { value: "#4DFFD8" },
-            dinner: { value: "#7B5EA7" },
-            dinnerLight: { value: "#A87FD4" },
-            bonus: { value: "#FF4081" },
-            bonusLight: { value: "#FF79A8" },
-            success: { value: "#00E676" },
-            danger: { value: "#FF1744" },
+            // Soft Cosmic (시안B) 배경
+            bg: { value: "#07091A" },
+            surface: { value: "#0C1230" },
+            surfaceHigh: { value: "#131A3E" },
+            border: { value: "#212C5C" },
+            borderBright: { value: "#3A4880" },
+
+            // 텍스트
+            text: { value: "#EBF0FF" },
+            textMuted: { value: "#6070A8" },
+            textDim: { value: "#3A4870" },
+
+            // 별 골드 (소프트)
+            gold: { value: "#FFD166" },
+            goldLight: { value: "#FFE8A0" },
+            goldDark: { value: "#CC9933" },
+
+            // 성운 액센트
+            nebula: { value: "#7B8DE0" },
+            nebulaLight: { value: "#A8B4F0" },
+            cosmic: { value: "#C589E8" },
+            cosmicLight: { value: "#DEB0F8" },
+
+            // 슬롯 색상
+            morning: { value: "#F4A05A" },
+            morningLight: { value: "#FFCB8A" },
+            lunch: { value: "#50C8E8" },
+            lunchLight: { value: "#8DDFF5" },
+            dinner: { value: "#9B72CF" },
+            dinnerLight: { value: "#C3A4EA" },
+            bonus: { value: "#E86FA8" },
+            bonusLight: { value: "#F4A0C8" },
+
+            // 상태
+            success: { value: "#5CE8A0" },
+            danger: { value: "#FF5C7A" },
+
+            // 하위 호환성 유지
+            amber: { value: "#F4A05A" },
+            surfaceHover: { value: "#1A2248" },
           },
           slot: {
-            inactive: { value: "#1A1A2E" },
-            inactiveBorder: { value: "#2A2A40" },
-            active: { value: "#1C1C2E" },
-            completed: { value: "#0D2B1A" },
-            completedBorder: { value: "#00E676" },
-            extra: { value: "#2B1A2B" },
-            extraBorder: { value: "#FF4081" },
+            inactive: { value: "#0C1230" },
+            inactiveBorder: { value: "#1A2348" },
+            active: { value: "#131A3E" },
+            completed: { value: "#0A1E28" },
+            completedBorder: { value: "#5CE8A0" },
+            extra: { value: "#1A1038" },
+            extraBorder: { value: "#E86FA8" },
           },
         },
         fonts: {
-          display: { value: "'Orbitron', 'Exo 2', sans-serif" },
+          display: { value: "'Orbitron', sans-serif" },
           body: { value: "'DM Sans', 'Noto Sans KR', sans-serif" },
           mono: { value: "'JetBrains Mono', monospace" },
         },
@@ -58,18 +78,19 @@ export default defineConfig({
           "5xl": { value: "3rem" },
         },
         radii: {
-          sm: { value: "6px" },
-          md: { value: "12px" },
-          lg: { value: "18px" },
-          xl: { value: "24px" },
+          sm: { value: "8px" },
+          md: { value: "14px" },
+          lg: { value: "20px" },
+          xl: { value: "28px" },
           full: { value: "9999px" },
         },
         shadows: {
-          gold: { value: "0 0 20px rgba(255,215,0,0.4), 0 0 60px rgba(255,215,0,0.15)" },
-          morning: { value: "0 0 20px rgba(255,107,53,0.4), 0 0 60px rgba(255,107,53,0.15)" },
-          lunch: { value: "0 0 20px rgba(0,212,170,0.4), 0 0 60px rgba(0,212,170,0.15)" },
-          dinner: { value: "0 0 20px rgba(123,94,167,0.4), 0 0 60px rgba(123,94,167,0.15)" },
-          bonus: { value: "0 0 20px rgba(255,64,129,0.4), 0 0 60px rgba(255,64,129,0.15)" },
+          gold: { value: "0 0 20px rgba(255,209,102,0.4), 0 0 60px rgba(255,209,102,0.15)" },
+          morning: { value: "0 0 20px rgba(244,160,90,0.4), 0 0 60px rgba(244,160,90,0.15)" },
+          lunch: { value: "0 0 20px rgba(80,200,232,0.4), 0 0 60px rgba(80,200,232,0.15)" },
+          dinner: { value: "0 0 20px rgba(155,114,207,0.4), 0 0 60px rgba(155,114,207,0.15)" },
+          bonus: { value: "0 0 20px rgba(232,111,168,0.4), 0 0 60px rgba(232,111,168,0.15)" },
+          nebula: { value: "0 0 30px rgba(123,141,224,0.3), 0 0 80px rgba(123,141,224,0.1)" },
         },
         durations: {
           fast: { value: "150ms" },
@@ -91,13 +112,25 @@ export default defineConfig({
           "0%, 100%": { opacity: "1" },
           "50%": { opacity: "0.5" },
         },
+        twinkle: {
+          "0%, 100%": { opacity: "1", transform: "scale(1)" },
+          "50%": { opacity: "0.2", transform: "scale(0.6)" },
+        },
         float: {
           "0%, 100%": { transform: "translateY(0)" },
           "50%": { transform: "translateY(-8px)" },
         },
+        orbFloat: {
+          "0%, 100%": { transform: "translateY(0) scale(1)" },
+          "50%": { transform: "translateY(-6px) scale(1.03)" },
+        },
+        orbPulse: {
+          "0%, 100%": { opacity: "0.8" },
+          "50%": { opacity: "1" },
+        },
         glow: {
-          "0%, 100%": { boxShadow: "0 0 10px rgba(255,215,0,0.2)" },
-          "50%": { boxShadow: "0 0 30px rgba(255,215,0,0.6), 0 0 60px rgba(255,215,0,0.3)" },
+          "0%, 100%": { boxShadow: "0 0 10px rgba(123,141,224,0.2)" },
+          "50%": { boxShadow: "0 0 30px rgba(197,137,232,0.5), 0 0 60px rgba(123,141,224,0.3)" },
         },
         slideUp: {
           from: { transform: "translateY(20px)", opacity: "0" },
@@ -115,6 +148,10 @@ export default defineConfig({
           from: { transform: "rotate(0deg)" },
           to: { transform: "rotate(360deg)" },
         },
+        spinSlow: {
+          from: { transform: "rotate(0deg)" },
+          to: { transform: "rotate(360deg)" },
+        },
         bounce: {
           "0%, 100%": { transform: "translateY(0)" },
           "50%": { transform: "translateY(-6px)" },
@@ -123,6 +160,21 @@ export default defineConfig({
           "0%": { transform: "scale(0) rotate(-30deg)", opacity: "0" },
           "60%": { transform: "scale(1.3) rotate(5deg)", opacity: "1" },
           "100%": { transform: "scale(1) rotate(0deg)", opacity: "1" },
+        },
+        starBirth: {
+          "0%": { opacity: "0", transform: "scale(0)" },
+          "60%": { opacity: "1", transform: "scale(1.4)" },
+          "100%": { opacity: "1", transform: "scale(1)" },
+        },
+        cosmicRing: {
+          "0%": { transform: "rotate(0deg) scale(1)", opacity: "0.5" },
+          "50%": { transform: "rotate(180deg) scale(1.05)", opacity: "0.8" },
+          "100%": { transform: "rotate(360deg) scale(1)", opacity: "0.5" },
+        },
+        auroraShift: {
+          "0%": { backgroundPosition: "0% 50%" },
+          "50%": { backgroundPosition: "100% 50%" },
+          "100%": { backgroundPosition: "0% 50%" },
         },
       },
     },

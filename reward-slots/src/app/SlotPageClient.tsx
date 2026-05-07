@@ -3,6 +3,8 @@
 import { useSearchParams } from "next/navigation";
 import { css } from "../../styled-system/css";
 import { SlotGrid } from "@/components/slots/SlotGrid";
+import { StarCanvas } from "@/components/slots/StarCanvas";
+import { StarFragmentIcon } from "@/components/slots/SlotIcons";
 
 export function SlotPageClient() {
   const searchParams = useSearchParams();
@@ -10,162 +12,175 @@ export function SlotPageClient() {
 
   return (
     <main
-      className={css({
+      style={{
         minHeight: "100vh",
-        background: "#0A0A0F",
+        background: "#07091A",
         position: "relative",
         overflow: "hidden",
-      })}
+        display: "flex",
+        justifyContent: "center",
+      }}
     >
-      {/* Background effects */}
+      {/* 캔버스 별 배경 */}
+      <StarCanvas />
+
+      {/* 성운 그라디언트 레이어 */}
       <div
         style={{
           position: "fixed",
           inset: 0,
           pointerEvents: "none",
-          zIndex: 0,
+          zIndex: 1,
           background: `
-            radial-gradient(ellipse 80% 50% at 20% 20%, rgba(123,94,167,0.08) 0%, transparent 60%),
-            radial-gradient(ellipse 60% 40% at 80% 70%, rgba(0,212,170,0.06) 0%, transparent 60%),
-            radial-gradient(ellipse 50% 60% at 50% 0%, rgba(255,215,0,0.04) 0%, transparent 50%)
+            radial-gradient(ellipse 70% 50% at 15% 25%, rgba(123,141,224,0.07) 0%, transparent 60%),
+            radial-gradient(ellipse 60% 40% at 85% 65%, rgba(155,114,207,0.06) 0%, transparent 60%),
+            radial-gradient(ellipse 50% 60% at 50% 100%, rgba(232,111,168,0.04) 0%, transparent 50%)
           `,
+          animation: "nebulaGlow 8s ease-in-out infinite",
         }}
       />
 
-      {/* Grid lines bg */}
-      <div
-        style={{
-          position: "fixed",
-          inset: 0,
-          pointerEvents: "none",
-          zIndex: 0,
-          backgroundImage: `
-            linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)
-          `,
-          backgroundSize: "60px 60px",
-        }}
-      />
-
+      {/* 컨텐츠 래퍼 */}
       <div
         className={css({
           position: "relative",
-          zIndex: 1,
-          maxWidth: "720px",
-          margin: "0 auto",
-          padding: "40px 24px 80px",
+          zIndex: 2,
+          width: "100%",
+          maxWidth: "740px",
+          padding: "48px 24px 80px",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          gap: "48px",
+          gap: "52px",
         })}
       >
-        {/* Header */}
-        <header className={css({ textAlign: "center", animation: "slideUp 0.6s ease" })}>
+        {/* 헤더 */}
+        <header className={css({ textAlign: "center", animation: "slideUp 0.7s ease" })}>
+          {/* 배지 */}
           <div
-            className={css({
+            style={{
               display: "inline-flex",
               alignItems: "center",
-              gap: "8px",
-              padding: "4px 16px",
-              borderRadius: "var(--radii-full)",
-              background: "rgba(255,215,0,0.08)",
-              border: "1px solid rgba(255,215,0,0.2)",
-              marginBottom: "20px",
-            })}
+              gap: "7px",
+              padding: "4px 14px",
+              borderRadius: "9999px",
+              background: "rgba(255,209,102,0.07)",
+              border: "1px solid rgba(255,209,102,0.18)",
+              marginBottom: "22px",
+            }}
           >
-            <span style={{ fontSize: "0.8rem" }}>🏅</span>
+            <StarFragmentIcon color="#FFD166" size={14} />
             <span
-              className={css({
-                fontSize: "0.7rem",
+              style={{
+                fontSize: "0.68rem",
                 fontWeight: "700",
-                letterSpacing: "0.15em",
+                letterSpacing: "0.18em",
                 textTransform: "uppercase",
-                color: "#FFD700",
-                fontFamily: "var(--fonts-display)",
-              })}
+                color: "#FFD166",
+                fontFamily: "'Orbitron', sans-serif",
+              }}
             >
-              Daily Reward
+              Daily Fortune
             </span>
           </div>
 
+          {/* 서비스명 */}
           <h1
-            className={css({
-              fontFamily: "var(--fonts-display)",
-              fontSize: "clamp(1.8rem, 5vw, 3rem)",
+            style={{
+              fontFamily: "'Orbitron', sans-serif",
+              fontSize: "clamp(2rem, 6vw, 3.2rem)",
               fontWeight: "900",
               letterSpacing: "-0.02em",
-              lineHeight: "1.1",
-              marginBottom: "14px",
-            })}
+              lineHeight: 1.1,
+              marginBottom: "6px",
+            }}
           >
             <span
               style={{
-                background: "linear-gradient(135deg, #FFD700 0%, #FF8C00 50%, #FFD700 100%)",
+                background: "linear-gradient(135deg, #FFD166 0%, #C589E8 50%, #7B8DE0 100%)",
                 backgroundClip: "text",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 backgroundSize: "200% auto",
-                animation: "shimmer 3s linear infinite",
+                animation: "shimmer 4s linear infinite",
               }}
             >
-              행운 도장
+              별모아
             </span>
           </h1>
 
+          <div
+            style={{
+              fontFamily: "'Orbitron', sans-serif",
+              fontSize: "clamp(0.7rem, 2vw, 0.85rem)",
+              color: "#3A4870",
+              letterSpacing: "0.25em",
+              marginBottom: "18px",
+            }}
+          >
+            BYULMOA
+          </div>
+
           <p
             className={css({
-              fontSize: "0.9rem",
+              fontSize: "0.88rem",
               color: "var(--colors-brand-textMuted)",
-              lineHeight: "1.7",
-              maxWidth: "380px",
+              lineHeight: "1.8",
+              maxWidth: "360px",
               margin: "0 auto",
             })}
           >
-            아침, 점심, 저녁 슬롯을 모두 수령하고
+            매일 아침·점심·저녁 운세를 확인하고
             <br />
-            오늘의 보너스 보상까지 획득하세요!
+            별 조각을 모아 우주를 성장시켜요
           </p>
         </header>
 
-        {/* Slot Grid */}
+        {/* 슬롯 그리드 */}
         <SlotGrid testParam={testParam} />
 
-        {/* Test mode helper */}
+        {/* 테스트 모드 도우미 */}
         <div
-          className={css({
+          style={{
             width: "100%",
-            padding: "16px 20px",
-            borderRadius: "var(--radii-lg)",
-            background: "rgba(255,255,255,0.02)",
-            border: "1px solid rgba(255,255,255,0.06)",
-          })}
+            padding: "14px 18px",
+            borderRadius: "16px",
+            background: "rgba(12,18,48,0.5)",
+            border: "1px solid rgba(21,30,72,0.6)",
+          }}
         >
-          <div className={css({ fontSize: "0.7rem", color: "var(--colors-brand-textMuted)", marginBottom: "8px", fontWeight: "600", letterSpacing: "0.05em" })}>
-            🧪 테스트 URL 파라미터
+          <div
+            style={{
+              fontSize: "0.65rem",
+              color: "#3A4870",
+              marginBottom: "8px",
+              fontWeight: "700",
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+            }}
+          >
+            테스트 URL 파라미터
           </div>
-          <div className={css({ display: "flex", gap: "8px", flexWrap: "wrap" })}>
+          <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
             {[
-              { param: "morning", label: "아침 모드", color: "#FF6B35" },
-              { param: "lunch", label: "점심 모드", color: "#00D4AA" },
-              { param: "dinner", label: "저녁 모드", color: "#7B5EA7" },
+              { param: "morning", label: "아침 모드", color: "#F4A05A" },
+              { param: "lunch",   label: "점심 모드", color: "#50C8E8" },
+              { param: "dinner",  label: "저녁 모드", color: "#9B72CF" },
             ].map(({ param, label, color }) => (
               <a
                 key={param}
                 href={`?test=${param}`}
-                className={css({
+                style={{
                   padding: "4px 12px",
-                  borderRadius: "var(--radii-full)",
-                  fontSize: "0.7rem",
+                  borderRadius: "9999px",
+                  fontSize: "0.68rem",
                   fontWeight: "600",
                   textDecoration: "none",
                   transition: "all 200ms",
                   border: "1px solid",
-                })}
-                style={{
-                  background: testParam === param ? `${color}20` : "transparent",
-                  borderColor: testParam === param ? `${color}60` : "rgba(255,255,255,0.1)",
-                  color: testParam === param ? color : "rgba(255,255,255,0.4)",
+                  background: testParam === param ? `${color}18` : "transparent",
+                  borderColor: testParam === param ? `${color}55` : "rgba(33,44,92,0.8)",
+                  color: testParam === param ? color : "#3A4870",
                 }}
               >
                 ?test={param}
@@ -174,15 +189,15 @@ export function SlotPageClient() {
             {testParam && (
               <a
                 href="/"
-                className={css({
+                style={{
                   padding: "4px 12px",
-                  borderRadius: "var(--radii-full)",
-                  fontSize: "0.7rem",
+                  borderRadius: "9999px",
+                  fontSize: "0.68rem",
                   fontWeight: "600",
                   textDecoration: "none",
-                  border: "1px solid rgba(255,255,255,0.1)",
-                  color: "rgba(255,255,255,0.3)",
-                })}
+                  border: "1px solid rgba(33,44,92,0.6)",
+                  color: "#3A4870",
+                }}
               >
                 초기화
               </a>
@@ -190,9 +205,16 @@ export function SlotPageClient() {
           </div>
         </div>
 
-        {/* Footer */}
-        <footer className={css({ fontSize: "0.7rem", color: "rgba(255,255,255,0.15)", textAlign: "center" })}>
-          행운 도장 — 일일 보상 시스템 &copy; 2026
+        {/* 푸터 */}
+        <footer
+          style={{
+            fontSize: "0.65rem",
+            color: "#1E2848",
+            textAlign: "center",
+            letterSpacing: "0.06em",
+          }}
+        >
+          별모아 — 매일의 운세와 우주 성장 · 30일 사이클 &copy; 2026
         </footer>
       </div>
     </main>

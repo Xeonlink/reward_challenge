@@ -5,20 +5,23 @@ import { css } from "../../../styled-system/css";
 import { Popup } from "../ui/Popup";
 import { Button } from "../ui/Button";
 import type { SlotKey } from "@/lib/slotLogic";
-import { getTimeOfDayLabel } from "@/lib/slotLogic";
+import { MorningIcon, LunchIcon, DinnerIcon, BonusIcon, StarFragmentIcon } from "./SlotIcons";
 
-const SLOT_COLORS: Record<SlotKey, { color: string; light: string; bg: string }> = {
-  morning: { color: "#FF6B35", light: "#FF9A6C", bg: "rgba(255,107,53,0.1)" },
-  lunch: { color: "#00D4AA", light: "#4DFFD8", bg: "rgba(0,212,170,0.1)" },
-  dinner: { color: "#7B5EA7", light: "#A87FD4", bg: "rgba(123,94,167,0.1)" },
-  bonus: { color: "#FF4081", light: "#FF79A8", bg: "rgba(255,64,129,0.1)" },
+const SLOT_CFG: Record<
+  SlotKey,
+  { color: string; light: string; bg: string; label: string; fortuneLabel: string }
+> = {
+  morning: { color: "#F4A05A", light: "#FFCB8A", bg: "rgba(244,160,90,0.08)",  label: "아침 운세", fortuneLabel: "새벽의 운세" },
+  lunch:   { color: "#50C8E8", light: "#8DDFF5", bg: "rgba(80,200,232,0.08)",   label: "정오 운세", fortuneLabel: "하늘의 운세" },
+  dinner:  { color: "#9B72CF", light: "#C3A4EA", bg: "rgba(155,114,207,0.08)",  label: "저녁 운세", fortuneLabel: "달빛의 운세" },
+  bonus:   { color: "#E86FA8", light: "#F4A0C8", bg: "rgba(232,111,168,0.08)",  label: "별 보너스",  fortuneLabel: "우주의 운세" },
 };
 
-const SLOT_ICONS: Record<SlotKey, string> = {
-  morning: "🌅",
-  lunch: "☀️",
-  dinner: "🌙",
-  bonus: "⭐",
+const SLOT_ICON: Record<SlotKey, React.FC<{ color: string; size?: number }>> = {
+  morning: MorningIcon,
+  lunch:   LunchIcon,
+  dinner:  DinnerIcon,
+  bonus:   BonusIcon,
 };
 
 interface SlotPopupProps {
@@ -26,7 +29,10 @@ interface SlotPopupProps {
   isExtra?: boolean;
   open: boolean;
   onClose: () => void;
-  onVisit: (key: SlotKey, success: boolean) => void;
+  /** 실제 외부 방문: sessionStorage 타임스탬프 저장 후 새 탭 열기 */
+  onExternalVisit: (key: SlotKey) => void;
+  /** 목업 테스트: 실제 방문 없이 결과 시뮬레이션 → RewardPopup 표시 */
+  onMockVisit: (key: SlotKey, success: boolean) => void;
 }
 
 export const SlotPopup: React.FC<SlotPopupProps> = ({
@@ -34,18 +40,15 @@ export const SlotPopup: React.FC<SlotPopupProps> = ({
   isExtra,
   open,
   onClose,
-  onVisit,
+  onExternalVisit,
+  onMockVisit,
 }) => {
-  const c = SLOT_COLORS[slotKey];
-  const label = getTimeOfDayLabel(slotKey);
+  const c = SLOT_CFG[slotKey];
+  const Icon = SLOT_ICON[slotKey];
 
-  const handleVisitSuccess = useCallback(() => {
-    onVisit(slotKey, true);
-  }, [onVisit, slotKey]);
-
-  const handleVisitFail = useCallback(() => {
-    onVisit(slotKey, false);
-  }, [onVisit, slotKey]);
+  const handleRealVisit  = useCallback(() => onExternalVisit(slotKey),       [onExternalVisit, slotKey]);
+  const handleMockSuccess = useCallback(() => onMockVisit(slotKey, true),    [onMockVisit, slotKey]);
+  const handleMockFail    = useCallback(() => onMockVisit(slotKey, false),   [onMockVisit, slotKey]);
 
   return (
     <Popup
@@ -53,80 +56,70 @@ export const SlotPopup: React.FC<SlotPopupProps> = ({
       onClose={onClose}
       title={
         <span style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <span style={{ fontSize: "1.4rem" }}>{SLOT_ICONS[slotKey]}</span>
+          <Icon color={c.light} size={28} />
           <span style={{ color: c.light }}>
-            {isExtra ? "추가 기회" : `${label} 보상`} 수령
+            {isExtra ? "추가 기회 — " : ""}
+            {c.fortuneLabel}
           </span>
         </span>
       }
     >
-      {/* Top accent */}
+      {/* 상단 색상 라인 */}
       <div
         style={{
-          height: "3px",
+          height: "2px",
           background: `linear-gradient(90deg, transparent, ${c.color}, transparent)`,
           marginTop: "-20px",
           marginBottom: "20px",
-          borderRadius: "2px",
+          borderRadius: "1px",
+          opacity: 0.8,
         }}
       />
 
-      {/* Description */}
+      {/* 별 조각 획득 안내 */}
       <div
-        className={css({
-          background: "rgba(255,255,255,0.04)",
-          borderRadius: "var(--radii-md)",
-          padding: "16px",
-          marginBottom: "20px",
-          border: "1px solid rgba(255,255,255,0.07)",
-        })}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "12px",
+          padding: "14px 16px",
+          borderRadius: "14px",
+          background: c.bg,
+          border: `1px solid ${c.color}30`,
+          marginBottom: "18px",
+        }}
       >
-        <p
-          className={css({
-            fontSize: "0.875rem",
-            color: "var(--colors-brand-textMuted)",
-            lineHeight: "1.7",
-          })}
-        >
-          {isExtra ? (
-            <>
-              추가 기회 슬롯입니다.{" "}
-              <span style={{ color: "#FF79A8", fontWeight: "600" }}>1회만</span> 사용 가능합니다.
-              <br />
-              외부 페이지에서{" "}
-              <span style={{ color: c.light, fontWeight: "600" }}>3초 이상</span> 체류 후
-              복귀하면 보상이 지급됩니다.
-            </>
-          ) : (
-            <>
-              외부 페이지로 이동합니다.{" "}
-              <span style={{ color: c.light, fontWeight: "600" }}>3초 이상</span> 체류 후
-              복귀하면 보상이 지급됩니다.
-            </>
-          )}
-        </p>
+        <StarFragmentIcon color={c.color} size={28} />
+        <div>
+          <div style={{ fontSize: "0.78rem", fontWeight: "700", color: c.light, marginBottom: "3px" }}>
+            별 조각 +1 획득 가능
+          </div>
+          <div style={{ fontSize: "0.72rem", color: "#6070A8", lineHeight: 1.5 }}>
+            {isExtra
+              ? "추가 기회는 하루 1회만 사용할 수 있어요."
+              : "강남철학관 방문 후 별 조각을 수집하세요."}
+          </div>
+        </div>
       </div>
 
-      {/* Steps */}
-      <div className={css({ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "24px" })}>
-        {["외부 페이지 이동", "3초 이상 체류", "페이지 복귀", "보상 수령"].map((step, i) => (
+      {/* 진행 단계 */}
+      <div className={css({ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "22px" })}>
+        {[
+          "강남철학관 운세 페이지로 이동",
+          "3초 이상 체류하기",
+          "돌아와서 별 조각 수령",
+        ].map((text, i) => (
           <div
             key={i}
-            className={css({
-              display: "flex",
-              alignItems: "center",
-              gap: "12px",
-              fontSize: "0.8rem",
-              color: "var(--colors-brand-textMuted)",
-            })}
+            style={{ display: "flex", alignItems: "center", gap: "12px", fontSize: "0.78rem" }}
           >
             <div
               style={{
-                width: "22px",
-                height: "22px",
+                width: 24,
+                height: 24,
                 borderRadius: "50%",
-                background: c.bg,
-                border: `1px solid ${c.color}50`,
+                background: `${c.color}15`,
+                border: `1px solid ${c.color}40`,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -138,50 +131,35 @@ export const SlotPopup: React.FC<SlotPopupProps> = ({
             >
               {i + 1}
             </div>
-            {step}
+            <span style={{ color: "#8090C0" }}>{text}</span>
           </div>
         ))}
       </div>
 
-      {/* Action buttons */}
+      {/* 버튼 영역 */}
       <div className={css({ display: "flex", flexDirection: "column", gap: "10px" })}>
-        {/* Real visit button */}
+        {/* 실제 방문 버튼 */}
         <Button
           variant="gold"
           size="lg"
           fullWidth
-          onClick={handleVisitSuccess}
-          leftIcon={<span>🚀</span>}
+          onClick={handleRealVisit}
+          leftIcon={<StarFragmentIcon color="#07091A" size={18} />}
         >
-          외부 페이지 방문하기
+          강남철학관 운세 보러 가기
         </Button>
 
-        {/* Mock test buttons */}
+        {/* 테스트 버튼 */}
         <div className={css({ display: "flex", gap: "8px" })}>
-          <Button
-            variant="secondary"
-            size="sm"
-            fullWidth
-            onClick={handleVisitSuccess}
-          >
-            ✅ 테스트: 성공
+          <Button variant="secondary" size="sm" fullWidth onClick={handleMockSuccess}>
+            ✓ 테스트: 성공
           </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            fullWidth
-            onClick={handleVisitFail}
-          >
-            ❌ 테스트: 실패
+          <Button variant="ghost" size="sm" fullWidth onClick={handleMockFail}>
+            ✕ 테스트: 실패
           </Button>
         </div>
-        <p
-          className={css({
-            fontSize: "0.65rem",
-            color: "var(--colors-brand-textMuted)",
-            textAlign: "center",
-          })}
-        >
+
+        <p className={css({ fontSize: "0.62rem", color: "var(--colors-brand-textMuted)", textAlign: "center" })}>
           테스트 버튼은 실제 방문 없이 결과를 시뮬레이션합니다
         </p>
       </div>

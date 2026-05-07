@@ -1,56 +1,70 @@
 "use client";
 
 import React from "react";
-import { css, cx } from "../../../styled-system/css";
 import type { SlotKey, SlotStatus } from "@/lib/slotLogic";
-import { getTimeOfDayLabel } from "@/lib/slotLogic";
+import { MorningIcon, LunchIcon, DinnerIcon, BonusIcon, LockIcon, CheckIcon } from "./SlotIcons";
 
 interface SlotConfig {
-  icon: string;
   label: string;
+  sublabel: string;
   timeLabel: string;
   color: string;
   colorLight: string;
-  gradient: string;
+  colorDim: string;
   glow: string;
+  bg: string;
+  bgActive: string;
+  Icon: React.FC<{ color: string; size?: number }>;
 }
 
 const SLOT_CONFIGS: Record<SlotKey, SlotConfig> = {
   morning: {
-    icon: "🌅",
-    label: "아침",
-    timeLabel: "00:00 ~ 11:59",
-    color: "#FF6B35",
-    colorLight: "#FF9A6C",
-    gradient: "linear-gradient(135deg, #FF4500 0%, #FF8C42 100%)",
-    glow: "0 0 24px rgba(255,107,53,0.5), 0 0 60px rgba(255,107,53,0.2)",
+    label: "아침 운세",
+    sublabel: "새벽의 기운",
+    timeLabel: "00:00 – 11:59",
+    color: "#F4A05A",
+    colorLight: "#FFCB8A",
+    colorDim: "#7A4820",
+    glow: "0 0 28px rgba(244,160,90,0.45), 0 0 65px rgba(244,160,90,0.18)",
+    bg: "linear-gradient(145deg, #0F0A04 0%, #1A1008 100%)",
+    bgActive: "linear-gradient(145deg, #1A1208 0%, #251A0C 100%)",
+    Icon: MorningIcon,
   },
   lunch: {
-    icon: "☀️",
-    label: "점심",
-    timeLabel: "12:00 ~ 17:59",
-    color: "#00D4AA",
-    colorLight: "#4DFFD8",
-    gradient: "linear-gradient(135deg, #00897B 0%, #00D4AA 100%)",
-    glow: "0 0 24px rgba(0,212,170,0.5), 0 0 60px rgba(0,212,170,0.2)",
+    label: "정오 운세",
+    sublabel: "하늘의 기운",
+    timeLabel: "12:00 – 17:59",
+    color: "#50C8E8",
+    colorLight: "#8DDFF5",
+    colorDim: "#18607A",
+    glow: "0 0 28px rgba(80,200,232,0.45), 0 0 65px rgba(80,200,232,0.18)",
+    bg: "linear-gradient(145deg, #030C10 0%, #061420 100%)",
+    bgActive: "linear-gradient(145deg, #061420 0%, #0A1E30 100%)",
+    Icon: LunchIcon,
   },
   dinner: {
-    icon: "🌙",
-    label: "저녁",
-    timeLabel: "18:00 ~ 23:59",
-    color: "#7B5EA7",
-    colorLight: "#A87FD4",
-    gradient: "linear-gradient(135deg, #4A148C 0%, #7B5EA7 100%)",
-    glow: "0 0 24px rgba(123,94,167,0.5), 0 0 60px rgba(123,94,167,0.2)",
+    label: "저녁 운세",
+    sublabel: "달빛의 기운",
+    timeLabel: "18:00 – 23:59",
+    color: "#9B72CF",
+    colorLight: "#C3A4EA",
+    colorDim: "#3A2060",
+    glow: "0 0 28px rgba(155,114,207,0.45), 0 0 65px rgba(155,114,207,0.18)",
+    bg: "linear-gradient(145deg, #060410 0%, #0E0820 100%)",
+    bgActive: "linear-gradient(145deg, #0E0820 0%, #180C30 100%)",
+    Icon: DinnerIcon,
   },
   bonus: {
-    icon: "⭐",
-    label: "보너스",
-    timeLabel: "모두 완료 시",
-    color: "#FF4081",
-    colorLight: "#FF79A8",
-    gradient: "linear-gradient(135deg, #AD1457 0%, #FF4081 100%)",
-    glow: "0 0 24px rgba(255,64,129,0.5), 0 0 60px rgba(255,64,129,0.2)",
+    label: "별 보너스",
+    sublabel: "우주의 기운",
+    timeLabel: "모든 운세 완료 후",
+    color: "#E86FA8",
+    colorLight: "#F4A0C8",
+    colorDim: "#7A1848",
+    glow: "0 0 28px rgba(232,111,168,0.45), 0 0 65px rgba(232,111,168,0.18)",
+    bg: "linear-gradient(145deg, #100408 0%, #1E0812 100%)",
+    bgActive: "linear-gradient(145deg, #1E0812 0%, #280C1A 100%)",
+    Icon: BonusIcon,
   },
 };
 
@@ -62,279 +76,279 @@ export interface SlotCardProps {
   isNew?: boolean;
 }
 
-const cardBase = css({
-  position: "relative",
-  borderRadius: "var(--radii-xl)",
-  padding: "28px 20px 24px",
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  gap: "12px",
-  cursor: "pointer",
-  transition: "all 300ms cubic-bezier(0.34, 1.56, 0.64, 1)",
-  border: "1px solid transparent",
-  overflow: "hidden",
-  userSelect: "none",
-  minWidth: "140px",
-  "&::before": {
-    content: '""',
-    position: "absolute",
-    inset: "0",
-    borderRadius: "inherit",
-    opacity: "0",
-    transition: "opacity 200ms",
-    background: "rgba(255,255,255,0.04)",
-  },
-});
-
-const statusStyles: Record<SlotStatus, string> = {
-  inactive: css({
-    background: "#1A1A2E",
-    borderColor: "#2A2A40",
-    cursor: "default",
-    opacity: "0.5",
-  }),
-  active: css({
-    background: "linear-gradient(135deg, #12121A 0%, #1C1C2E 100%)",
-    borderColor: "rgba(255,255,255,0.15)",
-    _hover: {
-      transform: "translateY(-4px) scale(1.02)",
-      "&::before": { opacity: "1" },
-    },
-    _active: {
-      transform: "translateY(-1px) scale(0.99)",
-    },
-  }),
-  completed: css({
-    background: "linear-gradient(135deg, #0A1F14 0%, #0D2B1A 100%)",
-    borderColor: "rgba(0,230,118,0.4)",
-    cursor: "default",
-    opacity: "0.85",
-  }),
-  extra: css({
-    background: "linear-gradient(135deg, #1A0A1A 0%, #2B1A2B 100%)",
-    borderColor: "rgba(255,64,129,0.5)",
-    _hover: {
-      transform: "translateY(-4px) scale(1.02)",
-      "&::before": { opacity: "1" },
-    },
-    _active: {
-      transform: "translateY(-1px) scale(0.99)",
-    },
-  }),
-  locked: css({
-    background: "#12121A",
-    borderColor: "#1E1E2E",
-    cursor: "not-allowed",
-    opacity: "0.35",
-    filter: "grayscale(0.7)",
-  }),
-};
-
-const iconContainerStyle = css({
-  fontSize: "2.5rem",
-  lineHeight: "1",
-  position: "relative",
-  transition: "transform 300ms cubic-bezier(0.34, 1.56, 0.64, 1)",
-});
-
-const labelStyle = css({
-  fontFamily: "var(--fonts-display)",
-  fontWeight: "700",
-  fontSize: "1rem",
-  letterSpacing: "0.05em",
-  textAlign: "center",
-});
-
-const timeLabelStyle = css({
-  fontSize: "0.7rem",
-  color: "var(--colors-brand-textMuted)",
-  fontFamily: "var(--fonts-mono)",
-  textAlign: "center",
-  letterSpacing: "0.03em",
-});
-
-const badgeStyle = css({
-  position: "absolute",
-  top: "10px",
-  right: "10px",
-  padding: "2px 8px",
-  borderRadius: "var(--radii-full)",
-  fontSize: "0.6rem",
-  fontWeight: "700",
-  letterSpacing: "0.08em",
-  textTransform: "uppercase",
-});
-
-const completedCheckStyle = css({
-  position: "absolute",
-  top: "10px",
-  left: "10px",
-  width: "20px",
-  height: "20px",
-  borderRadius: "50%",
-  background: "rgba(0,230,118,0.2)",
-  border: "1px solid rgba(0,230,118,0.5)",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  fontSize: "0.65rem",
-  color: "#00E676",
-});
-
-const pulseRingStyle = css({
-  position: "absolute",
-  inset: "-2px",
-  borderRadius: "inherit",
-  animation: "glow 2s ease-in-out infinite",
-  pointerEvents: "none",
-});
-
-export const SlotCard: React.FC<SlotCardProps> = ({
-  slotKey,
-  status,
-  isExtra,
-  onClick,
-  isNew,
-}) => {
-  const config = SLOT_CONFIGS[slotKey];
+export const SlotCard: React.FC<SlotCardProps> = ({ slotKey, status, isExtra, onClick, isNew }) => {
+  const cfg = SLOT_CONFIGS[slotKey];
   const isClickable = status === "active" || status === "extra";
 
-  const handleClick = () => {
-    if (isClickable) onClick(slotKey);
+  const handleClick = () => { if (isClickable) onClick(slotKey); };
+
+  // ── 상태별 카드 스타일 ──
+  const getCardStyle = (): React.CSSProperties => {
+    const base: React.CSSProperties = {
+      position: "relative",
+      borderRadius: "20px",
+      padding: "26px 18px 22px",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      gap: "10px",
+      cursor: isClickable ? "pointer" : "default",
+      transition: "all 320ms cubic-bezier(0.34, 1.56, 0.64, 1)",
+      border: "1px solid",
+      overflow: "hidden",
+      userSelect: "none",
+      minWidth: "148px",
+    };
+
+    if (status === "inactive" || status === "locked") {
+      return {
+        ...base,
+        background: "#0A0D20",
+        borderColor: "#181E3C",
+        opacity: status === "locked" ? 0.32 : 0.45,
+        filter: status === "locked" ? "grayscale(0.8)" : "none",
+        cursor: status === "locked" ? "not-allowed" : "default",
+      };
+    }
+
+    if (status === "completed") {
+      return {
+        ...base,
+        background: "linear-gradient(145deg, #061410 0%, #0A1E18 100%)",
+        borderColor: "rgba(92,232,160,0.35)",
+        opacity: 0.88,
+      };
+    }
+
+    if (status === "active") {
+      return {
+        ...base,
+        background: cfg.bgActive,
+        borderColor: `${cfg.color}45`,
+        boxShadow: cfg.glow,
+      };
+    }
+
+    if (status === "extra") {
+      return {
+        ...base,
+        background: "linear-gradient(145deg, #120820 0%, #1C1030 100%)",
+        borderColor: "rgba(232,111,168,0.5)",
+        boxShadow: "0 0 28px rgba(232,111,168,0.4), 0 0 65px rgba(232,111,168,0.15)",
+      };
+    }
+
+    return base;
   };
 
-  const glowColor = isExtra ? "rgba(255,64,129,0.4)" : config.color;
+  const iconColor =
+    status === "completed"
+      ? "#5CE8A0"
+      : status === "locked" || status === "inactive"
+      ? "#1A2040"
+      : isExtra
+      ? "#F4A0C8"
+      : cfg.color;
+
+  const labelColor =
+    status === "completed"
+      ? "#5CE8A0"
+      : status === "locked" || status === "inactive"
+      ? "#2A3060"
+      : isExtra
+      ? "#F4A0C8"
+      : cfg.colorLight;
+
+  const sublabelColor =
+    status === "completed" ? "rgba(92,232,160,0.5)"
+    : status === "locked" || status === "inactive" ? "#1A2040"
+    : isExtra ? "rgba(244,160,200,0.5)"
+    : `${cfg.color}70`;
+
+  const statusText =
+    status === "completed" ? "수령 완료"
+    : status === "locked"   ? "참여 불가"
+    : status === "inactive" ? "비활성"
+    : status === "extra"    ? "탭하여 참여"
+    : "탭하여 수령";
+
+  const statusColor =
+    status === "completed" ? "#5CE8A0"
+    : status === "locked"   ? "#2A3060"
+    : status === "extra"    ? "#E86FA8"
+    : status === "active"   ? cfg.color
+    : "#2A3060";
 
   return (
     <div
-      className={cx(cardBase, statusStyles[status])}
+      style={getCardStyle()}
       onClick={handleClick}
       role={isClickable ? "button" : "presentation"}
       tabIndex={isClickable ? 0 : undefined}
-      aria-label={`${config.label} 슬롯 — ${status}`}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") handleClick();
+      aria-label={`${cfg.label} — ${status}`}
+      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") handleClick(); }}
+      onMouseEnter={(e) => {
+        if (!isClickable) return;
+        const el = e.currentTarget as HTMLDivElement;
+        el.style.transform = "translateY(-5px) scale(1.025)";
       }}
-      style={
-        isClickable
-          ? {
-              boxShadow: `0 4px 24px rgba(0,0,0,0.4), ${config.glow}`,
-            }
-          : undefined
-      }
+      onMouseLeave={(e) => {
+        const el = e.currentTarget as HTMLDivElement;
+        el.style.transform = "";
+      }}
+      onMouseDown={(e) => {
+        if (!isClickable) return;
+        const el = e.currentTarget as HTMLDivElement;
+        el.style.transform = "translateY(-2px) scale(0.98)";
+      }}
+      onMouseUp={(e) => {
+        if (!isClickable) return;
+        const el = e.currentTarget as HTMLDivElement;
+        el.style.transform = "translateY(-5px) scale(1.025)";
+      }}
     >
-      {/* Active pulse ring */}
-      {status === "active" && (
+      {/* 활성 펄스 링 */}
+      {(status === "active" || status === "extra") && (
         <div
-          className={pulseRingStyle}
           style={{
-            boxShadow: `0 0 0 0 ${glowColor}`,
-            border: `1px solid ${config.color}40`,
+            position: "absolute",
+            inset: -2,
+            borderRadius: "22px",
+            border: `1px solid ${isExtra ? "rgba(232,111,168,0.3)" : `${cfg.color}30`}`,
+            animation: "glow 2.5s ease-in-out infinite",
+            pointerEvents: "none",
           }}
         />
       )}
 
-      {/* Completed check */}
+      {/* 완료 체크 배지 */}
       {status === "completed" && (
-        <div className={completedCheckStyle}>✓</div>
+        <div style={{ position: "absolute", top: 10, left: 10 }}>
+          <CheckIcon color="#5CE8A0" size={20} />
+        </div>
       )}
 
-      {/* Extra badge */}
+      {/* 추가기회 배지 */}
       {isExtra && status === "extra" && (
         <div
-          className={badgeStyle}
           style={{
-            background: "rgba(255,64,129,0.2)",
-            border: "1px solid rgba(255,64,129,0.5)",
-            color: "#FF79A8",
+            position: "absolute",
+            top: 10,
+            right: 10,
+            padding: "2px 8px",
+            borderRadius: "9999px",
+            fontSize: "0.58rem",
+            fontWeight: "700",
+            letterSpacing: "0.08em",
+            background: "rgba(232,111,168,0.18)",
+            border: "1px solid rgba(232,111,168,0.5)",
+            color: "#F4A0C8",
           }}
         >
           추가기회
         </div>
       )}
 
-      {/* New badge */}
+      {/* NEW 배지 */}
       {isNew && (
         <div
-          className={cx(
-            badgeStyle,
-            css({ top: "10px", right: "10px", animation: "bounce 1s ease infinite" })
-          )}
           style={{
-            background: "rgba(255,215,0,0.2)",
-            border: "1px solid rgba(255,215,0,0.5)",
-            color: "#FFD700",
+            position: "absolute",
+            top: 10,
+            right: 10,
+            padding: "2px 8px",
+            borderRadius: "9999px",
+            fontSize: "0.58rem",
+            fontWeight: "700",
+            letterSpacing: "0.08em",
+            background: "rgba(255,209,102,0.18)",
+            border: "1px solid rgba(255,209,102,0.5)",
+            color: "#FFD166",
+            animation: "bounce 1.2s ease infinite",
           }}
         >
           NEW
         </div>
       )}
 
-      {/* Icon */}
+      {/* 아이콘 */}
       <div
-        className={iconContainerStyle}
-        style={
-          status === "completed"
-            ? { filter: "grayscale(0.3) brightness(0.7)" }
-            : status === "locked" || status === "inactive"
-            ? { filter: "grayscale(1) brightness(0.5)" }
-            : {}
-        }
-      >
-        {status === "completed" ? "✅" : status === "locked" ? "🔒" : config.icon}
-      </div>
-
-      {/* Label */}
-      <div
-        className={labelStyle}
         style={{
-          color:
-            status === "completed"
-              ? "#00E676"
-              : status === "locked" || status === "inactive"
-              ? "#4A4A6A"
-              : isExtra
-              ? "#FF79A8"
-              : config.colorLight,
+          position: "relative",
+          transition: "transform 300ms cubic-bezier(0.34, 1.56, 0.64, 1)",
+          animation: status === "active" || status === "extra" ? "orbPulse 2.5s ease-in-out infinite" : undefined,
         }}
       >
-        {config.label}
+        {status === "locked" ? (
+          <LockIcon color="#1A2040" size={36} />
+        ) : status === "completed" ? (
+          <cfg.Icon color="#5CE8A0" size={36} />
+        ) : (
+          <cfg.Icon color={iconColor} size={36} />
+        )}
       </div>
 
-      {/* Time label */}
-      <div className={timeLabelStyle}>{config.timeLabel}</div>
-
-      {/* Status label */}
+      {/* 라벨 */}
       <div
-        className={css({
-          fontSize: "0.7rem",
-          fontWeight: "600",
+        style={{
+          fontFamily: "'Orbitron', sans-serif",
+          fontWeight: "700",
+          fontSize: "0.875rem",
+          letterSpacing: "0.04em",
+          color: labelColor,
           textAlign: "center",
-          marginTop: "2px",
-        })}
-        style={{
-          color:
-            status === "completed"
-              ? "#00E676"
-              : status === "locked"
-              ? "#3A3A5A"
-              : status === "extra"
-              ? "#FF4081"
-              : status === "active"
-              ? config.color
-              : "#4A4A6A",
         }}
       >
-        {status === "completed"
-          ? "수령 완료"
-          : status === "locked"
-          ? "참여 불가"
-          : status === "inactive"
-          ? "비활성"
-          : status === "extra"
-          ? "탭하여 참여"
-          : "탭하여 수령"}
+        {cfg.label}
+      </div>
+
+      {/* 서브 라벨 */}
+      <div
+        style={{
+          fontSize: "0.65rem",
+          color: sublabelColor,
+          fontFamily: "'Noto Sans KR', sans-serif",
+          textAlign: "center",
+          letterSpacing: "0.02em",
+        }}
+      >
+        {cfg.sublabel}
+      </div>
+
+      {/* 시간 라벨 */}
+      <div
+        style={{
+          fontSize: "0.62rem",
+          color: "#2A3060",
+          fontFamily: "'JetBrains Mono', monospace",
+          textAlign: "center",
+        }}
+      >
+        {cfg.timeLabel}
+      </div>
+
+      {/* 구분선 */}
+      <div
+        style={{
+          width: "60%",
+          height: "1px",
+          background: status === "active" || status === "extra"
+            ? `linear-gradient(90deg, transparent, ${isExtra ? "#E86FA8" : cfg.color}50, transparent)`
+            : "rgba(33,44,92,0.4)",
+        }}
+      />
+
+      {/* 상태 텍스트 */}
+      <div
+        style={{
+          fontSize: "0.68rem",
+          fontWeight: "600",
+          color: statusColor,
+          textAlign: "center",
+          letterSpacing: "0.04em",
+        }}
+      >
+        {statusText}
       </div>
     </div>
   );

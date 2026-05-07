@@ -121,21 +121,30 @@ export function computeSlotStates(
     }
   });
 
-  // Bonus slot — show if all 3 regular slots completed
+  // Bonus slot — 3개 모두 완료 시 항상 active (시간대 무관)
   const result: SlotState[] = [...slots];
   if (morning && lunch && dinner) {
     result.push({
       key: "bonus",
-      status: completion.bonus ? "completed" : currentTime === "dinner" || morning && lunch && dinner ? "active" : "inactive",
+      status: completion.bonus ? "completed" : "active",
     });
   }
 
   return result;
 }
 
-// ---------- visit tracking ----------
-export const VISIT_STORAGE_KEY = "reward_slots_visits";
-export const COMPLETION_STORAGE_KEY = "reward_slots_completion";
+// ---------- constants ----------
+export const VISIT_STORAGE_KEY = "byulmoa_visits";
+export const COMPLETION_STORAGE_KEY = "byulmoa_completion";
+export const CYCLE_STORAGE_KEY = "byulmoa_cycle";
+export const FORTUNE_URL = "https://www.gangcheolgwan.com/"; // 강남철학관 URL
+export const SLOT_EXTERNAL_URL = FORTUNE_URL;
+export const REQUIRED_VISIT_MS = 3000;
+
+// ---------- completion storage ----------
+function defaultCompletion(): CompletionRecord {
+  return { morning: false, lunch: false, dinner: false, bonus: false, extraUsed: false };
+}
 
 export function loadCompletion(): CompletionRecord {
   if (typeof window === "undefined") return defaultCompletion();
@@ -143,10 +152,8 @@ export function loadCompletion(): CompletionRecord {
     const raw = localStorage.getItem(COMPLETION_STORAGE_KEY);
     if (!raw) return defaultCompletion();
     const parsed = JSON.parse(raw);
-    // Reset if it's a new day
-    const savedDate = parsed._date;
     const today = new Date().toDateString();
-    if (savedDate !== today) return defaultCompletion();
+    if (parsed._date !== today) return defaultCompletion();
     return parsed;
   } catch {
     return defaultCompletion();
@@ -155,22 +162,51 @@ export function loadCompletion(): CompletionRecord {
 
 export function saveCompletion(record: CompletionRecord): void {
   if (typeof window === "undefined") return;
-  const today = new Date().toDateString();
   localStorage.setItem(
     COMPLETION_STORAGE_KEY,
-    JSON.stringify({ ...record, _date: today })
+    JSON.stringify({ ...record, _date: new Date().toDateString() })
   );
 }
 
-function defaultCompletion(): CompletionRecord {
-  return {
-    morning: false,
-    lunch: false,
-    dinner: false,
-    bonus: false,
-    extraUsed: false,
-  };
+// ---------- 30-day cycle ----------
+export interface CycleRecord {
+  cycleStart: string; // new Date().toDateString()
+  totalStars: number;
+  currentDay: number; // 1–30
 }
 
-export const SLOT_EXTERNAL_URL = "https://example.com/event";
-export const REQUIRED_VISIT_MS = 3000;
+export function loadCycle(): CycleRecord {
+  if (typeof window === "undefined") return defaultCycle();
+  try {
+    const raw = localStorage.getItem(CYCLE_STORAGE_KEY);
+    if (!raw) return defaultCycle();
+    const parsed: CycleRecord = JSON.parse(raw);
+    const start = new Date(parsed.cycleStart);
+    const days = Math.floor((Date.now() - start.getTime()) / 86_400_000);
+    if (days >= 30) return defaultCycle();
+    return { ...parsed, currentDay: days + 1 };
+  } catch {
+    return defaultCycle();
+  }
+}
+
+export function saveCycle(record: CycleRecord): void {
+  if (typeof window === "undefined") return;
+  localStorage.setItem(CYCLE_STORAGE_KEY, JSON.stringify(record));
+}
+
+function defaultCycle(): CycleRecord {
+  return { cycleStart: new Date().toDateString(), totalStars: 0, currentDay: 1 };
+}
+
+export function getOrbStage(totalStars: number): 1 | 2 | 3 | 4 | 5 {
+  if (totalStars <= 0)  return 1;
+  if (totalStars <= 12) return 2;
+  if (totalStars <= 30) return 3;
+  if (totalStars <= 55) return 4;
+  return 5;
+}
+
+export function countStarsFromCompletion(c: CompletionRecord): number {
+  return (c.morning ? 1 : 0) + (c.lunch ? 1 : 0) + (c.dinner ? 1 : 0) + (c.bonus ? 1 : 0);
+}

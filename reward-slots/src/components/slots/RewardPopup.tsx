@@ -6,6 +6,7 @@ import { Popup } from "../ui/Popup";
 import { Button } from "../ui/Button";
 import type { SlotKey } from "@/lib/slotLogic";
 import { getTimeOfDayLabel } from "@/lib/slotLogic";
+import { StarFragmentIcon } from "./SlotIcons";
 
 interface RewardPopupProps {
   slotKey: SlotKey;
@@ -14,12 +15,7 @@ interface RewardPopupProps {
   onClaim: (key: SlotKey, success: boolean) => void;
 }
 
-export const RewardPopup: React.FC<RewardPopupProps> = ({
-  slotKey,
-  success,
-  open,
-  onClaim,
-}) => {
+export const RewardPopup: React.FC<RewardPopupProps> = ({ slotKey, success, open, onClaim }) => {
   const label = getTimeOfDayLabel(slotKey);
 
   return (
@@ -35,45 +31,61 @@ export const RewardPopup: React.FC<RewardPopupProps> = ({
           flexDirection: "column",
           alignItems: "center",
           textAlign: "center",
-          gap: "16px",
+          gap: "18px",
           paddingTop: "8px",
         })}
       >
-        {/* Big emoji */}
+        {/* 아이콘 영역 */}
         <div
-          className={css({
-            fontSize: "4rem",
-            lineHeight: "1",
-            animation: success ? "starPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)" : "slideUp 0.3s ease",
-          })}
+          style={{
+            width: 80,
+            height: 80,
+            borderRadius: "50%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            background: success
+              ? "radial-gradient(circle, rgba(255,209,102,0.2) 0%, rgba(255,209,102,0.05) 100%)"
+              : "radial-gradient(circle, rgba(255,92,122,0.15) 0%, rgba(255,92,122,0.03) 100%)",
+            border: success ? "1px solid rgba(255,209,102,0.3)" : "1px solid rgba(255,92,122,0.25)",
+            animation: success ? "starBirth 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)" : "scaleIn 0.3s ease",
+          }}
         >
-          {success ? "🎉" : "😔"}
+          {success ? (
+            <StarFragmentIcon color="#FFD166" size={40} />
+          ) : (
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+              <circle cx="20" cy="20" r="18" stroke="#FF5C7A" strokeWidth="1.5" fill="rgba(255,92,122,0.1)" />
+              <line x1="13" y1="13" x2="27" y2="27" stroke="#FF5C7A" strokeWidth="2" strokeLinecap="round" />
+              <line x1="27" y1="13" x2="13" y2="27" stroke="#FF5C7A" strokeWidth="2" strokeLinecap="round" />
+            </svg>
+          )}
         </div>
 
-        {/* Title */}
+        {/* 제목 */}
         <div>
           <div
             className={css({
               fontFamily: "var(--fonts-display)",
-              fontSize: "1.25rem",
+              fontSize: "1.2rem",
               fontWeight: "700",
               marginBottom: "6px",
             })}
-            style={{ color: success ? "#FFD700" : "#FF6B6B" }}
+            style={{ color: success ? "#FFD166" : "#FF5C7A" }}
           >
-            {success ? "보상 획득!" : "조건 미충족"}
+            {success ? "별 조각 획득!" : "조건 미충족"}
           </div>
           <div
             className={css({
-              fontSize: "0.875rem",
+              fontSize: "0.82rem",
               color: "var(--colors-brand-textMuted)",
               lineHeight: "1.6",
             })}
           >
             {success ? (
               <>
-                <span style={{ color: "#FFD700", fontWeight: "600" }}>{label} 보상</span>을
-                성공적으로 수령했습니다!
+                <span style={{ color: "#FFD166", fontWeight: "600" }}>{label} 운세</span>를
+                통해 별 조각을 모았어요.
               </>
             ) : (
               <>
@@ -85,25 +97,57 @@ export const RewardPopup: React.FC<RewardPopupProps> = ({
           </div>
         </div>
 
-        {/* Reward display */}
+        {/* 보상 표시 */}
         {success && (
           <div
-            className={css({
-              background: "rgba(255,215,0,0.08)",
-              border: "1px solid rgba(255,215,0,0.25)",
-              borderRadius: "var(--radii-lg)",
-              padding: "14px 24px",
+            style={{
+              background: "rgba(255,209,102,0.07)",
+              border: "1px solid rgba(255,209,102,0.22)",
+              borderRadius: "16px",
+              padding: "14px 28px",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              gap: "4px",
-            })}
+              gap: "6px",
+            }}
           >
-            <div className={css({ fontSize: "0.7rem", color: "var(--colors-brand-textMuted)", textTransform: "uppercase", letterSpacing: "0.1em" })}>
-              행운 도장
+            <div
+              className={css({
+                fontSize: "0.62rem",
+                color: "var(--colors-brand-textMuted)",
+                textTransform: "uppercase",
+                letterSpacing: "0.12em",
+              })}
+            >
+              별 조각 획득
             </div>
-            <div className={css({ fontSize: "2rem", fontFamily: "var(--fonts-display)", fontWeight: "900", color: "#FFD700" })}>
-              +1
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+              }}
+            >
+              <StarFragmentIcon color="#FFD166" size={28} />
+              <span
+                className={css({
+                  fontSize: "2rem",
+                  fontFamily: "var(--fonts-display)",
+                  fontWeight: "900",
+                  color: "var(--colors-brand-gold)",
+                })}
+              >
+                +1
+              </span>
+            </div>
+            <div
+              style={{
+                fontSize: "0.68rem",
+                color: "rgba(255,209,102,0.5)",
+                fontFamily: "'JetBrains Mono', monospace",
+              }}
+            >
+              우주 성장에 기여했어요
             </div>
           </div>
         )}
