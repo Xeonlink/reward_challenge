@@ -20,6 +20,23 @@ export interface CompletionRecord {
   rewardClaimed?: Record<SlotKey, boolean>;
 }
 
+export interface UniverseRecord {
+  /** 누적 별 조각 총합 (사이클 리셋 후에도 유지) */
+  totalStars: number;
+  /** 현재 30일 사이클 시작일 toDateString() */
+  cycleStartDate: string;
+  /** 날짜별 완료 기록 — 리셋 안 됨 */
+  dailyRecord: {
+    [date: string]: {
+      morning: boolean;
+      lunch: boolean;
+      dinner: boolean;
+      bonus: boolean;
+      extraUsed: boolean;
+    };
+  };
+}
+
 // ---------- time helpers ----------
 
 export function getCurrentTimeOfDay(testParam?: string | null): TimeOfDay {
@@ -135,78 +152,81 @@ export function computeSlotStates(
 
 // ---------- constants ----------
 export const VISIT_STORAGE_KEY = "byulmoa_visits";
-export const COMPLETION_STORAGE_KEY = "byulmoa_completion";
-export const CYCLE_STORAGE_KEY = "byulmoa_cycle";
-export const FORTUNE_URL = "https://www.gangcheolgwan.com/"; // 강남철학관 URL
+export const UNIVERSE_STORAGE_KEY = "byulmoa_universe";
+export const FORTUNE_URL = "https://www.gangcheolgwan.com/";
 export const SLOT_EXTERNAL_URL = FORTUNE_URL;
 export const REQUIRED_VISIT_MS = 3000;
 
-// ---------- completion storage ----------
-function defaultCompletion(): CompletionRecord {
-  return { morning: false, lunch: false, dinner: false, bonus: false, extraUsed: false };
+// ---------- universe helpers ----------
+
+export function getTodayKey(): string {
+  return new Date().toDateString();
 }
 
-export function loadCompletion(): CompletionRecord {
-  if (typeof window === "undefined") return defaultCompletion();
-  try {
-    const raw = localStorage.getItem(COMPLETION_STORAGE_KEY);
-    if (!raw) return defaultCompletion();
-    const parsed = JSON.parse(raw);
-    const today = new Date().toDateString();
-    if (parsed._date !== today) return defaultCompletion();
-    return parsed;
-  } catch {
-    return defaultCompletion();
+export function getTodayRecord(universe: UniverseRecord): CompletionRecord {
+  const today = getTodayKey();
+  const day = universe.dailyRecord[today];
+  if (!day) return { morning: false, lunch: false, dinner: false, bonus: false, extraUsed: false };
+  return day;
+}
+
+/** 별 조각 계산: 아침/점심/저녁 각 +1, 보너스 +2 (하루 최대 5개) */
+export function starsFromDay(c: { morning: boolean; lunch: boolean; dinner: boolean; bonus: boolean }): number {
+  return (c.morning ? 1 : 0) + (c.lunch ? 1 : 0) + (c.dinner ? 1 : 0) + (c.bonus ? 2 : 0);
+}
+
+export function getCycleDay(universe: UniverseRecord): number {
+  if (!universe.cycleStartDate) return 1;
+  const start = new Date(universe.cycleStartDate);
+  if (isNaN(start.getTime())) return 1;
+  const days = Math.floor((Date.now() - start.getTime()) / 86_400_000);
+  return Math.min(days + 1, 30);
+}
+
+function defaultUniverse(): UniverseRecord {
+  return { totalStars: 0, cycleStartDate: new Date().toDateString(), dailyRecord: {} };
+}
+
+export function loadUniverse(): { record: UniverseRecord; cycleCompleted: boolean } {
+  if (typeof window === "undefined") {
+    return { record: { totalStars: 0, cycleStartDate: "", dailyRecord: {} }, cycleCompleted: false };
   }
-}
-
-export function saveCompletion(record: CompletionRecord): void {
-  if (typeof window === "undefined") return;
-  localStorage.setItem(
-    COMPLETION_STORAGE_KEY,
-    JSON.stringify({ ...record, _date: new Date().toDateString() })
-  );
-}
-
-// ---------- 30-day cycle ----------
-export interface CycleRecord {
-  cycleStart: string; // new Date().toDateString()
-  totalStars: number;
-  currentDay: number; // 1–30
-}
-
-export function loadCycle(): CycleRecord {
-  if (typeof window === "undefined") return defaultCycle();
   try {
-    const raw = localStorage.getItem(CYCLE_STORAGE_KEY);
-    if (!raw) return defaultCycle();
-    const parsed: CycleRecord = JSON.parse(raw);
-    const start = new Date(parsed.cycleStart);
+    const raw = localStorage.getItem(UNIVERSE_STORAGE_KEY);
+    if (!raw) return { record: defaultUniverse(), cycleCompleted: false };
+    const parsed: UniverseRecord = JSON.parse(raw);
+    const start = new Date(parsed.cycleStartDate);
+    if (isNaN(start.getTime())) {
+      // cycleStartDate 누락 or 손상 → totalStars/dailyRecord는 살리고 날짜만 오늘로 복구
+      const totalStars = typeof parsed.totalStars === "number" && parsed.totalStars >= 0 ? parsed.totalStars : 0;
+      const dailyRecord = parsed.dailyRecord && typeof parsed.dailyRecord === "object" ? parsed.dailyRecord : {};
+      const recovered: UniverseRecord = { ...defaultUniverse(), totalStars, dailyRecord };
+      saveUniverse(recovered);
+      return { record: recovered, cycleCompleted: false };
+    }
     const days = Math.floor((Date.now() - start.getTime()) / 86_400_000);
-    if (days >= 30) return defaultCycle();
-    return { ...parsed, currentDay: days + 1 };
+    if (days >= 30) {
+      // 30일 사이클 완료: totalStars 리셋, 새 사이클 시작
+      const fresh = defaultUniverse();
+      saveUniverse(fresh); // 즉시 저장 → 새로고침해도 팝업 1회만
+      return { record: fresh, cycleCompleted: true };
+    }
+    return { record: parsed, cycleCompleted: false };
   } catch {
-    return defaultCycle();
+    return { record: defaultUniverse(), cycleCompleted: false };
   }
 }
 
-export function saveCycle(record: CycleRecord): void {
+export function saveUniverse(record: UniverseRecord): void {
   if (typeof window === "undefined") return;
-  localStorage.setItem(CYCLE_STORAGE_KEY, JSON.stringify(record));
+  localStorage.setItem(UNIVERSE_STORAGE_KEY, JSON.stringify(record));
 }
 
-function defaultCycle(): CycleRecord {
-  return { cycleStart: new Date().toDateString(), totalStars: 0, currentDay: 1 };
-}
-
+// ---------- orb stage ----------
 export function getOrbStage(totalStars: number): 1 | 2 | 3 | 4 | 5 {
-  if (totalStars <= 0)  return 1;
-  if (totalStars <= 12) return 2;
-  if (totalStars <= 30) return 3;
-  if (totalStars <= 55) return 4;
+  if (totalStars <= 6)  return 1;
+  if (totalStars <= 20) return 2;
+  if (totalStars <= 40) return 3;
+  if (totalStars <= 70) return 4;
   return 5;
-}
-
-export function countStarsFromCompletion(c: CompletionRecord): number {
-  return (c.morning ? 1 : 0) + (c.lunch ? 1 : 0) + (c.dinner ? 1 : 0) + (c.bonus ? 1 : 0);
 }

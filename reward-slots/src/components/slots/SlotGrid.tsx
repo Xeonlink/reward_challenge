@@ -5,9 +5,10 @@ import { css } from "../../../styled-system/css";
 import { SlotCard } from "./SlotCard";
 import { SlotPopup } from "./SlotPopup";
 import { RewardPopup } from "./RewardPopup";
+import { Popup } from "../ui/Popup";
 import { CosmicOrb } from "./CosmicOrb";
 import { useSlots } from "@/hooks/useSlots";
-import { countStarsFromCompletion } from "@/lib/slotLogic";
+import { starsFromDay } from "@/lib/slotLogic";
 
 const TIME_LABELS: Record<string, { label: string; color: string }> = {
   morning: { label: "아침", color: "#F4A05A" },
@@ -23,8 +24,8 @@ export const SlotGrid: React.FC<SlotGridProps> = ({ testParam }) => {
   const {
     slots,
     currentTime,
-    completion,
-    cycle,
+    todayRecord,
+    universe,
     allCompleted,
     handleSlotClick,
     handleRewardClaim,
@@ -34,9 +35,12 @@ export const SlotGrid: React.FC<SlotGridProps> = ({ testParam }) => {
     closePopup,
     rewardPopup,
     closeRewardPopup,
+    cycleCompletePopup,
+    closeCycleCompletePopup,
+    lastStarBornAt,
   } = useSlots(testParam);
 
-  const starsToday    = countStarsFromCompletion(completion);
+  const starsToday = starsFromDay(todayRecord);
   const activeSlotData = activePopup ? slots.find((s) => s.key === activePopup) : null;
   const t = TIME_LABELS[currentTime];
 
@@ -51,7 +55,7 @@ export const SlotGrid: React.FC<SlotGridProps> = ({ testParam }) => {
       })}
     >
       {/* 우주 Orb */}
-      <CosmicOrb cycle={cycle} starsToday={starsToday} />
+      <CosmicOrb universe={universe} starsToday={starsToday} lastStarBornAt={lastStarBornAt} />
 
       {/* 현재 시간대 표시 */}
       <div
@@ -123,7 +127,7 @@ export const SlotGrid: React.FC<SlotGridProps> = ({ testParam }) => {
             status={slot.status}
             isExtra={slot.isExtra}
             onClick={handleSlotClick}
-            isNew={slot.key === "bonus" && !completion.bonus}
+            isNew={slot.key === "bonus" && !todayRecord.bonus}
           />
         ))}
       </div>
@@ -145,10 +149,10 @@ export const SlotGrid: React.FC<SlotGridProps> = ({ testParam }) => {
               fontSize: "0.72rem",
               fontWeight: "700",
               fontFamily: "'Orbitron', sans-serif",
-              color: starsToday === 4 ? "#FFD166" : "#A8B4F0",
+              color: starsToday >= 5 ? "#FFD166" : "#A8B4F0",
             }}
           >
-            {starsToday} / 4
+            {starsToday} / 5
           </span>
         </div>
         <div
@@ -163,17 +167,17 @@ export const SlotGrid: React.FC<SlotGridProps> = ({ testParam }) => {
           <div
             style={{
               height: "100%",
-              width: `${(starsToday / 4) * 100}%`,
+              width: `${(starsToday / 5) * 100}%`,
               background:
-                starsToday === 4
+                starsToday >= 5
                   ? "linear-gradient(90deg, #FFD166, #C589E8, #FFD166)"
                   : "linear-gradient(90deg, #7B8DE0, #C589E8)",
-              backgroundSize: starsToday === 4 ? "200% auto" : "auto",
-              animation: starsToday === 4 ? "shimmer 2s linear infinite" : undefined,
+              backgroundSize: starsToday >= 5 ? "200% auto" : "auto",
+              animation: starsToday >= 5 ? "shimmer 2s linear infinite" : undefined,
               borderRadius: "9999px",
               transition: "width 700ms cubic-bezier(0.34, 1.56, 0.64, 1)",
               boxShadow:
-                starsToday === 4
+                starsToday >= 5
                   ? "0 0 10px rgba(255,209,102,0.6)"
                   : "0 0 6px rgba(123,141,224,0.4)",
             }}
@@ -204,7 +208,7 @@ export const SlotGrid: React.FC<SlotGridProps> = ({ testParam }) => {
           >
             오늘의 운세를 모두 확인했어요!
           </div>
-          {!completion.bonus && (
+          {!todayRecord.bonus && (
             <div style={{ fontSize: "0.72rem", color: "#6070A8", marginTop: "4px" }}>
               별 보너스 슬롯이 해제되었어요
             </div>
@@ -267,6 +271,60 @@ export const SlotGrid: React.FC<SlotGridProps> = ({ testParam }) => {
           onClaim={handleRewardClaim}
         />
       )}
+
+      {/* 30일 사이클 완료 팝업 */}
+      <Popup
+        open={cycleCompletePopup}
+        onClose={closeCycleCompletePopup}
+        size="sm"
+        title={
+          <span style={{ color: "#FFD166", fontFamily: "'Orbitron', sans-serif" }}>
+            우주가 완성되었습니다!
+          </span>
+        }
+      >
+        <div style={{ textAlign: "center", padding: "8px 0 4px" }}>
+          <div style={{ fontSize: "2.4rem", marginBottom: "14px" }}>✨</div>
+          <div
+            style={{
+              fontSize: "0.88rem",
+              color: "#EBF0FF",
+              lineHeight: 1.7,
+              marginBottom: "8px",
+            }}
+          >
+            30일간의 여정을 완주했어요.
+            <br />
+            별 조각이 새롭게 초기화됩니다.
+          </div>
+          <div
+            style={{
+              fontSize: "0.75rem",
+              color: "#6070A8",
+              marginBottom: "22px",
+            }}
+          >
+            새로운 여정을 시작하세요
+          </div>
+          <button
+            onClick={closeCycleCompletePopup}
+            style={{
+              padding: "10px 32px",
+              borderRadius: "9999px",
+              background: "linear-gradient(135deg, #FFD166, #C589E8)",
+              border: "none",
+              color: "#07091A",
+              fontFamily: "'Orbitron', sans-serif",
+              fontSize: "0.78rem",
+              fontWeight: "700",
+              cursor: "pointer",
+              letterSpacing: "0.06em",
+            }}
+          >
+            새 여정 시작
+          </button>
+        </div>
+      </Popup>
     </div>
   );
 };

@@ -4,13 +4,13 @@ import { useState, useEffect, useCallback } from "react";
 import {
   computeSlotStates,
   getCurrentTimeOfDay,
-  loadCompletion,
-  saveCompletion,
-  loadCycle,
-  saveCycle,
-  countStarsFromCompletion,
+  loadUniverse,
+  saveUniverse,
+  getTodayKey,
+  getTodayRecord,
+  starsFromDay,
   type CompletionRecord,
-  type CycleRecord,
+  type UniverseRecord,
   type SlotKey,
   type TimeOfDay,
   REQUIRED_VISIT_MS,
@@ -20,8 +20,8 @@ import {
 export interface UseSlots {
   slots: ReturnType<typeof computeSlotStates>;
   currentTime: TimeOfDay;
-  completion: CompletionRecord;
-  cycle: CycleRecord;
+  todayRecord: CompletionRecord;
+  universe: UniverseRecord;
   allCompleted: boolean;
   handleSlotClick: (key: SlotKey) => void;
   handleRewardClaim: (key: SlotKey, success: boolean) => void;
@@ -32,39 +32,36 @@ export interface UseSlots {
   rewardPopup: { key: SlotKey; success: boolean } | null;
   closeRewardPopup: () => void;
   visitState: Record<string, "idle" | "visiting" | "done" | "failed">;
+  cycleCompletePopup: boolean;
+  closeCycleCompletePopup: () => void;
+  /** performance.now() timestamp set when a new star is earned; 0 otherwise */
+  lastStarBornAt: number;
 }
 
-// SSR-safe 초기값 — 브라우저 API 없이 서버/클라이언트 동일하게 유지
-const INIT_COMPLETION: CompletionRecord = {
-  morning: false,
-  lunch: false,
-  dinner: false,
-  bonus: false,
-  extraUsed: false,
-};
-
-const INIT_CYCLE: CycleRecord = {
-  cycleStart: "",
+// SSR-safe 초기값
+const INIT_UNIVERSE: UniverseRecord = {
   totalStars: 0,
-  currentDay: 1,
+  cycleStartDate: "",
+  dailyRecord: {},
 };
 
 export function useSlots(testParam?: string | null): UseSlots {
-  const [completion, setCompletion] = useState<CompletionRecord>(INIT_COMPLETION);
-  const [cycle, setCycle] = useState<CycleRecord>(INIT_CYCLE);
+  const [universe, setUniverse] = useState<UniverseRecord>(INIT_UNIVERSE);
   const [currentTime, setCurrentTime] = useState<TimeOfDay>("morning");
-
   const [activePopup, setActivePopup] = useState<SlotKey | null>(null);
   const [rewardPopup, setRewardPopup] = useState<{ key: SlotKey; success: boolean } | null>(null);
   const [visitState, setVisitState] = useState<Record<string, "idle" | "visiting" | "done" | "failed">>({});
+  const [cycleCompletePopup, setCycleCompletePopup] = useState(false);
+  const [lastStarBornAt, setLastStarBornAt] = useState(0);
 
   // 마운트 후 localStorage에서 실제 데이터 로드
   useEffect(() => {
-    setCompletion(loadCompletion());
-    setCycle(loadCycle());
+    const { record, cycleCompleted } = loadUniverse();
+    setUniverse(record);
+    if (cycleCompleted) setCycleCompletePopup(true);
   }, []);
 
-  // 현재 시간대 동기화 (클라이언트 로컬 타임 기준)
+  // 현재 시간대 동기화
   useEffect(() => {
     setCurrentTime(getCurrentTimeOfDay(testParam));
     const interval = setInterval(() => {
@@ -97,8 +94,9 @@ export function useSlots(testParam?: string | null): UseSlots {
     return () => document.removeEventListener("visibilitychange", onVisibility);
   }, []);
 
-  const slots = computeSlotStates(completion, currentTime);
-  const allCompleted = completion.morning && completion.lunch && completion.dinner;
+  const todayRecord = getTodayRecord(universe);
+  const slots = computeSlotStates(todayRecord, currentTime);
+  const allCompleted = todayRecord.morning && todayRecord.lunch && todayRecord.dinner;
 
   const handleSlotClick = useCallback(
     (key: SlotKey) => {
@@ -132,41 +130,60 @@ export function useSlots(testParam?: string | null): UseSlots {
     }, 300);
   }, []);
 
-  // 보상 확정: completion 업데이트 + localStorage 저장 + 사이클 별 조각 누적
+  // 보상 확정: dailyRecord 업데이트 + totalStars 누적 + 별 탄생 타임스탬프 기록
   const handleRewardClaim = useCallback(
     (key: SlotKey, success: boolean) => {
       if (success) {
-        const updated: CompletionRecord = {
-          ...completion,
+        const todayKey = getTodayKey();
+        const prevDay = universe.dailyRecord[todayKey] ?? {
+          morning: false,
+          lunch: false,
+          dinner: false,
+          bonus: false,
+          extraUsed: false,
+        };
+        const updatedDay = {
+          ...prevDay,
           [key]: true,
           extraUsed:
-            completion.extraUsed ||
-            slots.find((s) => s.key === key)?.isExtra ||
-            false,
+            prevDay.extraUsed ||
+            (slots.find((s) => s.key === key)?.isExtra ?? false),
         };
-        setCompletion(updated);
-        saveCompletion(updated);
 
-        const gained =
-          countStarsFromCompletion(updated) - countStarsFromCompletion(completion);
+        const prevStars = starsFromDay(prevDay);
+        const newStars = starsFromDay(updatedDay);
+        const gained = newStars - prevStars;
+
+        const updatedUniverse: UniverseRecord = {
+          ...universe,
+          totalStars: universe.totalStars + (gained > 0 ? gained : 0),
+          dailyRecord: {
+            ...universe.dailyRecord,
+            [todayKey]: updatedDay,
+          },
+        };
+
+        setUniverse(updatedUniverse);
+        saveUniverse(updatedUniverse);
+
+        // 새 별이 생겼을 때 탄생 타임스탬프 기록 (CosmicOrb 애니메이션용)
         if (gained > 0) {
-          const updatedCycle = { ...cycle, totalStars: cycle.totalStars + gained };
-          setCycle(updatedCycle);
-          saveCycle(updatedCycle);
+          setLastStarBornAt(performance.now());
         }
       }
       setRewardPopup(null);
     },
-    [completion, slots, cycle]
+    [universe, slots]
   );
 
   const closeRewardPopup = useCallback(() => setRewardPopup(null), []);
+  const closeCycleCompletePopup = useCallback(() => setCycleCompletePopup(false), []);
 
   return {
     slots,
     currentTime,
-    completion,
-    cycle,
+    todayRecord,
+    universe,
     allCompleted,
     handleSlotClick,
     handleRewardClaim,
@@ -177,5 +194,8 @@ export function useSlots(testParam?: string | null): UseSlots {
     rewardPopup,
     closeRewardPopup,
     visitState,
+    cycleCompletePopup,
+    closeCycleCompletePopup,
+    lastStarBornAt,
   };
 }
