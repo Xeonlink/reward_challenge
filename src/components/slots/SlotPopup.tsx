@@ -1,27 +1,63 @@
 "use client";
 
+import type { SlotKey } from "@/lib/slotLogic";
 import React, { useCallback } from "react";
 import { css } from "../../../styled-system/css";
-import { Popup } from "../ui/Popup";
 import { Button } from "../ui/Button";
-import type { SlotKey } from "@/lib/slotLogic";
-import { MorningIcon, LunchIcon, DinnerIcon, BonusIcon, StarFragmentIcon } from "./SlotIcons";
+import { Popup } from "../ui/Popup";
+import {
+  BonusIcon,
+  DinnerIcon,
+  LunchIcon,
+  MorningIcon,
+  StarFragmentIcon,
+} from "./SlotIcons";
 
 const SLOT_CFG: Record<
   SlotKey,
-  { color: string; light: string; bg: string; label: string; fortuneLabel: string }
+  {
+    color: string;
+    light: string;
+    bg: string;
+    label: string;
+    fortuneLabel: string;
+  }
 > = {
-  morning: { color: "#F4A05A", light: "#FFCB8A", bg: "rgba(244,160,90,0.08)",  label: "아침 운세", fortuneLabel: "새벽의 운세" },
-  lunch:   { color: "#50C8E8", light: "#8DDFF5", bg: "rgba(80,200,232,0.08)",   label: "정오 운세", fortuneLabel: "하늘의 운세" },
-  dinner:  { color: "#9B72CF", light: "#C3A4EA", bg: "rgba(155,114,207,0.08)",  label: "저녁 운세", fortuneLabel: "달빛의 운세" },
-  bonus:   { color: "#E86FA8", light: "#F4A0C8", bg: "rgba(232,111,168,0.08)",  label: "별 보너스",  fortuneLabel: "우주의 운세" },
+  morning: {
+    color: "#F4A05A",
+    light: "#FFCB8A",
+    bg: "rgba(244,160,90,0.08)",
+    label: "아침 운세",
+    fortuneLabel: "새벽의 운세",
+  },
+  lunch: {
+    color: "#50C8E8",
+    light: "#8DDFF5",
+    bg: "rgba(80,200,232,0.08)",
+    label: "정오 운세",
+    fortuneLabel: "하늘의 운세",
+  },
+  dinner: {
+    color: "#9B72CF",
+    light: "#C3A4EA",
+    bg: "rgba(155,114,207,0.08)",
+    label: "저녁 운세",
+    fortuneLabel: "달빛의 운세",
+  },
+  bonus: {
+    color: "#E86FA8",
+    light: "#F4A0C8",
+    bg: "rgba(232,111,168,0.08)",
+    label: "별 보너스",
+    fortuneLabel: "우주의 운세",
+  },
 };
 
 const SLOT_ICON: Record<SlotKey, React.FC<{ color: string; size?: number }>> = {
   morning: MorningIcon,
-  lunch:   LunchIcon,
-  dinner:  DinnerIcon,
-  bonus:   BonusIcon,
+  lunch: LunchIcon,
+  dinner: DinnerIcon,
+  bonus: BonusIcon,
 };
 
 interface SlotPopupProps {
@@ -42,7 +78,10 @@ export const SlotPopup: React.FC<SlotPopupProps> = ({
   const c = SLOT_CFG[slotKey];
   const Icon = SLOT_ICON[slotKey];
 
-  const handleRealVisit = useCallback(() => onExternalVisit(slotKey), [onExternalVisit, slotKey]);
+  const handleRealVisit = useCallback(
+    () => onExternalVisit(slotKey),
+    [onExternalVisit, slotKey],
+  );
 
   return (
     <Popup
@@ -85,10 +124,19 @@ export const SlotPopup: React.FC<SlotPopupProps> = ({
       >
         <StarFragmentIcon color={c.color} size={28} />
         <div>
-          <div style={{ fontSize: "0.78rem", fontWeight: "700", color: c.light, marginBottom: "3px" }}>
+          <div
+            style={{
+              fontSize: "0.78rem",
+              fontWeight: "700",
+              color: c.light,
+              marginBottom: "3px",
+            }}
+          >
             별 조각 +1 획득 가능
           </div>
-          <div style={{ fontSize: "0.72rem", color: "#6070A8", lineHeight: 1.5 }}>
+          <div
+            style={{ fontSize: "0.72rem", color: "#6070A8", lineHeight: 1.5 }}
+          >
             {isExtra
               ? "추가 기회는 하루 1회만 사용할 수 있어요."
               : "강남철학관 방문 후 별 조각을 수집하세요."}
@@ -97,7 +145,14 @@ export const SlotPopup: React.FC<SlotPopupProps> = ({
       </div>
 
       {/* 진행 단계 */}
-      <div className={css({ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "22px" })}>
+      <div
+        className={css({
+          display: "flex",
+          flexDirection: "column",
+          gap: "8px",
+          marginBottom: "22px",
+        })}
+      >
         {[
           "강남철학관 운세 페이지로 이동",
           "3초 이상 체류하기",
@@ -105,7 +160,12 @@ export const SlotPopup: React.FC<SlotPopupProps> = ({
         ].map((text, i) => (
           <div
             key={i}
-            style={{ display: "flex", alignItems: "center", gap: "12px", fontSize: "0.78rem" }}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "12px",
+              fontSize: "0.78rem",
+            }}
           >
             <div
               style={{
@@ -131,7 +191,13 @@ export const SlotPopup: React.FC<SlotPopupProps> = ({
       </div>
 
       {/* 버튼 영역 */}
-      <div className={css({ display: "flex", flexDirection: "column", gap: "10px" })}>
+      <div
+        className={css({
+          display: "flex",
+          flexDirection: "column",
+          gap: "10px",
+        })}
+      >
         {/* 실제 방문 버튼 */}
         <Button
           variant="gold"
@@ -142,7 +208,6 @@ export const SlotPopup: React.FC<SlotPopupProps> = ({
         >
           강남철학관 운세 보러 가기
         </Button>
-
       </div>
     </Popup>
   );

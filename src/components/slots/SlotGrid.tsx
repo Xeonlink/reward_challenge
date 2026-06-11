@@ -1,19 +1,19 @@
 "use client";
 
-import React from "react";
-import { css } from "../../../styled-system/css";
-import { SlotCard } from "./SlotCard";
-import { SlotPopup } from "./SlotPopup";
-import { RewardPopup } from "./RewardPopup";
-import { Popup } from "../ui/Popup";
-import { CosmicOrb } from "./CosmicOrb";
 import { useSlots } from "@/hooks/useSlots";
 import { starsFromDay } from "@/lib/slotLogic";
+import React from "react";
+import { css } from "../../../styled-system/css";
+import { Popup } from "../ui/Popup";
+import { CosmicOrb } from "./CosmicOrb";
+import { RewardPopup } from "./RewardPopup";
+import { SlotCard } from "./SlotCard";
+import { SlotPopup } from "./SlotPopup";
 
 const TIME_LABELS: Record<string, { label: string; color: string }> = {
   morning: { label: "아침", color: "#F4A05A" },
-  lunch:   { label: "점심", color: "#50C8E8" },
-  dinner:  { label: "저녁", color: "#9B72CF" },
+  lunch: { label: "점심", color: "#50C8E8" },
+  dinner: { label: "저녁", color: "#9B72CF" },
 };
 
 interface SlotGridProps {
@@ -41,7 +41,9 @@ export const SlotGrid: React.FC<SlotGridProps> = ({ testParam }) => {
   } = useSlots(testParam);
 
   const starsToday = starsFromDay(todayRecord);
-  const activeSlotData = activePopup ? slots.find((s) => s.key === activePopup) : null;
+  const activeSlotData = activePopup
+    ? slots.find((s) => s.key === activePopup)
+    : null;
   const t = TIME_LABELS[currentTime];
 
   return (
@@ -55,7 +57,11 @@ export const SlotGrid: React.FC<SlotGridProps> = ({ testParam }) => {
       })}
     >
       {/* 우주 Orb */}
-      <CosmicOrb universe={universe} starsToday={starsToday} lastStarBornAt={lastStarBornAt} />
+      <CosmicOrb
+        universe={universe}
+        starsToday={starsToday}
+        lastStarBornAt={lastStarBornAt}
+      />
 
       {/* 현재 시간대 표시 */}
       <div
@@ -80,7 +86,13 @@ export const SlotGrid: React.FC<SlotGridProps> = ({ testParam }) => {
             animation: "pulse 2s ease infinite",
           }}
         />
-        <span style={{ fontSize: "0.75rem", color: "#6070A8", fontFamily: "'JetBrains Mono', monospace" }}>
+        <span
+          style={{
+            fontSize: "0.75rem",
+            color: "#6070A8",
+            fontFamily: "'JetBrains Mono', monospace",
+          }}
+        >
           현재 시간대:
         </span>
         <span
@@ -142,8 +154,16 @@ export const SlotGrid: React.FC<SlotGridProps> = ({ testParam }) => {
           gap: "10px",
         }}
       >
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <span style={{ fontSize: "0.72rem", color: "#6070A8" }}>오늘의 별 조각</span>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <span style={{ fontSize: "0.72rem", color: "#6070A8" }}>
+            오늘의 별 조각
+          </span>
           <span
             style={{
               fontSize: "0.72rem",
@@ -173,7 +193,8 @@ export const SlotGrid: React.FC<SlotGridProps> = ({ testParam }) => {
                   ? "linear-gradient(90deg, #FFD166, #C589E8, #FFD166)"
                   : "linear-gradient(90deg, #7B8DE0, #C589E8)",
               backgroundSize: starsToday >= 5 ? "200% auto" : "auto",
-              animation: starsToday >= 5 ? "shimmer 2s linear infinite" : undefined,
+              animation:
+                starsToday >= 5 ? "shimmer 2s linear infinite" : undefined,
               borderRadius: "9999px",
               transition: "width 700ms cubic-bezier(0.34, 1.56, 0.64, 1)",
               boxShadow:
@@ -209,7 +230,13 @@ export const SlotGrid: React.FC<SlotGridProps> = ({ testParam }) => {
             오늘의 운세를 모두 확인했어요!
           </div>
           {!todayRecord.bonus && (
-            <div style={{ fontSize: "0.72rem", color: "#6070A8", marginTop: "4px" }}>
+            <div
+              style={{
+                fontSize: "0.72rem",
+                color: "#6070A8",
+                marginTop: "4px",
+              }}
+            >
               별 보너스 슬롯이 해제되었어요
             </div>
           )}
@@ -235,7 +262,10 @@ export const SlotGrid: React.FC<SlotGridProps> = ({ testParam }) => {
           { color: "#E86FA8", label: "추가 기회" },
           { color: "#2A3060", label: "참여 불가" },
         ].map(({ color, label }) => (
-          <div key={label} style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+          <div
+            key={label}
+            style={{ display: "flex", alignItems: "center", gap: "6px" }}
+          >
             <div
               style={{
                 width: 8,
@@ -245,7 +275,9 @@ export const SlotGrid: React.FC<SlotGridProps> = ({ testParam }) => {
                 boxShadow: `0 0 4px ${color}`,
               }}
             />
-            <span style={{ fontSize: "0.68rem", color: "#6070A8" }}>{label}</span>
+            <span style={{ fontSize: "0.68rem", color: "#6070A8" }}>
+              {label}
+            </span>
           </div>
         ))}
       </div>
@@ -277,7 +309,9 @@ export const SlotGrid: React.FC<SlotGridProps> = ({ testParam }) => {
         onClose={closeCycleCompletePopup}
         size="sm"
         title={
-          <span style={{ color: "#FFD166", fontFamily: "'Orbitron', sans-serif" }}>
+          <span
+            style={{ color: "#FFD166", fontFamily: "'Orbitron', sans-serif" }}
+          >
             우주가 완성되었습니다!
           </span>
         }
@@ -293,8 +327,7 @@ export const SlotGrid: React.FC<SlotGridProps> = ({ testParam }) => {
             }}
           >
             30일간의 여정을 완주했어요.
-            <br />
-            별 조각이 새롭게 초기화됩니다.
+            <br />별 조각이 새롭게 초기화됩니다.
           </div>
           <div
             style={{

@@ -3,7 +3,12 @@
 import React from "react";
 import { css, cx } from "../../../styled-system/css";
 
-export type ButtonVariant = "primary" | "secondary" | "ghost" | "danger" | "gold";
+export type ButtonVariant =
+  | "primary"
+  | "secondary"
+  | "ghost"
+  | "danger"
+  | "gold";
 export type ButtonSize = "sm" | "md" | "lg" | "xl";
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -98,7 +103,8 @@ const variantStyles: Record<ButtonVariant, string> = {
     },
   }),
   gold: css({
-    background: "linear-gradient(135deg, #B8860B 0%, #FFD700 50%, #DAA520 100%)",
+    background:
+      "linear-gradient(135deg, #B8860B 0%, #FFD700 50%, #DAA520 100%)",
     color: "#0A0A0F",
     borderColor: "#FFD700",
     boxShadow: "0 2px 16px rgba(255,215,0,0.4)",
@@ -163,18 +169,18 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       className,
       ...props
     },
-    ref
+    ref,
   ) => {
     return (
       <button
-        ref={ref}
         className={cx(
           baseStyles,
           variantStyles[variant],
           sizeStyles[size],
           fullWidth ? css({ width: "100%" }) : "",
-          className
+          className,
         )}
+        ref={ref}
         disabled={disabled || loading}
         aria-busy={loading}
         {...props}
@@ -182,21 +188,35 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {loading ? (
           <span className={spinnerStyle} aria-hidden />
         ) : leftIcon ? (
-          <span className={css({ display: "flex", alignItems: "center", flexShrink: "0" })}>
+          <span
+            className={css({
+              display: "flex",
+              alignItems: "center",
+              flexShrink: "0",
+            })}
+          >
             {leftIcon}
           </span>
         ) : null}
         {children && (
-          <span className={loading ? css({ opacity: "0.7" }) : ""}>{children}</span>
+          <span className={loading ? css({ opacity: "0.7" }) : ""}>
+            {children}
+          </span>
         )}
         {!loading && rightIcon && (
-          <span className={css({ display: "flex", alignItems: "center", flexShrink: "0" })}>
+          <span
+            className={css({
+              display: "flex",
+              alignItems: "center",
+              flexShrink: "0",
+            })}
+          >
             {rightIcon}
           </span>
         )}
       </button>
     );
-  }
+  },
 );
 
 Button.displayName = "Button";

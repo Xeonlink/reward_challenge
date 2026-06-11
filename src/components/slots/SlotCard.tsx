@@ -1,8 +1,15 @@
 "use client";
 
-import React from "react";
 import type { SlotKey, SlotStatus } from "@/lib/slotLogic";
-import { MorningIcon, LunchIcon, DinnerIcon, BonusIcon, LockIcon, CheckIcon } from "./SlotIcons";
+import React from "react";
+import {
+  BonusIcon,
+  CheckIcon,
+  DinnerIcon,
+  LockIcon,
+  LunchIcon,
+  MorningIcon,
+} from "./SlotIcons";
 
 interface SlotConfig {
   label: string;
@@ -76,11 +83,19 @@ export interface SlotCardProps {
   isNew?: boolean;
 }
 
-export const SlotCard: React.FC<SlotCardProps> = ({ slotKey, status, isExtra, onClick, isNew }) => {
+export const SlotCard: React.FC<SlotCardProps> = ({
+  slotKey,
+  status,
+  isExtra,
+  onClick,
+  isNew,
+}) => {
   const cfg = SLOT_CONFIGS[slotKey];
   const isClickable = status === "active" || status === "extra";
 
-  const handleClick = () => { if (isClickable) onClick(slotKey); };
+  const handleClick = () => {
+    if (isClickable) onClick(slotKey);
+  };
 
   // ── 상태별 카드 스타일 ──
   const getCardStyle = (): React.CSSProperties => {
@@ -134,7 +149,8 @@ export const SlotCard: React.FC<SlotCardProps> = ({ slotKey, status, isExtra, on
         ...base,
         background: "linear-gradient(145deg, #120820 0%, #1C1030 100%)",
         borderColor: "rgba(232,111,168,0.5)",
-        boxShadow: "0 0 28px rgba(232,111,168,0.4), 0 0 65px rgba(232,111,168,0.15)",
+        boxShadow:
+          "0 0 28px rgba(232,111,168,0.4), 0 0 65px rgba(232,111,168,0.15)",
       };
     }
 
@@ -145,39 +161,50 @@ export const SlotCard: React.FC<SlotCardProps> = ({ slotKey, status, isExtra, on
     status === "completed"
       ? "#5CE8A0"
       : status === "locked" || status === "inactive"
-      ? "#1A2040"
-      : isExtra
-      ? "#F4A0C8"
-      : cfg.color;
+        ? "#1A2040"
+        : isExtra
+          ? "#F4A0C8"
+          : cfg.color;
 
   const labelColor =
     status === "completed"
       ? "#5CE8A0"
       : status === "locked" || status === "inactive"
-      ? "#2A3060"
-      : isExtra
-      ? "#F4A0C8"
-      : cfg.colorLight;
+        ? "#2A3060"
+        : isExtra
+          ? "#F4A0C8"
+          : cfg.colorLight;
 
   const sublabelColor =
-    status === "completed" ? "rgba(92,232,160,0.5)"
-    : status === "locked" || status === "inactive" ? "#1A2040"
-    : isExtra ? "rgba(244,160,200,0.5)"
-    : `${cfg.color}70`;
+    status === "completed"
+      ? "rgba(92,232,160,0.5)"
+      : status === "locked" || status === "inactive"
+        ? "#1A2040"
+        : isExtra
+          ? "rgba(244,160,200,0.5)"
+          : `${cfg.color}70`;
 
   const statusText =
-    status === "completed" ? "수령 완료"
-    : status === "locked"   ? "참여 불가"
-    : status === "inactive" ? "비활성"
-    : status === "extra"    ? "탭하여 참여"
-    : "탭하여 수령";
+    status === "completed"
+      ? "수령 완료"
+      : status === "locked"
+        ? "참여 불가"
+        : status === "inactive"
+          ? "비활성"
+          : status === "extra"
+            ? "탭하여 참여"
+            : "탭하여 수령";
 
   const statusColor =
-    status === "completed" ? "#5CE8A0"
-    : status === "locked"   ? "#2A3060"
-    : status === "extra"    ? "#E86FA8"
-    : status === "active"   ? cfg.color
-    : "#2A3060";
+    status === "completed"
+      ? "#5CE8A0"
+      : status === "locked"
+        ? "#2A3060"
+        : status === "extra"
+          ? "#E86FA8"
+          : status === "active"
+            ? cfg.color
+            : "#2A3060";
 
   return (
     <div
@@ -186,7 +213,9 @@ export const SlotCard: React.FC<SlotCardProps> = ({ slotKey, status, isExtra, on
       role={isClickable ? "button" : "presentation"}
       tabIndex={isClickable ? 0 : undefined}
       aria-label={`${cfg.label} — ${status}`}
-      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") handleClick(); }}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") handleClick();
+      }}
       onMouseEnter={(e) => {
         if (!isClickable) return;
         const el = e.currentTarget as HTMLDivElement;
@@ -276,7 +305,10 @@ export const SlotCard: React.FC<SlotCardProps> = ({ slotKey, status, isExtra, on
         style={{
           position: "relative",
           transition: "transform 300ms cubic-bezier(0.34, 1.56, 0.64, 1)",
-          animation: status === "active" || status === "extra" ? "orbPulse 2.5s ease-in-out infinite" : undefined,
+          animation:
+            status === "active" || status === "extra"
+              ? "orbPulse 2.5s ease-in-out infinite"
+              : undefined,
         }}
       >
         {status === "locked" ? (
@@ -332,9 +364,10 @@ export const SlotCard: React.FC<SlotCardProps> = ({ slotKey, status, isExtra, on
         style={{
           width: "60%",
           height: "1px",
-          background: status === "active" || status === "extra"
-            ? `linear-gradient(90deg, transparent, ${isExtra ? "#E86FA8" : cfg.color}50, transparent)`
-            : "rgba(33,44,92,0.4)",
+          background:
+            status === "active" || status === "extra"
+              ? `linear-gradient(90deg, transparent, ${isExtra ? "#E86FA8" : cfg.color}50, transparent)`
+              : "rgba(33,44,92,0.4)",
         }}
       />
 

@@ -1,5 +1,12 @@
+import { UNIVERSE_STORAGE_KEY } from "./constants";
+
 export type TimeOfDay = "morning" | "lunch" | "dinner";
-export type SlotStatus = "inactive" | "active" | "completed" | "extra" | "locked";
+export type SlotStatus =
+  | "inactive"
+  | "active"
+  | "completed"
+  | "extra"
+  | "locked";
 export type SlotKey = "morning" | "lunch" | "dinner" | "bonus";
 
 export interface SlotState {
@@ -72,7 +79,7 @@ export function getTimeOfDayLabel(t: TimeOfDay | SlotKey): string {
  */
 export function computeSlotStates(
   completion: CompletionRecord,
-  currentTime: TimeOfDay
+  currentTime: TimeOfDay,
 ): SlotState[] {
   const { morning, lunch, dinner, extraUsed } = completion;
 
@@ -150,13 +157,6 @@ export function computeSlotStates(
   return result;
 }
 
-// ---------- constants ----------
-export const VISIT_STORAGE_KEY = "byulmoa_visits";
-export const UNIVERSE_STORAGE_KEY = "byulmoa_universe";
-export const FORTUNE_URL = "https://www.gangcheolgwan.com/";
-export const SLOT_EXTERNAL_URL = FORTUNE_URL;
-export const REQUIRED_VISIT_MS = 3000;
-
 // ---------- universe helpers ----------
 
 export function getTodayKey(): string {
@@ -166,13 +166,30 @@ export function getTodayKey(): string {
 export function getTodayRecord(universe: UniverseRecord): CompletionRecord {
   const today = getTodayKey();
   const day = universe.dailyRecord[today];
-  if (!day) return { morning: false, lunch: false, dinner: false, bonus: false, extraUsed: false };
+  if (!day)
+    return {
+      morning: false,
+      lunch: false,
+      dinner: false,
+      bonus: false,
+      extraUsed: false,
+    };
   return day;
 }
 
 /** 별 조각 계산: 아침/점심/저녁 각 +1, 보너스 +2 (하루 최대 5개) */
-export function starsFromDay(c: { morning: boolean; lunch: boolean; dinner: boolean; bonus: boolean }): number {
-  return (c.morning ? 1 : 0) + (c.lunch ? 1 : 0) + (c.dinner ? 1 : 0) + (c.bonus ? 2 : 0);
+export function starsFromDay(c: {
+  morning: boolean;
+  lunch: boolean;
+  dinner: boolean;
+  bonus: boolean;
+}): number {
+  return (
+    (c.morning ? 1 : 0) +
+    (c.lunch ? 1 : 0) +
+    (c.dinner ? 1 : 0) +
+    (c.bonus ? 2 : 0)
+  );
 }
 
 export function getCycleDay(universe: UniverseRecord): number {
@@ -184,12 +201,22 @@ export function getCycleDay(universe: UniverseRecord): number {
 }
 
 function defaultUniverse(): UniverseRecord {
-  return { totalStars: 0, cycleStartDate: new Date().toDateString(), dailyRecord: {} };
+  return {
+    totalStars: 0,
+    cycleStartDate: new Date().toDateString(),
+    dailyRecord: {},
+  };
 }
 
-export function loadUniverse(): { record: UniverseRecord; cycleCompleted: boolean } {
+export function loadUniverse(): {
+  record: UniverseRecord;
+  cycleCompleted: boolean;
+} {
   if (typeof window === "undefined") {
-    return { record: { totalStars: 0, cycleStartDate: "", dailyRecord: {} }, cycleCompleted: false };
+    return {
+      record: { totalStars: 0, cycleStartDate: "", dailyRecord: {} },
+      cycleCompleted: false,
+    };
   }
   try {
     const raw = localStorage.getItem(UNIVERSE_STORAGE_KEY);
@@ -198,9 +225,19 @@ export function loadUniverse(): { record: UniverseRecord; cycleCompleted: boolea
     const start = new Date(parsed.cycleStartDate);
     if (isNaN(start.getTime())) {
       // cycleStartDate 누락 or 손상 → totalStars/dailyRecord는 살리고 날짜만 오늘로 복구
-      const totalStars = typeof parsed.totalStars === "number" && parsed.totalStars >= 0 ? parsed.totalStars : 0;
-      const dailyRecord = parsed.dailyRecord && typeof parsed.dailyRecord === "object" ? parsed.dailyRecord : {};
-      const recovered: UniverseRecord = { ...defaultUniverse(), totalStars, dailyRecord };
+      const totalStars =
+        typeof parsed.totalStars === "number" && parsed.totalStars >= 0
+          ? parsed.totalStars
+          : 0;
+      const dailyRecord =
+        parsed.dailyRecord && typeof parsed.dailyRecord === "object"
+          ? parsed.dailyRecord
+          : {};
+      const recovered: UniverseRecord = {
+        ...defaultUniverse(),
+        totalStars,
+        dailyRecord,
+      };
       saveUniverse(recovered);
       return { record: recovered, cycleCompleted: false };
     }
@@ -224,7 +261,7 @@ export function saveUniverse(record: UniverseRecord): void {
 
 // ---------- orb stage ----------
 export function getOrbStage(totalStars: number): 1 | 2 | 3 | 4 | 5 {
-  if (totalStars <= 6)  return 1;
+  if (totalStars <= 6) return 1;
   if (totalStars <= 20) return 2;
   if (totalStars <= 40) return 3;
   if (totalStars <= 70) return 4;

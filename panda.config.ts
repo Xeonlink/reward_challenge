@@ -85,12 +85,30 @@ export default defineConfig({
           full: { value: "9999px" },
         },
         shadows: {
-          gold: { value: "0 0 20px rgba(255,209,102,0.4), 0 0 60px rgba(255,209,102,0.15)" },
-          morning: { value: "0 0 20px rgba(244,160,90,0.4), 0 0 60px rgba(244,160,90,0.15)" },
-          lunch: { value: "0 0 20px rgba(80,200,232,0.4), 0 0 60px rgba(80,200,232,0.15)" },
-          dinner: { value: "0 0 20px rgba(155,114,207,0.4), 0 0 60px rgba(155,114,207,0.15)" },
-          bonus: { value: "0 0 20px rgba(232,111,168,0.4), 0 0 60px rgba(232,111,168,0.15)" },
-          nebula: { value: "0 0 30px rgba(123,141,224,0.3), 0 0 80px rgba(123,141,224,0.1)" },
+          gold: {
+            value:
+              "0 0 20px rgba(255,209,102,0.4), 0 0 60px rgba(255,209,102,0.15)",
+          },
+          morning: {
+            value:
+              "0 0 20px rgba(244,160,90,0.4), 0 0 60px rgba(244,160,90,0.15)",
+          },
+          lunch: {
+            value:
+              "0 0 20px rgba(80,200,232,0.4), 0 0 60px rgba(80,200,232,0.15)",
+          },
+          dinner: {
+            value:
+              "0 0 20px rgba(155,114,207,0.4), 0 0 60px rgba(155,114,207,0.15)",
+          },
+          bonus: {
+            value:
+              "0 0 20px rgba(232,111,168,0.4), 0 0 60px rgba(232,111,168,0.15)",
+          },
+          nebula: {
+            value:
+              "0 0 30px rgba(123,141,224,0.3), 0 0 80px rgba(123,141,224,0.1)",
+          },
         },
         durations: {
           fast: { value: "150ms" },
@@ -130,7 +148,10 @@ export default defineConfig({
         },
         glow: {
           "0%, 100%": { boxShadow: "0 0 10px rgba(123,141,224,0.2)" },
-          "50%": { boxShadow: "0 0 30px rgba(197,137,232,0.5), 0 0 60px rgba(123,141,224,0.3)" },
+          "50%": {
+            boxShadow:
+              "0 0 30px rgba(197,137,232,0.5), 0 0 60px rgba(123,141,224,0.3)",
+          },
         },
         slideUp: {
           from: { transform: "translateY(20px)", opacity: "0" },

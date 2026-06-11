@@ -1,6 +1,6 @@
 @layer reset, base, tokens, recipes, utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=Noto+Sans+KR:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=Noto+Sans+KR:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap");
 
 * {
   box-sizing: border-box;
@@ -8,94 +8,209 @@
   padding: 0;
 }
 
-html, body {
-  background-color: #07091A;
-  color: #EBF0FF;
-  font-family: 'DM Sans', 'Noto Sans KR', sans-serif;
+html,
+body {
+  background-color: #07091a;
+  color: #ebf0ff;
+  font-family: "DM Sans", "Noto Sans KR", sans-serif;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: #0C1230; }
-::-webkit-scrollbar-thumb { background: #212C5C; border-radius: 2px; }
-::-webkit-scrollbar-thumb:hover { background: #FFD166; }
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: #0c1230;
+}
+::-webkit-scrollbar-thumb {
+  background: #212c5c;
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #ffd166;
+}
 
 /* ── Keyframes ── */
 @keyframes shimmer {
-  0%   { background-position: -200% center; }
-  100% { background-position:  200% center; }
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
 }
 @keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0.45; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
 }
 @keyframes twinkle {
-  0%, 100% { opacity: 1;   transform: scale(1);   }
-  50%       { opacity: 0.2; transform: scale(0.6); }
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.2;
+    transform: scale(0.6);
+  }
 }
 @keyframes float {
-  0%, 100% { transform: translateY(0);   }
-  50%       { transform: translateY(-8px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
 }
 @keyframes orbFloat {
-  0%, 100% { transform: translateY(0)   scale(1);    }
-  50%       { transform: translateY(-6px) scale(1.03); }
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-6px) scale(1.03);
+  }
 }
 @keyframes orbPulse {
-  0%, 100% { opacity: 0.8; }
-  50%       { opacity: 1;   }
+  0%,
+  100% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 @keyframes glow {
-  0%, 100% { box-shadow: 0 0 10px rgba(123,141,224,0.2); }
-  50%       { box-shadow: 0 0 30px rgba(197,137,232,0.5), 0 0 60px rgba(123,141,224,0.3); }
+  0%,
+  100% {
+    box-shadow: 0 0 10px rgba(123, 141, 224, 0.2);
+  }
+  50% {
+    box-shadow:
+      0 0 30px rgba(197, 137, 232, 0.5),
+      0 0 60px rgba(123, 141, 224, 0.3);
+  }
 }
 @keyframes slideUp {
-  from { transform: translateY(20px); opacity: 0; }
-  to   { transform: translateY(0);    opacity: 1; }
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 @keyframes scaleIn {
-  from { transform: scale(0.85); opacity: 0; }
-  to   { transform: scale(1);    opacity: 1; }
+  from {
+    transform: scale(0.85);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 @keyframes spin {
-  from { transform: rotate(0deg);   }
-  to   { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 @keyframes spinSlow {
-  from { transform: rotate(0deg);   }
-  to   { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 @keyframes bounce {
-  0%, 100% { transform: translateY(0);   }
-  50%       { transform: translateY(-6px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
 }
 @keyframes starPop {
-  0%   { transform: scale(0)   rotate(-30deg); opacity: 0; }
-  60%  { transform: scale(1.3) rotate(5deg);   opacity: 1; }
-  100% { transform: scale(1)   rotate(0deg);   opacity: 1; }
+  0% {
+    transform: scale(0) rotate(-30deg);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.3) rotate(5deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
 }
 @keyframes starBirth {
-  0%   { opacity: 0; transform: scale(0);   }
-  60%  { opacity: 1; transform: scale(1.4); }
-  100% { opacity: 1; transform: scale(1);   }
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.4);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 @keyframes cosmicRing {
-  0%   { transform: rotate(0deg)   scale(1);    opacity: 0.5; }
-  50%  { transform: rotate(180deg) scale(1.05); opacity: 0.8; }
-  100% { transform: rotate(360deg) scale(1);    opacity: 0.5; }
+  0% {
+    transform: rotate(0deg) scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: rotate(180deg) scale(1.05);
+    opacity: 0.8;
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+    opacity: 0.5;
+  }
 }
 @keyframes auroraShift {
-  0%   { background-position: 0%   50%; }
-  50%  { background-position: 100% 50%; }
-  100% { background-position: 0%   50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 @keyframes nebulaGlow {
-  0%, 100% { opacity: 0.06; }
-  50%       { opacity: 0.12; }
+  0%,
+  100% {
+    opacity: 0.06;
+  }
+  50% {
+    opacity: 0.12;
+  }
 }

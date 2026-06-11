@@ -1,21 +1,20 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { FORTUNE_URL, REQUIRED_VISIT_MS } from "@/lib/constants";
 import {
   computeSlotStates,
   getCurrentTimeOfDay,
-  loadUniverse,
-  saveUniverse,
   getTodayKey,
   getTodayRecord,
+  loadUniverse,
+  saveUniverse,
   starsFromDay,
   type CompletionRecord,
-  type UniverseRecord,
   type SlotKey,
   type TimeOfDay,
-  REQUIRED_VISIT_MS,
-  FORTUNE_URL,
+  type UniverseRecord,
 } from "@/lib/slotLogic";
+import { useCallback, useEffect, useState } from "react";
 
 export interface UseSlots {
   slots: ReturnType<typeof computeSlotStates>;
@@ -49,8 +48,13 @@ export function useSlots(testParam?: string | null): UseSlots {
   const [universe, setUniverse] = useState<UniverseRecord>(INIT_UNIVERSE);
   const [currentTime, setCurrentTime] = useState<TimeOfDay>("morning");
   const [activePopup, setActivePopup] = useState<SlotKey | null>(null);
-  const [rewardPopup, setRewardPopup] = useState<{ key: SlotKey; success: boolean } | null>(null);
-  const [visitState, setVisitState] = useState<Record<string, "idle" | "visiting" | "done" | "failed">>({});
+  const [rewardPopup, setRewardPopup] = useState<{
+    key: SlotKey;
+    success: boolean;
+  } | null>(null);
+  const [visitState, setVisitState] = useState<
+    Record<string, "idle" | "visiting" | "done" | "failed">
+  >({});
   const [cycleCompletePopup, setCycleCompletePopup] = useState(false);
   const [lastStarBornAt, setLastStarBornAt] = useState(0);
 
@@ -79,11 +83,17 @@ export function useSlots(testParam?: string | null): UseSlots {
       if (!visitData) return;
 
       try {
-        const { key, startTime } = JSON.parse(visitData) as { key: SlotKey; startTime: number };
+        const { key, startTime } = JSON.parse(visitData) as {
+          key: SlotKey;
+          startTime: number;
+        };
         const elapsed = Date.now() - startTime;
         const success = elapsed >= REQUIRED_VISIT_MS;
         sessionStorage.removeItem("byulmoa_visit");
-        setVisitState((prev) => ({ ...prev, [key]: success ? "done" : "failed" }));
+        setVisitState((prev) => ({
+          ...prev,
+          [key]: success ? "done" : "failed",
+        }));
         setRewardPopup({ key, success });
       } catch {
         sessionStorage.removeItem("byulmoa_visit");
@@ -96,16 +106,22 @@ export function useSlots(testParam?: string | null): UseSlots {
 
   const todayRecord = getTodayRecord(universe);
   const slots = computeSlotStates(todayRecord, currentTime);
-  const allCompleted = todayRecord.morning && todayRecord.lunch && todayRecord.dinner;
+  const allCompleted =
+    todayRecord.morning && todayRecord.lunch && todayRecord.dinner;
 
   const handleSlotClick = useCallback(
     (key: SlotKey) => {
       const slot = slots.find((s) => s.key === key);
       if (!slot) return;
-      if (slot.status === "completed" || slot.status === "locked" || slot.status === "inactive") return;
+      if (
+        slot.status === "completed" ||
+        slot.status === "locked" ||
+        slot.status === "inactive"
+      )
+        return;
       setActivePopup(key);
     },
-    [slots]
+    [slots],
   );
 
   const closePopup = useCallback(() => setActivePopup(null), []);
@@ -114,7 +130,7 @@ export function useSlots(testParam?: string | null): UseSlots {
   const handleExternalVisit = useCallback((key: SlotKey) => {
     sessionStorage.setItem(
       "byulmoa_visit",
-      JSON.stringify({ key, startTime: Date.now() })
+      JSON.stringify({ key, startTime: Date.now() }),
     );
     setVisitState((prev) => ({ ...prev, [key]: "visiting" }));
     setActivePopup(null);
@@ -173,11 +189,14 @@ export function useSlots(testParam?: string | null): UseSlots {
       }
       setRewardPopup(null);
     },
-    [universe, slots]
+    [universe, slots],
   );
 
   const closeRewardPopup = useCallback(() => setRewardPopup(null), []);
-  const closeCycleCompletePopup = useCallback(() => setCycleCompletePopup(false), []);
+  const closeCycleCompletePopup = useCallback(
+    () => setCycleCompletePopup(false),
+    [],
+  );
 
   return {
     slots,

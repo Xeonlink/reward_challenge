@@ -4,8 +4,6 @@
 
 <img width="665" height="450" alt="image" src="https://github.com/user-attachments/assets/3e350a47-33f1-4a66-9b9c-725c587e5568" />
 
-
-
 **배포 주소:** [polycube-practice.vercel.app](polycube-practice.vercel.app)
 
 ---
@@ -31,11 +29,13 @@
 30일 후 완성된 우주 → 특별 보상 → 새 우주 시작
 
 ### 타겟
+
 - 운세/타로에 관심 있는 20~30대
 - 매일 소소한 보상을 원하는 직장인/대학생
 - 기존 강남철학관 사용자
 
 ### 수익 모델
+
 - 외부 URL 체류 시간 기반 광고 수익
 - 강남철학관 유료 운세 업셀링
 - 별 조각 빠르게 모으기 인앱 구매 확장 가능
@@ -73,11 +73,11 @@ npm run dev
 
 ### URL 파라미터로 시간대 변경
 
-| URL | 시뮬레이션 |
-|-----|-----------|
+| URL              | 시뮬레이션  |
+| ---------------- | ----------- |
 | `/?test=morning` | 아침 시간대 |
-| `/?test=lunch` | 점심 시간대 |
-| `/?test=dinner` | 저녁 시간대 |
+| `/?test=lunch`   | 점심 시간대 |
+| `/?test=dinner`  | 저녁 시간대 |
 
 ### 콘솔에서 우주 성장 단계 테스트
 
@@ -85,44 +85,49 @@ npm run dev
 
 ```javascript
 // 2단계 테스트 (별자리 생성, 7~20개)
-localStorage.setItem('byulmoa_universe', JSON.stringify({totalStars: 15})); location.reload();
+localStorage.setItem("byulmoa_universe", JSON.stringify({ totalStars: 15 }));
+location.reload();
 
 // 3단계 테스트 (행성 등장, 21~40개)
-localStorage.setItem('byulmoa_universe', JSON.stringify({totalStars: 30})); location.reload();
+localStorage.setItem("byulmoa_universe", JSON.stringify({ totalStars: 30 }));
+location.reload();
 
 // 4단계 테스트 (밝은 보라+파티클, 41~70개)
-localStorage.setItem('byulmoa_universe', JSON.stringify({totalStars: 55})); location.reload();
+localStorage.setItem("byulmoa_universe", JSON.stringify({ totalStars: 55 }));
+location.reload();
 
 // 5단계 테스트 (금+보라 오로라, 71개+)
-localStorage.setItem('byulmoa_universe', JSON.stringify({totalStars: 80})); location.reload();
+localStorage.setItem("byulmoa_universe", JSON.stringify({ totalStars: 80 }));
+location.reload();
 
 // 초기화
-localStorage.setItem('byulmoa_universe', JSON.stringify({totalStars: 0})); location.reload();
+localStorage.setItem("byulmoa_universe", JSON.stringify({ totalStars: 0 }));
+location.reload();
 ```
 
 ---
 
 ## 슬롯 시간대
 
-| 슬롯 | 시간 | 보상 |
-|------|------|------|
-| 🌅 아침 | 00:00 ~ 11:59 | 별 조각 +1 |
-| ☀️ 점심 | 12:00 ~ 17:59 | 별 조각 +1 |
-| 🌙 저녁 | 18:00 ~ 23:59 | 별 조각 +1 |
-| ⭐ 보너스 | 3개 모두 완료 시 | 별 조각 +2 |
+| 슬롯        | 시간             | 보상       |
+| ----------- | ---------------- | ---------- |
+| 🌅 아침     | 00:00 ~ 11:59    | 별 조각 +1 |
+| ☀️ 점심     | 12:00 ~ 17:59    | 별 조각 +1 |
+| 🌙 저녁     | 18:00 ~ 23:59    | 별 조각 +1 |
+| ⭐ 보너스   | 3개 모두 완료 시 | 별 조각 +2 |
 | ✨ 추가기회 | 조건 충족 시 1회 | 별 조각 +1 |
 
 ---
 
 ## 우주 성장 단계
 
-| 별 조각 | 단계 | 우주 상태 |
-|---------|------|----------|
-| 0 ~ 6 | 1단계 | 텅 빈 어두운 우주 |
-| 7 ~ 20 | 2단계 | 파란 빛, 별자리 생성 |
-| 21 ~ 40 | 3단계 | 보라빛, 행성 등장 |
-| 41 ~ 70 | 4단계 | 밝은 보라 + 파티클 |
-| 71 + | 5단계 | 금 + 보라 오로라, 은하수 |
+| 별 조각 | 단계  | 우주 상태                |
+| ------- | ----- | ------------------------ |
+| 0 ~ 6   | 1단계 | 텅 빈 어두운 우주        |
+| 7 ~ 20  | 2단계 | 파란 빛, 별자리 생성     |
+| 21 ~ 40 | 3단계 | 보라빛, 행성 등장        |
+| 41 ~ 70 | 4단계 | 밝은 보라 + 파티클       |
+| 71 +    | 5단계 | 금 + 보라 오로라, 은하수 |
 
 30일 사이클 완료 시 별 조각 리셋 + 특별 보상 지급
 
@@ -130,13 +135,13 @@ localStorage.setItem('byulmoa_universe', JSON.stringify({totalStars: 0})); locat
 
 ## 추가기회 케이스
 
-| 케이스 | 아침 | 점심 | 저녁 |
-|--------|------|------|------|
-| 점심 완료 | 추가기회 | ✅ | — |
-| 점심+저녁 완료 | 추가기회 | ✅ | ✅ |
-| 저녁만 완료 | 🔒참여불가 | 추가기회 | ✅ |
-| 점심+저녁 완료 | 추가기회 | ✅ | ✅ |
-| 아침+저녁 완료 | ✅ | 추가기회 | ✅ |
+| 케이스         | 아침       | 점심     | 저녁 |
+| -------------- | ---------- | -------- | ---- |
+| 점심 완료      | 추가기회   | ✅       | —    |
+| 점심+저녁 완료 | 추가기회   | ✅       | ✅   |
+| 저녁만 완료    | 🔒참여불가 | 추가기회 | ✅   |
+| 점심+저녁 완료 | 추가기회   | ✅       | ✅   |
+| 아침+저녁 완료 | ✅         | 추가기회 | ✅   |
 
 추가기회 슬롯은 1회만 사용 가능합니다.
 

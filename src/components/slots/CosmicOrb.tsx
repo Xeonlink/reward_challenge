@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useRef, useEffect } from "react";
-import { getOrbStage, getCycleDay, type UniverseRecord } from "@/lib/slotLogic";
+import { getCycleDay, getOrbStage, type UniverseRecord } from "@/lib/slotLogic";
+import React, { useEffect, useRef } from "react";
 import { StarFragmentIcon } from "./SlotIcons";
 
 // ── CSS orb config ─────────────────────────────────────────────────────────────
@@ -84,7 +84,12 @@ const GOLDEN = 2.399963;
 // Orb radii by stage (half of css size)
 const ORB_R: Record<number, number> = { 1: 32, 2: 40, 3: 48, 4: 56, 5: 66 };
 
-interface StarData { finalX: number; finalY: number; born: number; size: number }
+interface StarData {
+  finalX: number;
+  finalY: number;
+  born: number;
+  size: number;
+}
 
 function starFinalPos(i: number) {
   const r = STAR_MIN_R + (Math.min(i, 149) / 149) * (STAR_MAX_R - STAR_MIN_R);
@@ -101,8 +106,11 @@ function starSize(i: number) {
 /** Pulsing core glow — stage-colored, visible around CSS orb edges */
 function drawCore(ctx: CanvasRenderingContext2D, ts: number, stage: number) {
   const cores: Record<number, [number, number, number]> = {
-    1: [80, 100, 200], 2: [90, 130, 230],
-    3: [155, 100, 230], 4: [200, 130, 245], 5: [255, 215, 80],
+    1: [80, 100, 200],
+    2: [90, 130, 230],
+    3: [155, 100, 230],
+    4: [200, 130, 245],
+    5: [255, 215, 80],
   };
   const [r, g, b] = cores[stage] ?? cores[5];
   const pulse = 0.38 + 0.18 * Math.sin(ts * 0.0017);
@@ -121,7 +129,7 @@ function drawNebula(ctx: CanvasRenderingContext2D, stage: number) {
     2: ["rgba(100,130,230,0.24)", "rgba(70,100,210,0.10)"],
     3: ["rgba(160,100,230,0.30)", "rgba(100,60,190,0.12)"],
     4: ["rgba(205,130,248,0.36)", "rgba(160,80,230,0.16)"],
-    5: ["rgba(255,200,80,0.28)",  "rgba(205,130,248,0.28)"],
+    5: ["rgba(255,200,80,0.28)", "rgba(205,130,248,0.28)"],
   };
   const [c1, c2] = p[stage] ?? p[2];
   const gr = ctx.createRadialGradient(CX, CY, 22, CX, CY, 132);
@@ -141,19 +149,19 @@ function drawMilkyWay(ctx: CanvasRenderingContext2D, ts: number) {
   // [half-height, R, G, B, base-alpha]
   const bands: [number, number, number, number, number][] = [
     [58, 255, 255, 255, 0.08],
-    [42, 160,  96, 255, 0.14],
-    [30,  64, 128, 255, 0.18],
+    [42, 160, 96, 255, 0.14],
+    [30, 64, 128, 255, 0.18],
     [20, 200, 160, 255, 0.22],
   ];
 
   for (const [halfH, r, g, b, baseA] of bands) {
     const a = baseA * (0.84 + 0.16 * Math.sin(ts * 0.0007 + halfH));
     const gr = ctx.createLinearGradient(-148, 0, 148, 0);
-    gr.addColorStop(0,    `rgba(${r},${g},${b},0)`);
-    gr.addColorStop(0.10, `rgba(${r},${g},${b},${(a * 0.55).toFixed(3)})`);
-    gr.addColorStop(0.5,  `rgba(${r},${g},${b},${a.toFixed(3)})`);
-    gr.addColorStop(0.90, `rgba(${r},${g},${b},${(a * 0.55).toFixed(3)})`);
-    gr.addColorStop(1,    `rgba(${r},${g},${b},0)`);
+    gr.addColorStop(0, `rgba(${r},${g},${b},0)`);
+    gr.addColorStop(0.1, `rgba(${r},${g},${b},${(a * 0.55).toFixed(3)})`);
+    gr.addColorStop(0.5, `rgba(${r},${g},${b},${a.toFixed(3)})`);
+    gr.addColorStop(0.9, `rgba(${r},${g},${b},${(a * 0.55).toFixed(3)})`);
+    gr.addColorStop(1, `rgba(${r},${g},${b},0)`);
     ctx.fillStyle = gr;
     ctx.fillRect(-148, -halfH, 296, halfH * 2);
   }
@@ -163,13 +171,13 @@ function drawMilkyWay(ctx: CanvasRenderingContext2D, ts: number) {
 /** Flowing aurora rings around the orb edge (stage 5) */
 function drawAurora(ctx: CanvasRenderingContext2D, ts: number, orbR: number) {
   const rings = [
-    { offset:  7, w: 4.5, color: "#ffe066", phase: 0      },
-    { offset: 13, w: 3.5, color: "#c084fc", phase: 2.094  },
-    { offset: 19, w: 2.5, color: "#60a0ff", phase: 4.189  },
+    { offset: 7, w: 4.5, color: "#ffe066", phase: 0 },
+    { offset: 13, w: 3.5, color: "#c084fc", phase: 2.094 },
+    { offset: 19, w: 2.5, color: "#60a0ff", phase: 4.189 },
   ];
   ctx.save();
   for (const ring of rings) {
-    const alpha = 0.28 + 0.20 * Math.sin(ts * 0.0016 + ring.phase);
+    const alpha = 0.28 + 0.2 * Math.sin(ts * 0.0016 + ring.phase);
     ctx.strokeStyle = ring.color;
     ctx.globalAlpha = alpha;
     ctx.lineWidth = ring.w;
@@ -184,9 +192,9 @@ function drawAurora(ctx: CanvasRenderingContext2D, ts: number, orbR: number) {
 
 /** Planet configs — [0]=large purple, [1]=medium teal, [2]=small orange */
 const PLANETS = [
-  { orbitR:  96, r: 10, color: "#a060ff", speed:  0.0009, phase: 0.0  },
-  { orbitR: 113, r:  7, color: "#30c0a0", speed: -0.0006, phase: 2.1  },
-  { orbitR: 127, r:  5, color: "#ff8840", speed:  0.0004, phase: 4.2  },
+  { orbitR: 96, r: 10, color: "#a060ff", speed: 0.0009, phase: 0.0 },
+  { orbitR: 113, r: 7, color: "#30c0a0", speed: -0.0006, phase: 2.1 },
+  { orbitR: 127, r: 5, color: "#ff8840", speed: 0.0004, phase: 4.2 },
 ];
 
 function drawPlanets(ctx: CanvasRenderingContext2D, ts: number, count: number) {
@@ -229,15 +237,19 @@ interface CosmicOrbProps {
   lastStarBornAt: number;
 }
 
-export function CosmicOrb({ universe, starsToday, lastStarBornAt }: CosmicOrbProps) {
+export function CosmicOrb({
+  universe,
+  starsToday,
+  lastStarBornAt,
+}: CosmicOrbProps) {
   const stage = getOrbStage(universe.totalStars);
   const cfg = ORB[stage];
-  const progress = Math.min(Math.round(universe.totalStars / 150 * 100), 100);
+  const progress = Math.min(Math.round((universe.totalStars / 150) * 100), 100);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const starsRef  = useRef<StarData[]>([]);
-  const stageRef  = useRef<number>(stage);
-  const animRef   = useRef<number>(0);
+  const starsRef = useRef<StarData[]>([]);
+  const stageRef = useRef<number>(stage);
+  const animRef = useRef<number>(0);
 
   // Sync stage ref every render (safe mutable ref, no re-render triggered)
   stageRef.current = stage;
@@ -329,7 +341,8 @@ export function CosmicOrb({ universe, starsToday, lastStarBornAt }: CosmicOrbPro
       {
         const stars = starsRef.current;
         const glowColor = s >= 5 ? "#FFD166" : "#C589E8";
-        const haloColor = s >= 5 ? "rgba(255,220,80,0.12)" : "rgba(197,137,232,0.12)";
+        const haloColor =
+          s >= 5 ? "rgba(255,220,80,0.12)" : "rgba(197,137,232,0.12)";
         ctx.save();
         ctx.shadowBlur = 9;
         ctx.shadowColor = glowColor;
@@ -369,7 +382,13 @@ export function CosmicOrb({ universe, starsToday, lastStarBornAt }: CosmicOrbPro
           ctx.shadowBlur = 20;
           ctx.shadowColor = "#FFD166";
           ctx.beginPath();
-          ctx.arc(CX + aD * Math.cos(aA), CY + aD * Math.sin(aA), Math.max(star.size * p, 0.5), 0, Math.PI * 2);
+          ctx.arc(
+            CX + aD * Math.cos(aA),
+            CY + aD * Math.sin(aA),
+            Math.max(star.size * p, 0.5),
+            0,
+            Math.PI * 2,
+          );
           ctx.fillStyle = "#FFE880";
           ctx.fill();
           ctx.restore();
@@ -383,19 +402,32 @@ export function CosmicOrb({ universe, starsToday, lastStarBornAt }: CosmicOrbPro
     return () => cancelAnimationFrame(animRef.current);
   }, []);
 
-  const wrapSize   = cfg.size + 40;
+  const wrapSize = cfg.size + 40;
   const wrapOffset = (W - wrapSize) / 2;
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px" }}>
-
-      <div style={{ fontSize: "0.7rem", fontWeight: "700", letterSpacing: "0.15em", textTransform: "uppercase", color: "#6070A8" }}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: "16px",
+      }}
+    >
+      <div
+        style={{
+          fontSize: "0.7rem",
+          fontWeight: "700",
+          letterSpacing: "0.15em",
+          textTransform: "uppercase",
+          color: "#6070A8",
+        }}
+      >
         우주 성장 현황
       </div>
 
       {/* ── Canvas + CSS orb ───────────────────────────────────────────────── */}
       <div style={{ position: "relative", width: W, height: H }}>
-
         {/* Canvas: core, nebula, milky way, aurora, planets, constellations, stars */}
         <canvas
           ref={canvasRef}
@@ -405,79 +437,273 @@ export function CosmicOrb({ universe, starsToday, lastStarBornAt }: CosmicOrbPro
         />
 
         {/* CSS orb (on top of canvas) */}
-        <div style={{ position: "absolute", top: wrapOffset, left: wrapOffset, width: wrapSize, height: wrapSize, display: "flex", alignItems: "center", justifyContent: "center" }}>
-
+        <div
+          style={{
+            position: "absolute",
+            top: wrapOffset,
+            left: wrapOffset,
+            width: wrapSize,
+            height: wrapSize,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
           {/* Ring (stage 3+) */}
           {stage >= 3 && (
-            <div style={{ position: "absolute", width: cfg.size + 28, height: cfg.size + 28, borderRadius: "50%", border: `1px solid ${cfg.ringColor}`, animation: "cosmicRing 8s linear infinite" }} />
+            <div
+              style={{
+                position: "absolute",
+                width: cfg.size + 28,
+                height: cfg.size + 28,
+                borderRadius: "50%",
+                border: `1px solid ${cfg.ringColor}`,
+                animation: "cosmicRing 8s linear infinite",
+              }}
+            />
           )}
           {/* Outer dashed ring (stage 4+) */}
           {stage >= 4 && (
-            <div style={{ position: "absolute", width: cfg.size + 16, height: cfg.size + 16, borderRadius: "50%", border: `1px dashed ${cfg.ringColor}`, opacity: 0.55, animation: "cosmicRing 12s linear infinite reverse" }} />
+            <div
+              style={{
+                position: "absolute",
+                width: cfg.size + 16,
+                height: cfg.size + 16,
+                borderRadius: "50%",
+                border: `1px dashed ${cfg.ringColor}`,
+                opacity: 0.55,
+                animation: "cosmicRing 12s linear infinite reverse",
+              }}
+            />
           )}
 
           {/* CSS particle 1 (stage 4+) */}
           {cfg.particleCount >= 1 && (
-            <div style={{ position: "absolute", width: cfg.size + 28, height: cfg.size + 28, borderRadius: "50%", animation: "spin 3.5s linear infinite" }}>
-              <div style={{ position: "absolute", top: "50%", left: "50%", marginTop: "-4px", marginLeft: `${(cfg.size + 28) / 2 - 4}px`, width: 8, height: 8, borderRadius: "50%", background: cfg.particleColor ?? "#C589E8", boxShadow: `0 0 12px ${cfg.particleColor ?? "#C589E8"}, 0 0 24px ${cfg.particleColor ?? "#C589E8"}55` }} />
+            <div
+              style={{
+                position: "absolute",
+                width: cfg.size + 28,
+                height: cfg.size + 28,
+                borderRadius: "50%",
+                animation: "spin 3.5s linear infinite",
+              }}
+            >
+              <div
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  marginTop: "-4px",
+                  marginLeft: `${(cfg.size + 28) / 2 - 4}px`,
+                  width: 8,
+                  height: 8,
+                  borderRadius: "50%",
+                  background: cfg.particleColor ?? "#C589E8",
+                  boxShadow: `0 0 12px ${cfg.particleColor ?? "#C589E8"}, 0 0 24px ${cfg.particleColor ?? "#C589E8"}55`,
+                }}
+              />
             </div>
           )}
           {/* CSS particle 2 (stage 5) */}
           {cfg.particleCount >= 2 && (
-            <div style={{ position: "absolute", width: cfg.size + 28, height: cfg.size + 28, borderRadius: "50%", animation: "spin 6s linear infinite reverse" }}>
-              <div style={{ position: "absolute", top: "50%", left: "50%", marginTop: "-3px", marginLeft: `${(cfg.size + 28) / 2 - 3}px`, width: 6, height: 6, borderRadius: "50%", background: "#C589E8", boxShadow: "0 0 10px #C589E8, 0 0 20px #C589E845" }} />
+            <div
+              style={{
+                position: "absolute",
+                width: cfg.size + 28,
+                height: cfg.size + 28,
+                borderRadius: "50%",
+                animation: "spin 6s linear infinite reverse",
+              }}
+            >
+              <div
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  marginTop: "-3px",
+                  marginLeft: `${(cfg.size + 28) / 2 - 3}px`,
+                  width: 6,
+                  height: 6,
+                  borderRadius: "50%",
+                  background: "#C589E8",
+                  boxShadow: "0 0 10px #C589E8, 0 0 20px #C589E845",
+                }}
+              />
             </div>
           )}
 
           {/* Orb body */}
-          <div style={{ width: cfg.size, height: cfg.size, borderRadius: "50%", background: cfg.bg, boxShadow: cfg.glow, animation: "orbFloat 5s ease-in-out infinite", position: "relative", flexShrink: 0 }}>
+          <div
+            style={{
+              width: cfg.size,
+              height: cfg.size,
+              borderRadius: "50%",
+              background: cfg.bg,
+              boxShadow: cfg.glow,
+              animation: "orbFloat 5s ease-in-out infinite",
+              position: "relative",
+              flexShrink: 0,
+            }}
+          >
             {/* Specular */}
-            <div style={{ position: "absolute", top: "16%", left: "20%", width: "30%", height: "22%", borderRadius: "50%", background: "rgba(255,255,255,0.22)", filter: "blur(5px)" }} />
+            <div
+              style={{
+                position: "absolute",
+                top: "16%",
+                left: "20%",
+                width: "30%",
+                height: "22%",
+                borderRadius: "50%",
+                background: "rgba(255,255,255,0.22)",
+                filter: "blur(5px)",
+              }}
+            />
             {/* Stage 5 aurora shimmer overlay */}
             {stage === 5 && (
-              <div style={{ position: "absolute", inset: 0, borderRadius: "50%", background: "linear-gradient(135deg, rgba(255,230,80,0.20), rgba(200,100,255,0.18), rgba(80,160,255,0.12))", backgroundSize: "200% 200%", animation: "auroraShift 2.5s ease infinite" }} />
+              <div
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  borderRadius: "50%",
+                  background:
+                    "linear-gradient(135deg, rgba(255,230,80,0.20), rgba(200,100,255,0.18), rgba(80,160,255,0.12))",
+                  backgroundSize: "200% 200%",
+                  animation: "auroraShift 2.5s ease infinite",
+                }}
+              />
             )}
           </div>
         </div>
       </div>
 
       {/* Stage label */}
-      <div style={{ fontSize: "0.82rem", fontWeight: "600", color: cfg.labelColor, letterSpacing: "0.02em" }}>
+      <div
+        style={{
+          fontSize: "0.82rem",
+          fontWeight: "600",
+          color: cfg.labelColor,
+          letterSpacing: "0.02em",
+        }}
+      >
         {cfg.label}
       </div>
 
       {/* Stats */}
-      <div style={{ display: "flex", alignItems: "center", gap: "20px", padding: "10px 20px", borderRadius: "9999px", background: "rgba(12,18,48,0.8)", border: "1px solid rgba(33,44,92,0.8)", backdropFilter: "blur(8px)" }}>
-        <Stat label="사이클" value={`Day ${getCycleDay(universe)}`} sub="/ 30" />
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "20px",
+          padding: "10px 20px",
+          borderRadius: "9999px",
+          background: "rgba(12,18,48,0.8)",
+          border: "1px solid rgba(33,44,92,0.8)",
+          backdropFilter: "blur(8px)",
+        }}
+      >
+        <Stat
+          label="사이클"
+          value={`Day ${getCycleDay(universe)}`}
+          sub="/ 30"
+        />
         <Divider />
-        <Stat label="별 조각" value={universe.totalStars.toString()} sub="개" icon={<StarFragmentIcon size={14} color="#FFD166" />} />
+        <Stat
+          label="별 조각"
+          value={universe.totalStars.toString()}
+          sub="개"
+          icon={<StarFragmentIcon size={14} color="#FFD166" />}
+        />
         <Divider />
         <Stat label="오늘" value={starsToday.toString()} sub="/ 5" />
       </div>
 
       {/* Progress bar */}
       <div style={{ width: "200px" }}>
-        <div style={{ width: "100%", height: "3px", borderRadius: "9999px", background: "rgba(33,44,92,0.6)", overflow: "hidden" }}>
-          <div style={{ height: "100%", width: `${progress}%`, background: stage >= 4 ? "linear-gradient(90deg, #7B8DE0, #C589E8, #FFD166)" : "linear-gradient(90deg, #7B8DE0, #C589E8)", borderRadius: "9999px", transition: "width 800ms cubic-bezier(0.34, 1.56, 0.64, 1)", boxShadow: stage >= 5 ? "0 0 10px rgba(255,209,102,0.7)" : "0 0 6px rgba(197,137,232,0.4)" }} />
+        <div
+          style={{
+            width: "100%",
+            height: "3px",
+            borderRadius: "9999px",
+            background: "rgba(33,44,92,0.6)",
+            overflow: "hidden",
+          }}
+        >
+          <div
+            style={{
+              height: "100%",
+              width: `${progress}%`,
+              background:
+                stage >= 4
+                  ? "linear-gradient(90deg, #7B8DE0, #C589E8, #FFD166)"
+                  : "linear-gradient(90deg, #7B8DE0, #C589E8)",
+              borderRadius: "9999px",
+              transition: "width 800ms cubic-bezier(0.34, 1.56, 0.64, 1)",
+              boxShadow:
+                stage >= 5
+                  ? "0 0 10px rgba(255,209,102,0.7)"
+                  : "0 0 6px rgba(197,137,232,0.4)",
+            }}
+          />
         </div>
-        <div style={{ display: "flex", justifyContent: "space-between", marginTop: "5px", fontSize: "0.6rem", color: "#3A4870" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            marginTop: "5px",
+            fontSize: "0.6rem",
+            color: "#3A4870",
+          }}
+        >
           <span>0</span>
           <span>30일 목표 150개</span>
           <span>150</span>
         </div>
       </div>
-
     </div>
   );
 }
 
-function Stat({ label, value, sub, icon }: { label: string; value: string; sub: string; icon?: React.ReactNode }) {
+function Stat({
+  label,
+  value,
+  sub,
+  icon,
+}: {
+  label: string;
+  value: string;
+  sub: string;
+  icon?: React.ReactNode;
+}) {
   return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "2px" }}>
-      <div style={{ fontSize: "0.6rem", color: "#6070A8", letterSpacing: "0.05em" }}>{label}</div>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: "2px",
+      }}
+    >
+      <div
+        style={{
+          fontSize: "0.6rem",
+          color: "#6070A8",
+          letterSpacing: "0.05em",
+        }}
+      >
+        {label}
+      </div>
       <div style={{ display: "flex", alignItems: "center", gap: "3px" }}>
         {icon}
-        <span style={{ fontSize: "0.875rem", fontWeight: "700", color: "#EBF0FF", fontFamily: "'Orbitron', sans-serif" }}>{value}</span>
+        <span
+          style={{
+            fontSize: "0.875rem",
+            fontWeight: "700",
+            color: "#EBF0FF",
+            fontFamily: "'Orbitron', sans-serif",
+          }}
+        >
+          {value}
+        </span>
         <span style={{ fontSize: "0.65rem", color: "#6070A8" }}>{sub}</span>
       </div>
     </div>
@@ -485,5 +711,7 @@ function Stat({ label, value, sub, icon }: { label: string; value: string; sub: 
 }
 
 function Divider() {
-  return <div style={{ width: 1, height: 24, background: "rgba(33,44,92,0.8)" }} />;
+  return (
+    <div style={{ width: 1, height: 24, background: "rgba(33,44,92,0.8)" }} />
+  );
 }

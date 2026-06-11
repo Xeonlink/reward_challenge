@@ -1,10 +1,10 @@
 "use client";
 
+import { SlotGrid } from "@/components/slots/SlotGrid";
+import { StarFragmentIcon } from "@/components/slots/SlotIcons";
+import { StarCanvas } from "@/components/slots/StarCanvas";
 import { useSearchParams } from "next/navigation";
 import { css } from "../../styled-system/css";
-import { SlotGrid } from "@/components/slots/SlotGrid";
-import { StarCanvas } from "@/components/slots/StarCanvas";
-import { StarFragmentIcon } from "@/components/slots/SlotIcons";
 
 export function SlotPageClient() {
   const searchParams = useSearchParams();
@@ -55,7 +55,12 @@ export function SlotPageClient() {
         })}
       >
         {/* 헤더 */}
-        <header className={css({ textAlign: "center", animation: "slideUp 0.7s ease" })}>
+        <header
+          className={css({
+            textAlign: "center",
+            animation: "slideUp 0.7s ease",
+          })}
+        >
           {/* 배지 */}
           <div
             style={{
@@ -97,7 +102,8 @@ export function SlotPageClient() {
           >
             <span
               style={{
-                background: "linear-gradient(135deg, #FFD166 0%, #C589E8 50%, #7B8DE0 100%)",
+                background:
+                  "linear-gradient(135deg, #FFD166 0%, #C589E8 50%, #7B8DE0 100%)",
                 backgroundClip: "text",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
@@ -131,8 +137,7 @@ export function SlotPageClient() {
             })}
           >
             매일 아침·점심·저녁 운세를 확인하고
-            <br />
-            별 조각을 모아 우주를 성장시켜요
+            <br />별 조각을 모아 우주를 성장시켜요
           </p>
         </header>
 
@@ -164,8 +169,8 @@ export function SlotPageClient() {
           <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
             {[
               { param: "morning", label: "아침 모드", color: "#F4A05A" },
-              { param: "lunch",   label: "점심 모드", color: "#50C8E8" },
-              { param: "dinner",  label: "저녁 모드", color: "#9B72CF" },
+              { param: "lunch", label: "점심 모드", color: "#50C8E8" },
+              { param: "dinner", label: "저녁 모드", color: "#9B72CF" },
             ].map(({ param, label, color }) => (
               <a
                 key={param}
@@ -178,8 +183,10 @@ export function SlotPageClient() {
                   textDecoration: "none",
                   transition: "all 200ms",
                   border: "1px solid",
-                  background: testParam === param ? `${color}18` : "transparent",
-                  borderColor: testParam === param ? `${color}55` : "rgba(33,44,92,0.8)",
+                  background:
+                    testParam === param ? `${color}18` : "transparent",
+                  borderColor:
+                    testParam === param ? `${color}55` : "rgba(33,44,92,0.8)",
                   color: testParam === param ? color : "#3A4870",
                 }}
               >

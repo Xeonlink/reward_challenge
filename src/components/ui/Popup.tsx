@@ -122,8 +122,8 @@ export const Popup: React.FC<PopupProps> = ({
       aria-label={typeof title === "string" ? title : "팝업"}
     >
       <div
-        ref={dialogRef}
         className={cx(dialogStyle, dialogSizes[size], className)}
+        ref={dialogRef}
         onClick={(e) => e.stopPropagation()}
       >
         {(title || showClose) && (
