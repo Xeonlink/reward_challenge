@@ -192,22 +192,31 @@ location.reload();
 ```
 src/
 ├── app/
-│   ├── layout.tsx          # 루트 레이아웃
-│   ├── page.tsx            # 메인 페이지
-│   ├── SlotPageClient.tsx  # 클라이언트 (useSearchParams)
-│   └── globals.css
+│   ├── layout.tsx
+│   ├── page.tsx
+│   ├── SlotPageClient.tsx
+│   └── loading.tsx
 ├── components/
+│   ├── cosmic-orb/
+│   │   ├── CosmicOrb.tsx
+│   │   ├── CosmicOrbStats.tsx
+│   │   ├── orbConfig.ts
+│   │   ├── useCosmicOrbCanvas.ts
+│   │   └── canvas/draw.ts
 │   ├── ui/
-│   │   ├── Button.tsx      # 재사용 버튼 (variant/size/loading/disabled)
-│   │   └── Popup.tsx       # 재사용 팝업
+│   │   ├── Button.tsx
+│   │   └── Popup.tsx
 │   └── slots/
-│       ├── SlotCard.tsx    # 슬롯 카드
-│       ├── SlotGrid.tsx    # 슬롯 전체 레이아웃
-│       ├── SlotPopup.tsx   # 슬롯 클릭 팝업
-│       ├── RewardPopup.tsx # 보상 결과 팝업
-│       └── CosmicOrb.tsx  # 우주 orb 캔버스
+│       ├── SlotGrid.tsx
+│       ├── SlotCardFrame.tsx
+│       ├── RewardPopup.tsx
+│       ├── cards/          # Morning/Lunch/Dinner/BonusSlotCard
+│       ├── popups/         # Fortune/BonusLocked 팝업
+│       └── sections/       # 진행률, 완료 배너, 범례
 ├── hooks/
-│   └── useSlots.ts         # 슬롯 상태 관리
+│   ├── useSlots.ts         # re-export
+│   └── slots/              # useUniverse, useCurrentTime, useFortuneVisit
 └── lib/
-    └── slotLogic.ts        # 비즈니스 로직
+    ├── slotLogic.ts        # re-export (하위 호환)
+    └── slots/              # 타입, 상태 계산, 보상, 설정
 ```
