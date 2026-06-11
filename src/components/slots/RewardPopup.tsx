@@ -61,7 +61,7 @@ export const RewardPopup: React.FC<RewardPopupProps> = ({
           }}
         >
           {success ? (
-            <StarFragmentIcon color="#FFD166" size={40} />
+            <StarFragmentIcon color="var(--colors-accent)" size={40} />
           ) : (
             <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
               <circle
@@ -103,20 +103,24 @@ export const RewardPopup: React.FC<RewardPopupProps> = ({
               fontWeight: "700",
               marginBottom: "6px",
             })}
-            style={{ color: success ? "#FFD166" : "#FF5C7A" }}
+            style={{
+              color: success ? "var(--colors-accent)" : "var(--colors-danger)",
+            }}
           >
             {success ? "별 조각 획득!" : "조건 미충족"}
           </div>
           <div
             className={css({
               fontSize: "0.82rem",
-              color: "var(--colors-brand-textMuted)",
+              color: "fg.muted",
               lineHeight: "1.6",
             })}
           >
             {success ? (
               <>
-                <span style={{ color: "#FFD166", fontWeight: "600" }}>
+                <span
+                  style={{ color: "var(--colors-accent)", fontWeight: "600" }}
+                >
                   {label} 운세
                 </span>
                 를 통해 별 조각을 모았어요.
@@ -148,7 +152,7 @@ export const RewardPopup: React.FC<RewardPopupProps> = ({
             <div
               className={css({
                 fontSize: "0.62rem",
-                color: "var(--colors-brand-textMuted)",
+                color: "fg.muted",
                 textTransform: "uppercase",
                 letterSpacing: "0.12em",
               })}
@@ -162,13 +166,13 @@ export const RewardPopup: React.FC<RewardPopupProps> = ({
                 gap: "8px",
               }}
             >
-              <StarFragmentIcon color="#FFD166" size={28} />
+              <StarFragmentIcon color="var(--colors-accent)" size={28} />
               <span
                 className={css({
                   fontSize: "2rem",
                   fontFamily: "var(--fonts-display)",
                   fontWeight: "900",
-                  color: "var(--colors-brand-gold)",
+                  color: "accent",
                 })}
               >
                 +1

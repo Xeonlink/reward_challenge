@@ -1,10 +1,12 @@
 "use client";
 
-import { heroZoneStyle, serviceGridStyle } from "@/app/_styles/shellStyles";
+import { Text } from "@/components/ui/Text";
+import { TimeBadge } from "@/components/ui/TimeBadge";
 import { useSlots } from "@/hooks/useSlots";
 import { starsFromDay } from "@/lib/slotLogic";
 import { css } from "@/styled/css";
 import React from "react";
+import { Button } from "../ui/Button";
 import { Popup } from "../ui/Popup";
 import { CosmicOrb } from "./CosmicOrb";
 import { RewardPopup } from "./RewardPopup";
@@ -12,10 +14,77 @@ import { SlotCard } from "./SlotCard";
 import { SlotPopup } from "./SlotPopup";
 
 const TIME_LABELS: Record<string, { label: string; color: string }> = {
-  morning: { label: "아침", color: "#F4A05A" },
-  lunch: { label: "점심", color: "#50C8E8" },
-  dinner: { label: "저녁", color: "#9B72CF" },
+  morning: { label: "아침", color: "var(--colors-slot-morning)" },
+  lunch: { label: "점심", color: "var(--colors-slot-lunch)" },
+  dinner: { label: "저녁", color: "var(--colors-slot-dinner)" },
 };
+
+const rootStyle = css({
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  gap: "36px",
+  width: "100%",
+});
+
+const heroZoneStyle = css({
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  gap: "20px",
+  width: "100%",
+});
+
+const serviceGridStyle = css({
+  display: "grid",
+  gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+  gap: "12px",
+  width: "100%",
+});
+
+const progressWrapStyle = css({
+  width: "100%",
+  maxWidth: "380px",
+  display: "flex",
+  flexDirection: "column",
+  gap: "10px",
+});
+
+const progressHeaderStyle = css({
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+});
+
+const progressTrackStyle = css({
+  width: "100%",
+  height: "5px",
+  borderRadius: "full",
+  background: "color-mix(in srgb, var(--colors-border) 50%, transparent)",
+  overflow: "hidden",
+});
+
+const completeBannerStyle = css({
+  padding: "16px 28px",
+  borderRadius: "lg",
+  border: "1px solid",
+  borderColor: "color-mix(in srgb, var(--colors-accent) 25%, transparent)",
+  background: "color-mix(in srgb, var(--colors-accent) 5%, transparent)",
+  textAlign: "center",
+  animation: "slideUp 0.5s ease",
+});
+
+const legendStyle = css({
+  display: "flex",
+  gap: "18px",
+  flexWrap: "wrap",
+  justifyContent: "center",
+  padding: "14px 22px",
+  borderRadius: "16px",
+  background: "color-mix(in srgb, var(--colors-surface) 50%, transparent)",
+  border: "1px solid",
+  borderColor: "color-mix(in srgb, var(--colors-border) 70%, transparent)",
+});
 
 interface SlotGridProps {
   testParam?: string | null;
@@ -46,15 +115,7 @@ export const SlotGrid: React.FC<SlotGridProps> = ({ testParam }) => {
   const t = TIME_LABELS[currentTime];
 
   return (
-    <div
-      className={css({
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        gap: "36px",
-        width: "100%",
-      })}
-    >
+    <div className={rootStyle}>
       <div className={heroZoneStyle}>
         <CosmicOrb
           universe={universe}
@@ -62,63 +123,13 @@ export const SlotGrid: React.FC<SlotGridProps> = ({ testParam }) => {
           lastStarBornAt={lastStarBornAt}
         />
 
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "10px",
-            padding: "8px 18px",
-            borderRadius: "9999px",
-            border: "1px solid rgba(33,44,92,0.7)",
-            background: "rgba(12,18,48,0.7)",
-            backdropFilter: "blur(8px)",
-          }}
-        >
-          <div
-            style={{
-              width: 7,
-              height: 7,
-              borderRadius: "50%",
-              background: t?.color,
-              boxShadow: `0 0 6px ${t?.color}`,
-              animation: "pulse 2s ease infinite",
-            }}
+        {t ? (
+          <TimeBadge
+            slotColor={t.color}
+            label={t.label}
+            testMode={Boolean(testParam)}
           />
-          <span
-            style={{
-              fontSize: "0.75rem",
-              color: "#6070A8",
-              fontFamily: "'JetBrains Mono', monospace",
-            }}
-          >
-            현재 시간대:
-          </span>
-          <span
-            style={{
-              fontSize: "0.82rem",
-              fontWeight: "700",
-              color: t?.color,
-              fontFamily: "'Orbitron', sans-serif",
-            }}
-          >
-            {t?.label}
-          </span>
-          {testParam ? (
-            <span
-              style={{
-                fontSize: "0.62rem",
-                padding: "2px 8px",
-                borderRadius: "9999px",
-                background: "rgba(232,111,168,0.12)",
-                border: "1px solid rgba(232,111,168,0.3)",
-                color: "#F4A0C8",
-                fontWeight: "600",
-              }}
-            >
-              TEST
-            </span>
-          ) : null}
-        </div>
+        ) : null}
       </div>
 
       <div className={serviceGridStyle}>
@@ -134,146 +145,108 @@ export const SlotGrid: React.FC<SlotGridProps> = ({ testParam }) => {
         ))}
       </div>
 
-      {/* 오늘의 진행 현황 */}
-      <div
-        style={{
-          width: "100%",
-          maxWidth: "380px",
-          display: "flex",
-          flexDirection: "column",
-          gap: "10px",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <span style={{ fontSize: "0.72rem", color: "#6070A8" }}>
+      <div className={progressWrapStyle}>
+        <div className={progressHeaderStyle}>
+          <Text className={css({ fontSize: "0.72rem" })} variant="muted">
             오늘의 별 조각
-          </span>
+          </Text>
           <span
-            style={{
+            className={css({
               fontSize: "0.72rem",
               fontWeight: "700",
-              fontFamily: "'Orbitron', sans-serif",
-              color: starsToday >= 5 ? "#FFD166" : "#A8B4F0",
-            }}
+              fontFamily: "display",
+              color: starsToday >= 5 ? "accent" : "nebula.light",
+            })}
           >
             {starsToday} / 5
           </span>
         </div>
-        <div
-          style={{
-            width: "100%",
-            height: "5px",
-            borderRadius: "9999px",
-            background: "rgba(33,44,92,0.5)",
-            overflow: "hidden",
-          }}
-        >
+        <div className={progressTrackStyle}>
           <div
-            style={{
+            className={css({
               height: "100%",
+              borderRadius: "full",
+              transition: "width 700ms",
+              transitionTimingFunction: "spring",
+            })}
+            style={{
               width: `${(starsToday / 5) * 100}%`,
               background:
                 starsToday >= 5
-                  ? "linear-gradient(90deg, #FFD166, #C589E8, #FFD166)"
-                  : "linear-gradient(90deg, #7B8DE0, #C589E8)",
+                  ? "linear-gradient(90deg, var(--colors-accent), var(--colors-cosmic), var(--colors-accent))"
+                  : "linear-gradient(90deg, var(--colors-nebula), var(--colors-cosmic))",
               backgroundSize: starsToday >= 5 ? "200% auto" : "auto",
               animation:
                 starsToday >= 5 ? "shimmer 2s linear infinite" : undefined,
-              borderRadius: "9999px",
-              transition: "width 700ms cubic-bezier(0.34, 1.56, 0.64, 1)",
               boxShadow:
                 starsToday >= 5
-                  ? "0 0 10px rgba(255,209,102,0.6)"
-                  : "0 0 6px rgba(123,141,224,0.4)",
+                  ? "0 0 10px color-mix(in srgb, var(--colors-accent) 60%, transparent)"
+                  : "0 0 6px color-mix(in srgb, var(--colors-nebula) 40%, transparent)",
             }}
           />
         </div>
       </div>
 
-      {/* 모두 완료 메시지 */}
-      {allCompleted && (
-        <div
-          style={{
-            padding: "16px 28px",
-            borderRadius: "20px",
-            border: "1px solid rgba(255,209,102,0.25)",
-            background: "rgba(255,209,102,0.05)",
-            textAlign: "center",
-            animation: "slideUp 0.5s ease",
-          }}
-        >
-          <div style={{ fontSize: "1.4rem", marginBottom: "6px" }}>✨</div>
-          <div
-            style={{
-              fontFamily: "'Orbitron', sans-serif",
+      {allCompleted ? (
+        <div className={completeBannerStyle}>
+          <div className={css({ fontSize: "1.4rem", marginBottom: "6px" })}>
+            ✨
+          </div>
+          <Text
+            className={css({
+              fontFamily: "display",
               fontSize: "0.82rem",
-              color: "#FFD166",
+              color: "accent",
               fontWeight: "700",
-            }}
+            })}
           >
             오늘의 운세를 모두 확인했어요!
-          </div>
-          {!todayRecord.bonus && (
-            <div
-              style={{
-                fontSize: "0.72rem",
-                color: "#6070A8",
-                marginTop: "4px",
-              }}
+          </Text>
+          {!todayRecord.bonus ? (
+            <Text
+              className={css({ fontSize: "0.72rem", marginTop: "4px" })}
+              variant="muted"
             >
               별 보너스 슬롯이 해제되었어요
-            </div>
-          )}
+            </Text>
+          ) : null}
         </div>
-      )}
+      ) : null}
 
-      {/* 범례 */}
-      <div
-        style={{
-          display: "flex",
-          gap: "18px",
-          flexWrap: "wrap",
-          justifyContent: "center",
-          padding: "14px 22px",
-          borderRadius: "16px",
-          background: "rgba(12,18,48,0.5)",
-          border: "1px solid rgba(21,30,72,0.7)",
-        }}
-      >
+      <div className={legendStyle}>
         {[
-          { color: "#9B72CF", label: "참여 가능" },
-          { color: "#5CE8A0", label: "수령 완료" },
-          { color: "#E86FA8", label: "추가 기회" },
-          { color: "#2A3060", label: "참여 불가" },
+          { color: "var(--colors-slot-dinner)", label: "참여 가능" },
+          { color: "var(--colors-success)", label: "수령 완료" },
+          { color: "var(--colors-slot-bonus)", label: "추가 기회" },
+          { color: "var(--colors-border)", label: "참여 불가" },
         ].map(({ color, label }) => (
           <div
+            className={css({
+              display: "flex",
+              alignItems: "center",
+              gap: "6px",
+            })}
             key={label}
-            style={{ display: "flex", alignItems: "center", gap: "6px" }}
           >
             <div
-              style={{
-                width: 8,
-                height: 8,
+              className={css({
+                width: "8px",
+                height: "8px",
                 borderRadius: "50%",
+              })}
+              style={{
                 background: color,
                 boxShadow: `0 0 4px ${color}`,
               }}
             />
-            <span style={{ fontSize: "0.68rem", color: "#6070A8" }}>
+            <Text className={css({ fontSize: "0.68rem" })} variant="dim">
               {label}
-            </span>
+            </Text>
           </div>
         ))}
       </div>
 
-      {/* 슬롯 팝업 */}
-      {activePopup && activeSlotData && (
+      {activePopup && activeSlotData ? (
         <SlotPopup
           slotKey={activePopup}
           isExtra={activeSlotData.isExtra}
@@ -281,70 +254,57 @@ export const SlotGrid: React.FC<SlotGridProps> = ({ testParam }) => {
           onClose={closePopup}
           onExternalVisit={handleExternalVisit}
         />
-      )}
+      ) : null}
 
-      {/* 보상 팝업 — handleRewardClaim이 completion 업데이트 + popup 닫기 처리 */}
-      {rewardPopup && (
+      {rewardPopup ? (
         <RewardPopup
           slotKey={rewardPopup.key}
           success={rewardPopup.success}
           open
           onClaim={handleRewardClaim}
         />
-      )}
+      ) : null}
 
-      {/* 30일 사이클 완료 팝업 */}
       <Popup
         open={cycleCompletePopup}
         onClose={closeCycleCompletePopup}
         size="sm"
         title={
-          <span
-            style={{ color: "#FFD166", fontFamily: "'Orbitron', sans-serif" }}
+          <Text
+            className={css({
+              color: "accent",
+              fontFamily: "display",
+              fontSize: "1.125rem",
+              fontWeight: "700",
+            })}
           >
             우주가 완성되었습니다!
-          </span>
+          </Text>
         }
       >
-        <div style={{ textAlign: "center", padding: "8px 0 4px" }}>
-          <div style={{ fontSize: "2.4rem", marginBottom: "14px" }}>✨</div>
-          <div
-            style={{
+        <div className={css({ textAlign: "center", padding: "8px 0 4px" })}>
+          <div className={css({ fontSize: "2.4rem", marginBottom: "14px" })}>
+            ✨
+          </div>
+          <Text
+            className={css({
               fontSize: "0.88rem",
-              color: "#EBF0FF",
               lineHeight: 1.7,
               marginBottom: "8px",
-            }}
+            })}
           >
             30일간의 여정을 완주했어요.
             <br />별 조각이 새롭게 초기화됩니다.
-          </div>
-          <div
-            style={{
-              fontSize: "0.75rem",
-              color: "#6070A8",
-              marginBottom: "22px",
-            }}
+          </Text>
+          <Text
+            className={css({ fontSize: "0.75rem", marginBottom: "22px" })}
+            variant="muted"
           >
             새로운 여정을 시작하세요
-          </div>
-          <button
-            onClick={closeCycleCompletePopup}
-            style={{
-              padding: "10px 32px",
-              borderRadius: "9999px",
-              background: "linear-gradient(135deg, #FFD166, #C589E8)",
-              border: "none",
-              color: "#07091A",
-              fontFamily: "'Orbitron', sans-serif",
-              fontSize: "0.78rem",
-              fontWeight: "700",
-              cursor: "pointer",
-              letterSpacing: "0.06em",
-            }}
-          >
+          </Text>
+          <Button variant="gold" size="sm" onClick={closeCycleCompletePopup}>
             새 여정 시작
-          </button>
+          </Button>
         </div>
       </Popup>
     </div>
