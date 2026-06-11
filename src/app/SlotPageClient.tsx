@@ -3,12 +3,14 @@
 import { SlotGrid } from "@/components/slots/SlotGrid";
 import { StarFragmentIcon } from "@/components/slots/SlotIcons";
 import { StarCanvas } from "@/components/slots/StarCanvas";
-import { useSearchParams } from "next/navigation";
 import { css } from "../../styled-system/css";
 
-export function SlotPageClient() {
-  const searchParams = useSearchParams();
-  const testParam = searchParams.get("test");
+type Props = {
+  testParam?: string;
+};
+
+export function SlotPageClient(props: Props) {
+  const { testParam } = props;
 
   return (
     <main
