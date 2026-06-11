@@ -1,5 +1,7 @@
 import { defineConfig } from "@pandacss/dev";
 
+const colorVar = (name: string) => ({ value: `var(--colors-${name})` });
+
 export default defineConfig({
   preflight: true,
   include: ["./src/**/*.{js,jsx,ts,tsx}", "./pages/**/*.{js,jsx,ts,tsx}"],
@@ -8,49 +10,44 @@ export default defineConfig({
     extend: {
       tokens: {
         colors: {
-          brand: {
-            // Soft Cosmic (시안B) 배경
-            bg: { value: "#07091A" },
-            surface: { value: "#0C1230" },
-            surfaceHigh: { value: "#131A3E" },
-            border: { value: "#212C5C" },
-            borderBright: { value: "#3A4880" },
-
-            // 텍스트
-            text: { value: "#EBF0FF" },
-            textMuted: { value: "#6070A8" },
-            textDim: { value: "#3A4870" },
-
-            // 별 골드 (소프트)
-            gold: { value: "#FFD166" },
-            goldLight: { value: "#FFE8A0" },
-            goldDark: { value: "#CC9933" },
-
-            // 성운 액센트
-            nebula: { value: "#7B8DE0" },
-            nebulaLight: { value: "#A8B4F0" },
-            cosmic: { value: "#C589E8" },
-            cosmicLight: { value: "#DEB0F8" },
-
-            // 슬롯 색상
-            morning: { value: "#F4A05A" },
-            morningLight: { value: "#FFCB8A" },
-            lunch: { value: "#50C8E8" },
-            lunchLight: { value: "#8DDFF5" },
-            dinner: { value: "#9B72CF" },
-            dinnerLight: { value: "#C3A4EA" },
-            bonus: { value: "#E86FA8" },
-            bonusLight: { value: "#F4A0C8" },
-
-            // 상태
-            success: { value: "#5CE8A0" },
-            danger: { value: "#FF5C7A" },
-
-            // 하위 호환성 유지
-            amber: { value: "#F4A05A" },
-            surfaceHover: { value: "#1A2248" },
+          bg: colorVar("bg"),
+          fg: {
+            DEFAULT: colorVar("fg"),
+            muted: colorVar("fg-muted"),
+            dim: colorVar("fg-dim"),
+          },
+          surface: {
+            DEFAULT: colorVar("surface"),
+            high: colorVar("surface-high"),
+            hover: colorVar("surface-hover"),
+          },
+          border: {
+            DEFAULT: colorVar("border"),
+            bright: colorVar("border-bright"),
+          },
+          accent: {
+            DEFAULT: colorVar("accent"),
+            light: colorVar("accent-light"),
+            dark: colorVar("accent-dark"),
+          },
+          footer: colorVar("footer"),
+          nebula: {
+            DEFAULT: colorVar("nebula"),
+            light: colorVar("nebula-light"),
+          },
+          cosmic: {
+            DEFAULT: colorVar("cosmic"),
+            light: colorVar("cosmic-light"),
           },
           slot: {
+            morning: colorVar("slot-morning"),
+            morningLight: colorVar("slot-morning-light"),
+            lunch: colorVar("slot-lunch"),
+            lunchLight: colorVar("slot-lunch-light"),
+            dinner: colorVar("slot-dinner"),
+            dinnerLight: colorVar("slot-dinner-light"),
+            bonus: colorVar("slot-bonus"),
+            bonusLight: colorVar("slot-bonus-light"),
             inactive: { value: "#0C1230" },
             inactiveBorder: { value: "#1A2348" },
             active: { value: "#131A3E" },
@@ -59,11 +56,15 @@ export default defineConfig({
             extra: { value: "#1A1038" },
             extraBorder: { value: "#E86FA8" },
           },
+          success: colorVar("success"),
+          danger: colorVar("danger"),
         },
         fonts: {
-          display: { value: "'Orbitron', sans-serif" },
-          body: { value: "'DM Sans', 'Noto Sans KR', sans-serif" },
-          mono: { value: "'JetBrains Mono', monospace" },
+          display: { value: "var(--font-display), sans-serif" },
+          body: {
+            value: "var(--font-body), var(--font-body-kr), sans-serif",
+          },
+          mono: { value: "var(--font-mono), monospace" },
         },
         fontSizes: {
           "2xs": { value: "0.625rem" },
@@ -196,6 +197,10 @@ export default defineConfig({
           "0%": { backgroundPosition: "0% 50%" },
           "50%": { backgroundPosition: "100% 50%" },
           "100%": { backgroundPosition: "0% 50%" },
+        },
+        nebulaGlow: {
+          "0%, 100%": { opacity: "0.06" },
+          "50%": { opacity: "0.12" },
         },
       },
     },
