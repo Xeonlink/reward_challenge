@@ -573,8 +573,6 @@ export function CosmicOrb({
 
   return (
     <div className={orbRoot}>
-      <Text variant="sectionLabel">우주 성장 현황</Text>
-
       <div className={canvasWrap}>
         <canvas className={canvasEl} ref={canvasRef} width={W} height={H} />
 
