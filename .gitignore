@@ -7,3 +7,4 @@ dist
 .panda
 .DS_Store
 styled-system
+.cursor
