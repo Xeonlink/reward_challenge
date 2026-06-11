@@ -1,7 +1,9 @@
+import { css } from "@/styled/css";
+
 export default function Loading() {
   return (
     <div
-      style={{
+      className={css({
         minHeight: "100vh",
         display: "flex",
         alignItems: "center",
@@ -11,7 +13,7 @@ export default function Loading() {
         fontFamily: "'Orbitron', sans-serif",
         fontSize: "1.1rem",
         letterSpacing: "0.2em",
-      }}
+      })}
     >
       별모아
     </div>

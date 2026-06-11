@@ -1,5 +1,6 @@
 "use client";
 
+import { css } from "@/styled/css";
 import { useEffect, useRef } from "react";
 
 interface Star {
@@ -19,22 +20,33 @@ const BIRTH_FADE = 700; // ms per-star fade-in
 
 export function StarCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const rafRef = useRef<number>(0);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    let raf: number;
-    const startedAt = performance.now();
+    const canvasEl = canvasRef.current;
+    if (!canvasEl) return;
 
     const resize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      canvasEl.width = window.innerWidth;
+      canvasEl.height = window.innerHeight;
     };
+
     resize();
     window.addEventListener("resize", resize);
+
+    return () => {
+      window.removeEventListener("resize", resize);
+    };
+  }, []);
+
+  useEffect(() => {
+    const canvasEl = canvasRef.current;
+    if (!canvasEl) return;
+
+    const startedAt = performance.now();
+
+    const ctx = canvasEl.getContext("2d");
+    if (!ctx) return;
 
     // Build star list
     const stars: Star[] = Array.from({ length: STAR_COUNT }, (_, i) => {
@@ -55,7 +67,7 @@ export function StarCanvas() {
 
     const draw = (now: number) => {
       const elapsed = now - startedAt;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.clearRect(0, 0, canvasEl.width, canvasEl.height);
 
       for (const s of stars) {
         if (elapsed < s.birthAt) continue;
@@ -80,27 +92,24 @@ export function StarCanvas() {
         ctx.restore();
       }
 
-      raf = requestAnimationFrame(draw);
+      rafRef.current = requestAnimationFrame(draw);
     };
 
-    raf = requestAnimationFrame(draw);
+    rafRef.current = requestAnimationFrame(draw);
     return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener("resize", resize);
+      cancelAnimationFrame(rafRef.current);
     };
   }, []);
 
   return (
     <canvas
-      ref={canvasRef}
-      style={{
+      className={css({
         position: "fixed",
         inset: 0,
-        width: "100%",
-        height: "100%",
         zIndex: 0,
         pointerEvents: "none",
-      }}
+      })}
+      ref={canvasRef}
     />
   );
 }
