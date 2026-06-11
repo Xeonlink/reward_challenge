@@ -66,6 +66,7 @@ export default function Layout(props: LayoutProps<"/">) {
           className={css({
             marginX: "auto",
             maxWidth: "lg",
+            paddingX: { base: "4", md: "6" },
           })}
         >
           <header
@@ -104,24 +105,14 @@ export default function Layout(props: LayoutProps<"/">) {
             </p>
           </header>
 
-          <main
-            className={css({
-              // display: "flex",
-              // flexDirection: "column",
-              // alignItems: "center",
-              // gap: "2.875rem",
-              // width: "100%",
-              // paddingTop: "1.375rem",
-            })}
-          >
-            {children}
-          </main>
+          <main>{children}</main>
 
           <footer
             className={css({
               textAlign: "center",
               color: "fg.muted",
               marginY: "8",
+              fontSize: "sm",
             })}
           >
             별모아 — 매일의 운세와 우주 성장 · 30일 사이클 &copy; 2026
