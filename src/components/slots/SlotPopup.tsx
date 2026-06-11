@@ -1,8 +1,8 @@
 "use client";
 
 import type { SlotKey } from "@/lib/slotLogic";
+import { css } from "@/styled/css";
 import React, { useCallback } from "react";
-import { css } from "../../../styled-system/css";
 import { Button } from "../ui/Button";
 import { Popup } from "../ui/Popup";
 import {

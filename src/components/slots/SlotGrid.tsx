@@ -2,8 +2,8 @@
 
 import { useSlots } from "@/hooks/useSlots";
 import { starsFromDay } from "@/lib/slotLogic";
+import { css } from "@/styled/css";
 import React from "react";
-import { css } from "../../../styled-system/css";
 import { Popup } from "../ui/Popup";
 import { CosmicOrb } from "./CosmicOrb";
 import { RewardPopup } from "./RewardPopup";

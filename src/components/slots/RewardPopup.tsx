@@ -2,8 +2,8 @@
 
 import type { SlotKey } from "@/lib/slotLogic";
 import { getTimeOfDayLabel } from "@/lib/slotLogic";
+import { css } from "@/styled/css";
 import React from "react";
-import { css } from "../../../styled-system/css";
 import { Button } from "../ui/Button";
 import { Popup } from "../ui/Popup";
 import { StarFragmentIcon } from "./SlotIcons";
