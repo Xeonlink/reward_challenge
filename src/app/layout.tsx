@@ -35,40 +35,23 @@ const mono = JetBrains_Mono({
   variable: "--font-mono",
 });
 
-const shellColumnStyle = css({
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-});
-
 const siteHeaderStyle = css({
   position: "relative",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  gap: "8px",
-  height: "56px",
+  gap: "0.5rem",
+  height: "4rem",
   paddingTop: "env(safe-area-inset-top, 0px)",
   flexShrink: 0,
 });
 
-const shellContentStyle = css({
-  position: "relative",
-  width: "100%",
-  maxWidth: "520px",
-  margin: "0 auto",
-  padding: "0 16px 64px",
-  flex: 1,
-  display: "flex",
-  flexDirection: "column",
-});
-
 const siteFooterStyle = css({
-  fontSize: "0.65rem",
+  fontSize: "0.625rem",
   color: "footer",
   textAlign: "center",
   letterSpacing: "0.06em",
-  marginTop: "40px",
+  marginTop: "2.875rem",
   paddingBottom: "env(safe-area-inset-bottom, 0px)",
 });
 
@@ -94,19 +77,16 @@ export default function Layout(props: LayoutProps<"/">) {
     >
       <body>
         <StarCanvas />
-        <div className={shellColumnStyle}>
-          <header className={siteHeaderStyle}>
-            <StarFragmentIcon color="var(--colors-accent)" size={18} />
-            <Text variant="brand">별모아</Text>
-          </header>
+        <header className={siteHeaderStyle}>
+          <StarFragmentIcon color="var(--colors-accent)" size={18} />
+          <Text variant="brand">별모아</Text>
+        </header>
 
-          <div className={shellContentStyle}>
-            {children}
-            <footer className={siteFooterStyle}>
-              별모아 — 매일의 운세와 우주 성장 · 30일 사이클 &copy; 2026
-            </footer>
-          </div>
-        </div>
+        {children}
+
+        <footer className={siteFooterStyle}>
+          별모아 — 매일의 운세와 우주 성장 · 30일 사이클 &copy; 2026
+        </footer>
       </body>
     </html>
   );
