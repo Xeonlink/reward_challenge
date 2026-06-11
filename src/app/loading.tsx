@@ -1,55 +1,71 @@
-import {
-  cardGridSkeletonStyle,
-  cardSkeletonStyle,
-  heroBadgeSkeletonStyle,
-  heroDescLine2SkeletonStyle,
-  heroDescSkeletonStyle,
-  heroSkeletonStyle,
-  heroSubtitleSkeletonStyle,
-  heroTitleSkeletonStyle,
-  orbSkeletonStyle,
-  pageSectionsStyle,
-  progressBarSkeletonStyle,
-  progressLabelSkeletonStyle,
-  progressSkeletonStyle,
-  skeletonPulseStyle,
-  timeBadgeSkeletonStyle,
-} from "@/app/_styles/shellStyles";
-import { css, cx } from "@/styled/css";
+import { Skeleton } from "@/components/ui/Skeleton";
+import { css } from "@/styled/css";
+
+const pageSectionsStyle = css({
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  gap: "40px",
+  width: "100%",
+  paddingTop: "20px",
+});
+
+const heroSkeletonStyle = css({
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  gap: "14px",
+  width: "100%",
+});
+
+const orbZoneStyle = css({
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  gap: "20px",
+  width: "100%",
+});
+
+const cardGridStyle = css({
+  display: "grid",
+  gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+  gap: "12px",
+  width: "100%",
+});
+
+const progressStyle = css({
+  width: "100%",
+  maxWidth: "380px",
+  display: "flex",
+  flexDirection: "column",
+  gap: "10px",
+});
 
 export default function Loading() {
   return (
     <div className={pageSectionsStyle} aria-hidden="true">
       <div className={heroSkeletonStyle}>
-        <div className={cx(skeletonPulseStyle, heroBadgeSkeletonStyle)} />
-        <div className={cx(skeletonPulseStyle, heroTitleSkeletonStyle)} />
-        <div className={cx(skeletonPulseStyle, heroSubtitleSkeletonStyle)} />
-        <div className={cx(skeletonPulseStyle, heroDescSkeletonStyle)} />
-        <div className={cx(skeletonPulseStyle, heroDescLine2SkeletonStyle)} />
+        <Skeleton variant="badge" />
+        <Skeleton variant="title" />
+        <Skeleton variant="subtitle" />
+        <Skeleton variant="line" />
+        <Skeleton variant="lineShort" />
       </div>
 
-      <div
-        className={css({
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: "20px",
-          width: "100%",
-        })}
-      >
-        <div className={cx(skeletonPulseStyle, orbSkeletonStyle)} />
-        <div className={cx(skeletonPulseStyle, timeBadgeSkeletonStyle)} />
+      <div className={orbZoneStyle}>
+        <Skeleton variant="orb" />
+        <Skeleton variant="timeBadge" />
       </div>
 
-      <div className={cardGridSkeletonStyle}>
+      <div className={cardGridStyle}>
         {Array.from({ length: 4 }).map((_, i) => (
-          <div className={cx(skeletonPulseStyle, cardSkeletonStyle)} key={i} />
+          <Skeleton variant="card" key={i} />
         ))}
       </div>
 
-      <div className={progressSkeletonStyle}>
-        <div className={cx(skeletonPulseStyle, progressLabelSkeletonStyle)} />
-        <div className={cx(skeletonPulseStyle, progressBarSkeletonStyle)} />
+      <div className={progressStyle}>
+        <Skeleton variant="progressLabel" />
+        <Skeleton variant="progressBar" />
       </div>
     </div>
   );

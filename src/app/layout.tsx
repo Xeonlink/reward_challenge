@@ -1,13 +1,76 @@
-import {
-  shellContentStyle,
-  siteFooterStyle,
-  siteHeaderStyle,
-} from "@/app/_styles/shellStyles";
 import { StarFragmentIcon } from "@/components/slots/SlotIcons";
 import { StarCanvas } from "@/components/slots/StarCanvas";
-import { css } from "@/styled/css";
+import { Text } from "@/components/ui/Text";
+import { css, cx } from "@/styled/css";
 import type { Metadata } from "next";
+import {
+  DM_Sans,
+  JetBrains_Mono,
+  Noto_Sans_KR,
+  Orbitron,
+} from "next/font/google";
 import "./globals.css";
+
+const display = Orbitron({
+  subsets: ["latin"],
+  weight: ["400", "600", "700", "900"],
+  variable: "--font-display",
+});
+
+const body = DM_Sans({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
+  variable: "--font-body",
+});
+
+const bodyKr = Noto_Sans_KR({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
+  variable: "--font-body-kr",
+});
+
+const mono = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-mono",
+});
+
+const shellColumnStyle = css({
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+});
+
+const siteHeaderStyle = css({
+  position: "relative",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: "8px",
+  height: "56px",
+  paddingTop: "env(safe-area-inset-top, 0px)",
+  flexShrink: 0,
+});
+
+const shellContentStyle = css({
+  position: "relative",
+  width: "100%",
+  maxWidth: "520px",
+  margin: "0 auto",
+  padding: "0 16px 64px",
+  flex: 1,
+  display: "flex",
+  flexDirection: "column",
+});
+
+const siteFooterStyle = css({
+  fontSize: "0.65rem",
+  color: "footer",
+  textAlign: "center",
+  letterSpacing: "0.06em",
+  marginTop: "40px",
+  paddingBottom: "env(safe-area-inset-bottom, 0px)",
+});
 
 export const metadata: Metadata = {
   title: "별모아 — 매일의 운세로 별 조각 수집",
@@ -19,29 +82,22 @@ export default function Layout(props: LayoutProps<"/">) {
   const { children } = props;
 
   return (
-    <html lang="ko">
+    <html
+      className={cx(
+        "cosmic",
+        display.variable,
+        body.variable,
+        bodyKr.variable,
+        mono.variable,
+      )}
+      lang="ko"
+    >
       <body>
         <StarCanvas />
-        <div
-          className={css({
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          })}
-        >
+        <div className={shellColumnStyle}>
           <header className={siteHeaderStyle}>
-            <StarFragmentIcon color="#FFD166" size={18} />
-            <span
-              className={css({
-                fontFamily: "'Orbitron', sans-serif",
-                fontSize: "0.9rem",
-                fontWeight: "700",
-                letterSpacing: "0.12em",
-                color: "#EBF0FF",
-              })}
-            >
-              별모아
-            </span>
+            <StarFragmentIcon color="var(--colors-accent)" size={18} />
+            <Text variant="brand">별모아</Text>
           </header>
 
           <div className={shellContentStyle}>
