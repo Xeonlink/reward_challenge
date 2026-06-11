@@ -140,7 +140,11 @@ export const SlotGrid: React.FC<SlotGridProps> = ({ testParam }) => {
             status={slot.status}
             isExtra={slot.isExtra}
             onClick={handleSlotClick}
-            isNew={slot.key === "bonus" && !todayRecord.bonus}
+            isNew={
+              slot.key === "bonus" &&
+              slot.status === "active" &&
+              !todayRecord.bonus
+            }
           />
         ))}
       </div>
@@ -243,6 +247,8 @@ export const SlotGrid: React.FC<SlotGridProps> = ({ testParam }) => {
         <SlotPopup
           slotKey={activePopup}
           isExtra={activeSlotData.isExtra}
+          locked={activePopup === "bonus" && activeSlotData.status === "locked"}
+          todayRecord={todayRecord}
           open
           onClose={closePopup}
           onExternalVisit={handleExternalVisit}

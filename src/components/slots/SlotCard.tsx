@@ -99,6 +99,14 @@ const slotCard = cva({
         filter: "grayscale(0.8)",
         cursor: "not-allowed",
       },
+      lockedBonus: {
+        background: "slot.extra",
+        borderColor: "slot.extraBorder",
+        opacity: 0.82,
+        cursor: "pointer",
+        _hover: { transform: "translateY(-3px) scale(1.02)" },
+        _active: { transform: "translateY(-1px) scale(0.99)" },
+      },
       completed: {
         background: "slot.completed",
         borderColor: "slot.completedBorder",
@@ -171,6 +179,21 @@ const checkBadge = css({
   left: "0.625rem",
 });
 
+const lockOverlay = css({
+  position: "absolute",
+  bottom: "-0.125rem",
+  right: "-0.125rem",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  width: "1.25rem",
+  height: "1.25rem",
+  borderRadius: "50%",
+  background: "color-mix(in srgb, var(--colors-surface) 90%, transparent)",
+  border: "1px solid",
+  borderColor: "color-mix(in srgb, var(--colors-border) 80%, transparent)",
+});
+
 const iconWrap = cva({
   base: {
     position: "relative",
@@ -208,7 +231,10 @@ export const SlotCard: React.FC<SlotCardProps> = ({
   isNew,
 }) => {
   const cfg = SLOT_CONFIGS[slotKey];
-  const isClickable = status === "active" || status === "extra";
+  const isBonusLocked = slotKey === "bonus" && status === "locked";
+  const cardStatus = isBonusLocked ? "lockedBonus" : status;
+  const isClickable =
+    status === "active" || status === "extra" || isBonusLocked;
 
   const handleClick = () => {
     if (isClickable) onClick(slotKey);
@@ -217,54 +243,65 @@ export const SlotCard: React.FC<SlotCardProps> = ({
   const iconColor =
     status === "completed"
       ? "var(--colors-success)"
-      : status === "locked" || status === "inactive"
-        ? "var(--colors-fg-muted)"
-        : isExtra
-          ? "var(--colors-slot-bonus-light)"
-          : cfg.color;
+      : isBonusLocked
+        ? "var(--colors-slot-bonus-light)"
+        : status === "locked" || status === "inactive"
+          ? "var(--colors-fg-muted)"
+          : isExtra
+            ? "var(--colors-slot-bonus-light)"
+            : cfg.color;
 
   const labelColor =
     status === "completed"
       ? "var(--colors-success)"
-      : status === "locked" || status === "inactive"
-        ? "var(--colors-fg-muted)"
-        : isExtra
-          ? "var(--colors-slot-bonus-light)"
-          : cfg.colorLight;
+      : isBonusLocked
+        ? "var(--colors-slot-bonus-light)"
+        : status === "locked" || status === "inactive"
+          ? "var(--colors-fg-muted)"
+          : isExtra
+            ? "var(--colors-slot-bonus-light)"
+            : cfg.colorLight;
 
   const sublabelColor =
     status === "completed"
       ? "color-mix(in srgb, var(--colors-success) 50%, transparent)"
-      : status === "locked" || status === "inactive"
-        ? "var(--colors-fg-dim)"
-        : isExtra
-          ? "color-mix(in srgb, var(--colors-slot-bonus-light) 50%, transparent)"
-          : `color-mix(in srgb, ${cfg.color} 44%, transparent)`;
+      : isBonusLocked
+        ? "color-mix(in srgb, var(--colors-slot-bonus-light) 50%, transparent)"
+        : status === "locked" || status === "inactive"
+          ? "var(--colors-fg-dim)"
+          : isExtra
+            ? "color-mix(in srgb, var(--colors-slot-bonus-light) 50%, transparent)"
+            : `color-mix(in srgb, ${cfg.color} 44%, transparent)`;
 
-  const timeColor =
-    status === "locked" || status === "inactive"
+  const timeColor = isBonusLocked
+    ? "var(--colors-fg-muted)"
+    : status === "locked" || status === "inactive"
       ? "var(--colors-fg-dim)"
       : "var(--colors-fg-muted)";
 
   const statusText =
     status === "completed"
       ? "수령 완료"
-      : status === "locked"
-        ? "참여 불가"
-        : status === "inactive"
-          ? "비활성"
-          : status === "extra"
-            ? "탭하여 참여"
-            : "탭하여 수령";
+      : isBonusLocked
+        ? "탭하여 조건 확인"
+        : status === "locked"
+          ? "참여 불가"
+          : status === "inactive"
+            ? "비활성"
+            : status === "extra"
+              ? "탭하여 참여"
+              : "탭하여 수령";
 
   const statusColor =
     status === "completed"
       ? "var(--colors-success)"
-      : status === "locked" || status === "inactive"
-        ? "var(--colors-fg-dim)"
-        : status === "extra"
-          ? "var(--colors-slot-bonus)"
-          : cfg.color;
+      : isBonusLocked
+        ? "var(--colors-slot-bonus)"
+        : status === "locked" || status === "inactive"
+          ? "var(--colors-fg-dim)"
+          : status === "extra"
+            ? "var(--colors-slot-bonus)"
+            : cfg.color;
 
   // runtime: active slot uses per-key gradient, border, glow
   const activeStyle =
@@ -286,9 +323,9 @@ export const SlotCard: React.FC<SlotCardProps> = ({
       : undefined;
 
   const dividerStyle =
-    status === "active" || status === "extra"
+    status === "active" || status === "extra" || isBonusLocked
       ? {
-          background: `linear-gradient(90deg, transparent, color-mix(in srgb, ${isExtra ? "var(--colors-slot-bonus)" : cfg.color} 31%, transparent), transparent)`,
+          background: `linear-gradient(90deg, transparent, color-mix(in srgb, ${isExtra || isBonusLocked ? "var(--colors-slot-bonus)" : cfg.color} 31%, transparent), transparent)`,
         }
       : {
           background:
@@ -297,7 +334,7 @@ export const SlotCard: React.FC<SlotCardProps> = ({
 
   return (
     <div
-      className={slotCard({ status })}
+      className={slotCard({ status: cardStatus })}
       style={activeStyle}
       onClick={handleClick}
       role={isClickable ? "button" : "presentation"}
@@ -328,12 +365,19 @@ export const SlotCard: React.FC<SlotCardProps> = ({
           pulse: status === "active" || status === "extra",
         })}
       >
-        {status === "locked" ? (
+        {status === "locked" && !isBonusLocked ? (
           <LockIcon color="var(--colors-fg-muted)" size={36} />
         ) : status === "completed" ? (
           <cfg.Icon color="var(--colors-success)" size={36} />
         ) : (
-          <cfg.Icon color={iconColor} size={36} />
+          <>
+            <cfg.Icon color={iconColor} size={36} />
+            {isBonusLocked ? (
+              <div className={lockOverlay}>
+                <LockIcon color="var(--colors-fg-muted)" size={12} />
+              </div>
+            ) : null}
+          </>
         )}
       </div>
 

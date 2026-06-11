@@ -1,13 +1,14 @@
 "use client";
 
 import { Text } from "@/components/ui/Text";
-import type { SlotKey } from "@/lib/slotLogic";
+import type { CompletionRecord, SlotKey } from "@/lib/slotLogic";
 import { css, cva } from "@/styled/css";
 import React, { useCallback } from "react";
 import { Button } from "../ui/Button";
 import { Popup } from "../ui/Popup";
 import {
   BonusIcon,
+  CheckIcon,
   DinnerIcon,
   LunchIcon,
   MorningIcon,
@@ -60,6 +61,15 @@ const SLOT_ICON: Record<SlotKey, React.FC<{ color: string; size?: number }>> = {
   dinner: DinnerIcon,
   bonus: BonusIcon,
 };
+
+const BONUS_UNLOCK_STEPS: {
+  key: keyof Pick<CompletionRecord, "morning" | "lunch" | "dinner">;
+  label: string;
+}[] = [
+  { key: "morning", label: "아침 운세 수령" },
+  { key: "lunch", label: "점심 운세 수령" },
+  { key: "dinner", label: "저녁 운세 수령" },
+];
 
 const popupTitle = css({
   display: "flex",
@@ -129,6 +139,8 @@ const buttonWrap = css({
 interface SlotPopupProps {
   slotKey: SlotKey;
   isExtra?: boolean;
+  locked?: boolean;
+  todayRecord?: CompletionRecord;
   open: boolean;
   onClose: () => void;
   onExternalVisit: (key: SlotKey) => void;
@@ -137,6 +149,8 @@ interface SlotPopupProps {
 export const SlotPopup: React.FC<SlotPopupProps> = ({
   slotKey,
   isExtra,
+  locked = false,
+  todayRecord,
   open,
   onClose,
   onExternalVisit,
@@ -171,59 +185,129 @@ export const SlotPopup: React.FC<SlotPopupProps> = ({
         }}
       />
 
-      <div
-        className={callout}
-        style={{
-          background: c.bg,
-          borderColor: `color-mix(in srgb, ${c.color} 19%, transparent)`,
-        }}
-      >
-        <StarFragmentIcon color={c.color} size={28} />
-        <div>
-          <div className={calloutTitle} style={{ color: c.light }}>
-            별 조각 +1 획득 가능
-          </div>
-          <Text variant="muted">
-            {isExtra
-              ? "추가 기회는 하루 1회만 사용할 수 있어요."
-              : "강남철학관 방문 후 별 조각을 수집하세요."}
-          </Text>
-        </div>
-      </div>
-
-      <div className={stepsWrap}>
-        {[
-          "강남철학관 운세 페이지로 이동",
-          "3초 이상 체류하기",
-          "돌아와서 별 조각 수령",
-        ].map((text, i) => (
-          <div className={stepRow} key={text}>
-            <div
-              className={stepNumber()}
-              style={{
-                background: `color-mix(in srgb, ${c.color} 8%, transparent)`,
-                borderColor: `color-mix(in srgb, ${c.color} 25%, transparent)`,
-                color: c.light,
-              }}
-            >
-              {i + 1}
+      {locked && todayRecord ? (
+        <>
+          <div
+            className={callout}
+            style={{
+              background: c.bg,
+              borderColor: `color-mix(in srgb, ${c.color} 19%, transparent)`,
+            }}
+          >
+            <StarFragmentIcon color={c.color} size={28} />
+            <div>
+              <div className={calloutTitle} style={{ color: c.light }}>
+                아침·점심·저녁을 모두 완료해야 합니다
+              </div>
+              <Text variant="muted">
+                3개 운세를 모두 수령하면 별 보너스가 해제됩니다
+              </Text>
             </div>
-            <Text variant="muted">{text}</Text>
           </div>
-        ))}
-      </div>
 
-      <div className={buttonWrap}>
-        <Button
-          variant="gold"
-          size="lg"
-          fullWidth
-          onClick={handleRealVisit}
-          leftIcon={<StarFragmentIcon color="#07091A" size={18} />}
-        >
-          강남철학관 운세 보러 가기
-        </Button>
-      </div>
+          <div className={stepsWrap}>
+            {BONUS_UNLOCK_STEPS.map(({ key, label }, i) => {
+              const done = todayRecord[key];
+              return (
+                <div className={stepRow} key={key}>
+                  <div
+                    className={stepNumber()}
+                    style={{
+                      background: done
+                        ? "color-mix(in srgb, var(--colors-success) 12%, transparent)"
+                        : `color-mix(in srgb, ${c.color} 8%, transparent)`,
+                      borderColor: done
+                        ? "color-mix(in srgb, var(--colors-success) 35%, transparent)"
+                        : `color-mix(in srgb, ${c.color} 25%, transparent)`,
+                      color: done ? "var(--colors-success)" : c.light,
+                    }}
+                  >
+                    {done ? (
+                      <CheckIcon color="var(--colors-success)" size={14} />
+                    ) : (
+                      i + 1
+                    )}
+                  </div>
+                  <Text
+                    className={css({
+                      color: done ? "success" : "fg.muted",
+                      textDecoration: done ? "line-through" : undefined,
+                      opacity: done ? 0.85 : 1,
+                    })}
+                    variant="muted"
+                  >
+                    {label}
+                  </Text>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className={buttonWrap}>
+            <Button variant="gold" size="lg" fullWidth onClick={onClose}>
+              확인
+            </Button>
+          </div>
+        </>
+      ) : (
+        <>
+          <div
+            className={callout}
+            style={{
+              background: c.bg,
+              borderColor: `color-mix(in srgb, ${c.color} 19%, transparent)`,
+            }}
+          >
+            <StarFragmentIcon color={c.color} size={28} />
+            <div>
+              <div className={calloutTitle} style={{ color: c.light }}>
+                {slotKey === "bonus"
+                  ? "별 조각 +2 획득 가능"
+                  : "별 조각 +1 획득 가능"}
+              </div>
+              <Text variant="muted">
+                {isExtra
+                  ? "추가 기회는 하루 1회만 사용할 수 있어요."
+                  : "강남철학관 방문 후 별 조각을 수집하세요."}
+              </Text>
+            </div>
+          </div>
+
+          <div className={stepsWrap}>
+            {[
+              "강남철학관 운세 페이지로 이동",
+              "3초 이상 체류하기",
+              "돌아와서 별 조각 수령",
+            ].map((text, i) => (
+              <div className={stepRow} key={text}>
+                <div
+                  className={stepNumber()}
+                  style={{
+                    background: `color-mix(in srgb, ${c.color} 8%, transparent)`,
+                    borderColor: `color-mix(in srgb, ${c.color} 25%, transparent)`,
+                    color: c.light,
+                  }}
+                >
+                  {i + 1}
+                </div>
+                <Text variant="muted">{text}</Text>
+              </div>
+            ))}
+          </div>
+
+          <div className={buttonWrap}>
+            <Button
+              variant="gold"
+              size="lg"
+              fullWidth
+              onClick={handleRealVisit}
+              leftIcon={<StarFragmentIcon color="#07091A" size={18} />}
+            >
+              강남철학관 운세 보러 가기
+            </Button>
+          </div>
+        </>
+      )}
     </Popup>
   );
 };

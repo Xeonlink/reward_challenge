@@ -145,14 +145,13 @@ export function computeSlotStates(
     }
   });
 
-  // Bonus slot — 3개 모두 완료 시 항상 active (시간대 무관)
+  // Bonus slot — 항상 표시; 3개 완료 시 active, 그 전에는 locked(탭 시 조건 안내)
   const result: SlotState[] = [...slots];
-  if (morning && lunch && dinner) {
-    result.push({
-      key: "bonus",
-      status: completion.bonus ? "completed" : "active",
-    });
-  }
+  const allThreeDone = morning && lunch && dinner;
+  result.push({
+    key: "bonus",
+    status: completion.bonus ? "completed" : allThreeDone ? "active" : "locked",
+  });
 
   return result;
 }

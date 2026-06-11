@@ -113,12 +113,8 @@ export function useSlots(testParam?: string | null): UseSlots {
     (key: SlotKey) => {
       const slot = slots.find((s) => s.key === key);
       if (!slot) return;
-      if (
-        slot.status === "completed" ||
-        slot.status === "locked" ||
-        slot.status === "inactive"
-      )
-        return;
+      if (slot.status === "completed" || slot.status === "inactive") return;
+      if (slot.status === "locked" && key !== "bonus") return;
       setActivePopup(key);
     },
     [slots],
