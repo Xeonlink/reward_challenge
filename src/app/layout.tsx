@@ -1,4 +1,5 @@
 import { DevTools } from "@/components/dev-tools";
+import { ModalContainer } from "@/components/modal";
 import { StarFragmentIcon } from "@/components/slots/SlotIcons";
 import { StarCanvas } from "@/components/slots/StarCanvas";
 import { Badge } from "@/components/ui/Badge";
@@ -119,6 +120,7 @@ export default function Layout(props: LayoutProps<"/">) {
           </footer>
         </div>
 
+        <ModalContainer />
         <DevTools />
       </body>
     </html>

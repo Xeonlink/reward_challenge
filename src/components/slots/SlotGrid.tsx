@@ -1,16 +1,15 @@
 "use client";
 
 import { CosmicOrb } from "@/components/cosmic-orb/CosmicOrb";
-import { TimeBadge } from "@/components/ui/TimeBadge";
+import { useModal } from "@/components/modal";
 import { useSlots } from "@/hooks/useSlots";
 import {
-  getTimeOfDayLabel,
   getVisitRewardAmount,
   getVisitRewardLabel,
   starsFromDay,
-  type TimeOfDay,
 } from "@/lib/slots";
 import { css } from "@/styled/css";
+import { useEffect } from "react";
 import { RewardPopup } from "./RewardPopup";
 import { BonusSlotCard } from "./cards/BonusSlotCard";
 import { DinnerSlotCard } from "./cards/DinnerSlotCard";
@@ -47,16 +46,10 @@ interface SlotGridProps {
   testParam?: string | null;
 }
 
-function timeBadgeColor(currentTime: TimeOfDay): string {
-  if (currentTime === "morning") return "var(--colors-slot-morning)";
-  if (currentTime === "lunch") return "var(--colors-slot-lunch)";
-  return "var(--colors-slot-dinner)";
-}
-
 export function SlotGrid({ testParam }: SlotGridProps) {
+  const modal = useModal();
   const {
     board,
-    currentTime,
     todayRecord,
     universe,
     allCompleted,
@@ -70,6 +63,30 @@ export function SlotGrid({ testParam }: SlotGridProps) {
 
   const starsToday = starsFromDay(todayRecord);
 
+  useEffect(() => {
+    if (!rewardPopup) return;
+
+    const popup = rewardPopup;
+    const dismiss = modal.open(
+      <RewardPopup
+        slotLabel={getVisitRewardLabel(popup.intent)}
+        rewardAmount={getVisitRewardAmount(popup.intent)}
+        success={popup.success}
+        onClaim={() => handleRewardClaim(popup.intent, popup.success)}
+      />,
+    );
+
+    return dismiss;
+  }, [rewardPopup, modal, handleRewardClaim]);
+
+  useEffect(() => {
+    if (!cycleCompletePopup) return;
+
+    const dismiss = modal.open(<CycleCompletePopup />);
+
+    return dismiss;
+  }, [cycleCompletePopup, modal, closeCycleCompletePopup]);
+
   return (
     <div className={rootStyle}>
       <div className={heroZoneStyle}>
@@ -77,12 +94,6 @@ export function SlotGrid({ testParam }: SlotGridProps) {
           universe={universe}
           starsToday={starsToday}
           lastStarBornAt={lastStarBornAt}
-        />
-
-        <TimeBadge
-          slotColor={timeBadgeColor(currentTime)}
-          label={getTimeOfDayLabel(currentTime)}
-          testMode={Boolean(testParam)}
         />
       </div>
 
@@ -113,23 +124,6 @@ export function SlotGrid({ testParam }: SlotGridProps) {
       <DailyStarsProgress starsToday={starsToday} />
 
       {allCompleted ? <SlotsCompleteBanner todayRecord={todayRecord} /> : null}
-
-      {rewardPopup ? (
-        <RewardPopup
-          slotLabel={getVisitRewardLabel(rewardPopup.intent)}
-          rewardAmount={getVisitRewardAmount(rewardPopup.intent)}
-          success={rewardPopup.success}
-          open
-          onClaim={() =>
-            handleRewardClaim(rewardPopup.intent, rewardPopup.success)
-          }
-        />
-      ) : null}
-
-      <CycleCompletePopup
-        open={cycleCompletePopup}
-        onClose={closeCycleCompletePopup}
-      />
     </div>
   );
 }

@@ -2,6 +2,55 @@
 
 import { loadUniverse, saveUniverse, type UniverseRecord } from "@/lib/slots";
 import { useEffect, useState } from "react";
+import {
+  createJSONStorage,
+  persist,
+  subscribeWithSelector,
+} from "zustand/middleware";
+import { immer } from "zustand/middleware/immer";
+import { createStore } from "zustand/vanilla";
+
+type Store = {
+  totalStars: number;
+  cycleStartDate: string;
+  dailyRecord: Record<
+    string,
+    {
+      morning: boolean;
+      lunch: boolean;
+      dinner: boolean;
+      bonus: boolean;
+      extraUsed: boolean;
+    }
+  >;
+  actions: {
+    setTotalStars: (totalStars: number) => void;
+  };
+};
+
+const store = createStore<Store>()(
+  persist(
+    subscribeWithSelector(
+      immer((set) => ({
+        totalStars: 0,
+        cycleStartDate: "",
+        dailyRecord: {},
+        actions: {
+          setTotalStars: (totalStars) => set({ totalStars }),
+        },
+      })),
+    ),
+    {
+      name: "byulmoa_universe",
+      storage: createJSONStorage(() => localStorage),
+      partialize: (state) => ({
+        totalStars: state.totalStars,
+        cycleStartDate: state.cycleStartDate,
+        dailyRecord: state.dailyRecord,
+      }),
+    },
+  ),
+);
 
 const INIT_UNIVERSE: UniverseRecord = {
   totalStars: 0,

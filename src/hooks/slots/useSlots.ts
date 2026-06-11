@@ -61,6 +61,7 @@ export function useSlots(testParam?: string | null) {
     rewardPopup,
     cycleCompletePopup,
     closeCycleCompletePopup,
+    clearRewardPopup,
     lastStarBornAt,
   };
 }

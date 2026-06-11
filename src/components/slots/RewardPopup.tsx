@@ -1,5 +1,6 @@
 "use client";
 
+import { useModal } from "@/components/modal";
 import { Text } from "@/components/ui/Text";
 import { css, cva } from "@/styled/css";
 import { Button } from "../ui/Button";
@@ -101,16 +102,21 @@ interface RewardPopupProps {
   slotLabel: string;
   rewardAmount: number;
   success: boolean;
-  open: boolean;
   onClaim: () => void;
 }
 
 export function RewardPopup(props: RewardPopupProps) {
-  const { slotLabel, rewardAmount: amount, success, open, onClaim } = props;
+  const { slotLabel, rewardAmount: amount, success, onClaim } = props;
   const variant = success ? "success" : "failure";
+  const modal = useModal();
+
+  const handleClaim = () => {
+    onClaim();
+    modal.closeSelf();
+  };
 
   return (
-    <Popup open={open} onClose={onClaim} showClose={false} size="sm">
+    <Popup>
       <div className={content}>
         <div className={rewardIcon({ variant })}>
           {success ? (
@@ -182,7 +188,7 @@ export function RewardPopup(props: RewardPopupProps) {
           variant={success ? "gold" : "secondary"}
           size="md"
           fullWidth
-          onClick={onClaim}
+          onClick={handleClaim}
         >
           {success ? "확인" : "닫기"}
         </Button>

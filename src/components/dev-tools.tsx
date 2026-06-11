@@ -15,6 +15,7 @@ const UNIVERSE_PRESETS = [
   { label: "3단계·30", totalStars: 30 },
   { label: "4단계·55", totalStars: 55 },
   { label: "5단계·80", totalStars: 80 },
+  { label: "5단계·149개", totalStars: 149 },
   { label: "우주 초기화", totalStars: 0 },
 ] as const;
 

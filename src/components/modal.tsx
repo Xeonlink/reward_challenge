@@ -9,7 +9,9 @@ import type {
 } from "react";
 import {
   createContext,
+  useCallback,
   useContext,
+  useMemo,
   useState,
   useSyncExternalStore,
 } from "react";
@@ -59,48 +61,55 @@ function ModalContextProvider(props: PropsWithChildren<{ modalKey: string }>) {
 export function useModal() {
   const modalCtx = useContext(ModalContext);
 
-  const close = (key: string) => {
+  const close = useCallback((key: string) => {
     modalStore.publish((modals) => modals.filter((modal) => modal.key !== key));
-  };
+  }, []);
 
-  const createKey = () => {
-    return crypto.randomUUID();
-  };
+  const createKey = useCallback(() => crypto.randomUUID(), []);
 
-  const openWithKey = (key: string, element: React.ReactElement) => {
-    modalStore.publish((modals) => [...modals, { key, element }]);
-    return () => close(key);
-  };
+  const openWithKey = useCallback(
+    (key: string, element: React.ReactElement) => {
+      modalStore.publish((modals) => [...modals, { key, element }]);
+      return () => close(key);
+    },
+    [close],
+  );
 
-  const open = (element: React.ReactElement) => {
-    const key = createKey();
-    return openWithKey(key, element);
-  };
+  const open = useCallback(
+    (element: React.ReactElement) => {
+      const key = createKey();
+      return openWithKey(key, element);
+    },
+    [createKey, openWithKey],
+  );
 
-  const closeSelf = () => {
+  const closeSelf = useCallback(() => {
     if (!modalCtx) {
       throw new Error("Context key is not exist");
     }
     close(modalCtx.key);
-  };
+  }, [modalCtx, close]);
 
-  const startClose = () => {
+  const startClose = useCallback(() => {
     if (!modalCtx) {
       throw new Error("Context key is not exist");
     }
     modalCtx.setOpen(false);
-  };
+  }, [modalCtx]);
 
-  return {
-    isOpen: !!modalCtx?.open,
-    open,
-    createKey,
-    openWithKey,
-    close,
-    closeSelf,
-    startClose,
-    length: () => modalStore.getSnapshot().length,
-  };
+  return useMemo(
+    () => ({
+      isOpen: !!modalCtx?.open,
+      open,
+      createKey,
+      openWithKey,
+      close,
+      closeSelf,
+      startClose,
+      length: () => modalStore.getSnapshot().length,
+    }),
+    [modalCtx, open, createKey, openWithKey, close, closeSelf, startClose],
+  );
 }
 
 export function ModalContainer() {

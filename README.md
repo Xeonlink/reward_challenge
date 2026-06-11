@@ -208,7 +208,6 @@ src/
 │   │   └── Popup.tsx
 │   └── slots/
 │       ├── SlotGrid.tsx
-│       ├── FortuneSlotCardFrame.tsx
 │       ├── BonusSlotCardFrame.tsx
 │       ├── slotCardLayout.ts
 │       ├── RewardPopup.tsx

@@ -1,5 +1,6 @@
 "use client";
 
+import { useModal } from "@/components/modal";
 import { Button } from "@/components/ui/Button";
 import { Text } from "@/components/ui/Text";
 import type { CompletionRecord } from "@/lib/slots";
@@ -60,12 +61,11 @@ const buttonWrap = css({
 
 type BonusLockedPopupProps = {
   todayRecord: CompletionRecord;
-  open: boolean;
-  onClose: () => void;
 };
 
 export function BonusLockedPopup(props: BonusLockedPopupProps) {
-  const { todayRecord, open, onClose } = props;
+  const { todayRecord } = props;
+  const modal = useModal();
 
   const color = "var(--colors-slot-bonus)";
   const colorLight = "var(--colors-slot-bonus-light)";
@@ -88,8 +88,6 @@ export function BonusLockedPopup(props: BonusLockedPopupProps) {
       color={color}
       colorLight={colorLight}
       icon={BonusIcon}
-      open={open}
-      onClose={onClose}
     >
       <div
         className={callout}
@@ -170,7 +168,12 @@ export function BonusLockedPopup(props: BonusLockedPopupProps) {
       </div>
 
       <div className={buttonWrap}>
-        <Button variant="gold" size="lg" fullWidth onClick={onClose}>
+        <Button
+          variant="gold"
+          size="lg"
+          fullWidth
+          onClick={() => modal.closeSelf()}
+        >
           확인
         </Button>
       </div>
