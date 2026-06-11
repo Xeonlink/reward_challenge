@@ -127,7 +127,7 @@ const button = cva({
       sm: {
         height: "2.25rem",
         paddingInline: "0.75rem",
-        fontSize: "xs",
+        fontSize: "sm",
         borderRadius: "sm",
       },
       md: {

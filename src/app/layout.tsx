@@ -95,6 +95,7 @@ export default function Layout(props: LayoutProps<"/">) {
 
             <p
               className={css({
+                fontSize: "sm",
                 color: "fg.muted",
               })}
             >

@@ -140,7 +140,7 @@ const cornerBadge = cva({
     right: "0.625rem",
     padding: "0.125rem 0.5rem",
     borderRadius: "full",
-    fontSize: "2xs",
+    fontSize: "sm",
     fontWeight: "700",
     letterSpacing: "0.08em",
     border: "1px solid",

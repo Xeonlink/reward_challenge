@@ -54,7 +54,7 @@ const headerStyle = css({
 
 const titleStyle = css({
   fontFamily: "display",
-  fontSize: "1.125rem",
+  fontSize: "lg",
   fontWeight: "700",
   color: "fg",
   lineHeight: "1.3",
@@ -73,7 +73,7 @@ const closeButtonStyle = css({
   alignItems: "center",
   justifyContent: "center",
   transition: "all 200ms",
-  fontSize: "1rem",
+  fontSize: "md",
   lineHeight: "1",
   _hover: {
     background: "rgba(255,255,255,0.12)",

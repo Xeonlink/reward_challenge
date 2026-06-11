@@ -95,7 +95,7 @@ const rewardAmount = css({
 });
 
 const rewardCaption = css({
-  fontSize: "2xs",
+  fontSize: "sm",
   color: "color-mix(in srgb, var(--colors-accent) 50%, transparent)",
   fontFamily: "mono",
 });

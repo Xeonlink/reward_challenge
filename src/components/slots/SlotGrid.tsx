@@ -187,9 +187,7 @@ export const SlotGrid: React.FC<SlotGridProps> = ({ testParam }) => {
 
       {allCompleted ? (
         <div className={completeBannerStyle}>
-          <div
-            className={css({ fontSize: "1.375rem", marginBottom: "0.375rem" })}
-          >
+          <div className={css({ fontSize: "xl", marginBottom: "0.375rem" })}>
             ✨
           </div>
           <Text
@@ -279,7 +277,7 @@ export const SlotGrid: React.FC<SlotGridProps> = ({ testParam }) => {
         <div
           className={css({ textAlign: "center", padding: "0.5rem 0 0.25rem" })}
         >
-          <div className={css({ fontSize: "2.375rem", marginBottom: "1rem" })}>
+          <div className={css({ fontSize: "4xl", marginBottom: "1rem" })}>
             ✨
           </div>
           <Text

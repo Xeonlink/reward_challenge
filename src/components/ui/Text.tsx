@@ -10,8 +10,8 @@ const text = cva({
     variant: {
       body: { fontSize: "sm" },
       muted: { fontSize: "sm", color: "fg.muted" },
-      dim: { fontSize: "xs", color: "fg.dim" },
-      caption: { fontSize: "xs", fontFamily: "mono", color: "fg.muted" },
+      dim: { fontSize: "sm", color: "fg.dim" },
+      caption: { fontSize: "sm", fontFamily: "mono", color: "fg.muted" },
       brand: {
         fontFamily: "display",
         fontSize: "sm",
@@ -20,7 +20,7 @@ const text = cva({
         color: "fg",
       },
       label: {
-        fontSize: "2xs",
+        fontSize: "sm",
         fontWeight: "700",
         letterSpacing: "0.08em",
         textTransform: "uppercase",
@@ -28,23 +28,23 @@ const text = cva({
       },
       subtitle: {
         fontFamily: "display",
-        fontSize: "xs",
+        fontSize: "sm",
         color: "fg.muted",
         letterSpacing: "0.25em",
       },
       statLabel: {
-        fontSize: "2xs",
+        fontSize: "sm",
         color: "fg.muted",
         letterSpacing: "0.05em",
       },
       statValue: {
-        fontSize: "sm",
+        fontSize: "md",
         fontFamily: "display",
         fontWeight: "700",
         color: "fg",
       },
       statSub: {
-        fontSize: "2xs",
+        fontSize: "sm",
         color: "fg.muted",
       },
       slotTitle: {
@@ -55,23 +55,23 @@ const text = cva({
         textAlign: "center",
       },
       slotMeta: {
-        fontSize: "2xs",
+        fontSize: "sm",
         textAlign: "center",
         letterSpacing: "0.02em",
       },
       slotMetaMono: {
-        fontSize: "2xs",
+        fontSize: "sm",
         fontFamily: "mono",
         textAlign: "center",
       },
       slotStatus: {
-        fontSize: "2xs",
+        fontSize: "sm",
         fontWeight: "600",
         textAlign: "center",
         letterSpacing: "0.04em",
       },
       sectionLabel: {
-        fontSize: "xs",
+        fontSize: "sm",
         fontWeight: "700",
         letterSpacing: "0.15em",
         textTransform: "uppercase",

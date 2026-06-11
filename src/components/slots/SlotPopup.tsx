@@ -86,7 +86,7 @@ const callout = css({
 });
 
 const calloutTitle = css({
-  fontSize: "xs",
+  fontSize: "sm",
   fontWeight: "700",
   marginBottom: "0.25rem",
 });
@@ -102,7 +102,7 @@ const stepRow = css({
   display: "flex",
   alignItems: "center",
   gap: "0.75rem",
-  fontSize: "xs",
+  fontSize: "sm",
 });
 
 const stepNumber = cva({
@@ -114,7 +114,7 @@ const stepNumber = cva({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    fontSize: "2xs",
+    fontSize: "sm",
     fontWeight: "700",
     flexShrink: 0,
   },

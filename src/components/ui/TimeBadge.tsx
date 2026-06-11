@@ -28,7 +28,7 @@ const dot = cva({
 
 const timeLabel = cva({
   base: {
-    fontSize: "xs",
+    fontSize: "sm",
     color: "fg.muted",
     fontFamily: "mono",
   },
@@ -36,7 +36,7 @@ const timeLabel = cva({
 
 const timeValue = cva({
   base: {
-    fontSize: "sm",
+    fontSize: "md",
     fontWeight: "700",
     fontFamily: "display",
     color: "var(--time-dot)",
@@ -45,7 +45,7 @@ const timeValue = cva({
 
 const testBadge = cva({
   base: {
-    fontSize: "2xs",
+    fontSize: "xs",
     padding: "0.125rem 0.5rem",
     borderRadius: "full",
     background: "color-mix(in srgb, var(--colors-slot-bonus) 12%, transparent)",
