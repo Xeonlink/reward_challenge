@@ -11,3 +11,4 @@ src/styled
 playwright-report
 test-results
 temp
+*.tsbuildinfo
