@@ -70,35 +70,11 @@
   /* ── Global rules (reference theme variables) ── */
 
   html {
-    font-size: 14px;
     font-family: var(--font-body), var(--font-body-kr), sans-serif;
     color: var(--colors-fg);
     background-color: var(--colors-bg);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-  }
-
-  body {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    color: var(--colors-fg);
-    background-color: var(--colors-bg);
-  }
-
-  body > header,
-  body > main,
-  body > footer {
-    width: 100%;
-    max-width: 37.125rem;
-    padding-inline: 1rem;
-    box-sizing: border-box;
-  }
-
-  body > main {
-    flex: 1;
-    padding-bottom: 4.5rem;
   }
 
   ::-webkit-scrollbar {
@@ -111,7 +87,7 @@
 
   ::-webkit-scrollbar-thumb {
     background-color: var(--colors-border);
-    border-radius: 9999px;
+    border-radius: 100rem;
   }
 
   ::-webkit-scrollbar-thumb:hover {

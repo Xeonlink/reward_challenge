@@ -1,5 +1,8 @@
+import { DevTools } from "@/components/dev-tools";
 import { StarFragmentIcon } from "@/components/slots/SlotIcons";
 import { StarCanvas } from "@/components/slots/StarCanvas";
+import { Badge } from "@/components/ui/Badge";
+import { Heading } from "@/components/ui/Heading";
 import { Text } from "@/components/ui/Text";
 import { css, cx } from "@/styled/css";
 import type { Metadata } from "next";
@@ -35,26 +38,6 @@ const mono = JetBrains_Mono({
   variable: "--font-mono",
 });
 
-const siteHeaderStyle = css({
-  position: "relative",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  gap: "0.5rem",
-  height: "4rem",
-  paddingTop: "env(safe-area-inset-top, 0px)",
-  flexShrink: 0,
-});
-
-const siteFooterStyle = css({
-  fontSize: "0.625rem",
-  color: "footer",
-  textAlign: "center",
-  letterSpacing: "0.06em",
-  marginTop: "2.875rem",
-  paddingBottom: "env(safe-area-inset-bottom, 0px)",
-});
-
 export const metadata: Metadata = {
   title: "별모아 — 매일의 운세로 별 조각 수집",
   description:
@@ -75,20 +58,76 @@ export default function Layout(props: LayoutProps<"/">) {
       )}
       lang="ko"
     >
-      <body>
+      <body className={css({ minHeight: "screen" })}>
         {/* starlight background. It assume bg is dark. */}
         <StarCanvas />
 
-        <header className={siteHeaderStyle}>
-          <StarFragmentIcon color="var(--colors-accent)" size={18} />
-          <Text variant="brand">별모아</Text>
-        </header>
+        <div
+          className={css({
+            marginX: "auto",
+            maxWidth: "lg",
+          })}
+        >
+          <header
+            className={css({
+              animation: "slideUp 0.7s ease",
+              textAlign: "center",
+              marginTop: "8",
+            })}
+          >
+            <Badge label="Daily Fortune" />
 
-        {children}
+            <div
+              className={css({
+                display: "flex",
+                width: "full",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: "2",
+              })}
+            >
+              <StarFragmentIcon color="var(--colors-accent)" size={32} />
+              <Heading>별모아</Heading>
+              <StarFragmentIcon color="var(--colors-accent)" size={32} />
+            </div>
 
-        <footer className={siteFooterStyle}>
-          별모아 — 매일의 운세와 우주 성장 · 30일 사이클 &copy; 2026
-        </footer>
+            <Text variant="subtitle">BYULMOA</Text>
+
+            <p
+              className={css({
+                color: "fg.muted",
+              })}
+            >
+              매일 &ldquo;아침&rdquo; · &ldquo;점심&rdquo; · &ldquo;저녁&rdquo;
+              운세를 확인하고 <br />별 조각을 모아 우주를 성장시켜요!
+            </p>
+          </header>
+
+          <main
+            className={css({
+              // display: "flex",
+              // flexDirection: "column",
+              // alignItems: "center",
+              // gap: "2.875rem",
+              // width: "100%",
+              // paddingTop: "1.375rem",
+            })}
+          >
+            {children}
+          </main>
+
+          <footer
+            className={css({
+              textAlign: "center",
+              color: "fg.muted",
+              marginY: "8",
+            })}
+          >
+            별모아 — 매일의 운세와 우주 성장 · 30일 사이클 &copy; 2026
+          </footer>
+        </div>
+
+        <DevTools />
       </body>
     </html>
   );
