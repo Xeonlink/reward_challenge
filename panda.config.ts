@@ -66,25 +66,6 @@ export default defineConfig({
           },
           mono: { value: "var(--font-mono), monospace" },
         },
-        fontSizes: {
-          "2xs": { value: "0.625rem" },
-          xs: { value: "0.75rem" },
-          sm: { value: "0.875rem" },
-          md: { value: "1rem" },
-          lg: { value: "1.125rem" },
-          xl: { value: "1.25rem" },
-          "2xl": { value: "1.5rem" },
-          "3xl": { value: "1.875rem" },
-          "4xl": { value: "2.25rem" },
-          "5xl": { value: "3rem" },
-        },
-        radii: {
-          sm: { value: "0.5rem" },
-          md: { value: "1rem" },
-          lg: { value: "1.375rem" },
-          xl: { value: "2rem" },
-          full: { value: "9999px" },
-        },
         shadows: {
           gold: {
             value:
