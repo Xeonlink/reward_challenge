@@ -147,19 +147,17 @@ export const SlotGrid: React.FC<SlotGridProps> = ({ testParam }) => {
 
       <div className={progressWrapStyle}>
         <div className={progressHeaderStyle}>
-          <Text className={css({ fontSize: "0.75rem" })} variant="muted">
-            오늘의 별 조각
-          </Text>
-          <span
+          <Text variant="muted">오늘의 별 조각</Text>
+          <Text
             className={css({
-              fontSize: "0.75rem",
               fontWeight: "700",
               fontFamily: "display",
               color: starsToday >= 5 ? "accent" : "nebula.light",
             })}
+            variant="muted"
           >
             {starsToday} / 5
-          </span>
+          </Text>
         </div>
         <div className={progressTrackStyle}>
           <div
@@ -197,18 +195,15 @@ export const SlotGrid: React.FC<SlotGridProps> = ({ testParam }) => {
           <Text
             className={css({
               fontFamily: "display",
-              fontSize: "0.875rem",
               color: "accent",
               fontWeight: "700",
             })}
+            variant="body"
           >
             오늘의 운세를 모두 확인했어요!
           </Text>
           {!todayRecord.bonus ? (
-            <Text
-              className={css({ fontSize: "0.75rem", marginTop: "0.25rem" })}
-              variant="muted"
-            >
+            <Text className={css({ marginTop: "0.25rem" })} variant="muted">
               별 보너스 슬롯이 해제되었어요
             </Text>
           ) : null}
@@ -241,9 +236,7 @@ export const SlotGrid: React.FC<SlotGridProps> = ({ testParam }) => {
                 boxShadow: `0 0 4px ${color}`,
               }}
             />
-            <Text className={css({ fontSize: "0.625rem" })} variant="dim">
-              {label}
-            </Text>
+            <Text variant="dim">{label}</Text>
           </div>
         ))}
       </div>
@@ -275,10 +268,9 @@ export const SlotGrid: React.FC<SlotGridProps> = ({ testParam }) => {
           <Text
             className={css({
               color: "accent",
-              fontFamily: "display",
-              fontSize: "1.125rem",
-              fontWeight: "700",
+              fontSize: "lg",
             })}
+            variant="slotTitle"
           >
             우주가 완성되었습니다!
           </Text>
@@ -292,18 +284,15 @@ export const SlotGrid: React.FC<SlotGridProps> = ({ testParam }) => {
           </div>
           <Text
             className={css({
-              fontSize: "0.875rem",
               lineHeight: 1.7,
               marginBottom: "0.5rem",
             })}
+            variant="body"
           >
             30일간의 여정을 완주했어요.
             <br />별 조각이 새롭게 초기화됩니다.
           </Text>
-          <Text
-            className={css({ fontSize: "0.75rem", marginBottom: "1.375rem" })}
-            variant="muted"
-          >
+          <Text className={css({ marginBottom: "1.375rem" })} variant="muted">
             새로운 여정을 시작하세요
           </Text>
           <Button variant="gold" size="sm" onClick={closeCycleCompletePopup}>

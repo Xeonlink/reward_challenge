@@ -1,7 +1,8 @@
 "use client";
 
+import { Text } from "@/components/ui/Text";
 import type { SlotKey } from "@/lib/slotLogic";
-import { css } from "@/styled/css";
+import { css, cva } from "@/styled/css";
 import React, { useCallback } from "react";
 import { Button } from "../ui/Button";
 import { Popup } from "../ui/Popup";
@@ -24,30 +25,30 @@ const SLOT_CFG: Record<
   }
 > = {
   morning: {
-    color: "#F4A05A",
-    light: "#FFCB8A",
-    bg: "rgba(244,160,90,0.08)",
+    color: "var(--colors-slot-morning)",
+    light: "var(--colors-slot-morning-light)",
+    bg: "color-mix(in srgb, var(--colors-slot-morning) 8%, transparent)",
     label: "아침 운세",
     fortuneLabel: "새벽의 운세",
   },
   lunch: {
-    color: "#50C8E8",
-    light: "#8DDFF5",
-    bg: "rgba(80,200,232,0.08)",
+    color: "var(--colors-slot-lunch)",
+    light: "var(--colors-slot-lunch-light)",
+    bg: "color-mix(in srgb, var(--colors-slot-lunch) 8%, transparent)",
     label: "정오 운세",
     fortuneLabel: "하늘의 운세",
   },
   dinner: {
-    color: "#9B72CF",
-    light: "#C3A4EA",
-    bg: "rgba(155,114,207,0.08)",
+    color: "var(--colors-slot-dinner)",
+    light: "var(--colors-slot-dinner-light)",
+    bg: "color-mix(in srgb, var(--colors-slot-dinner) 8%, transparent)",
     label: "저녁 운세",
     fortuneLabel: "달빛의 운세",
   },
   bonus: {
-    color: "#E86FA8",
-    light: "#F4A0C8",
-    bg: "rgba(232,111,168,0.08)",
+    color: "var(--colors-slot-bonus)",
+    light: "var(--colors-slot-bonus-light)",
+    bg: "color-mix(in srgb, var(--colors-slot-bonus) 8%, transparent)",
     label: "별 보너스",
     fortuneLabel: "우주의 운세",
   },
@@ -59,6 +60,71 @@ const SLOT_ICON: Record<SlotKey, React.FC<{ color: string; size?: number }>> = {
   dinner: DinnerIcon,
   bonus: BonusIcon,
 };
+
+const popupTitle = css({
+  display: "flex",
+  alignItems: "center",
+  gap: "0.625rem",
+});
+
+const accentLine = css({
+  height: "0.125rem",
+  marginTop: "-1.375rem",
+  marginBottom: "1.375rem",
+  borderRadius: "0.125rem",
+  opacity: 0.8,
+});
+
+const callout = css({
+  display: "flex",
+  alignItems: "center",
+  gap: "0.75rem",
+  padding: "1rem 1.125rem",
+  borderRadius: "md",
+  border: "1px solid",
+  marginBottom: "1.25rem",
+});
+
+const calloutTitle = css({
+  fontSize: "xs",
+  fontWeight: "700",
+  marginBottom: "0.25rem",
+});
+
+const stepsWrap = css({
+  display: "flex",
+  flexDirection: "column",
+  gap: "0.5rem",
+  marginBottom: "1.375rem",
+});
+
+const stepRow = css({
+  display: "flex",
+  alignItems: "center",
+  gap: "0.75rem",
+  fontSize: "xs",
+});
+
+const stepNumber = cva({
+  base: {
+    width: "1.75rem",
+    height: "1.75rem",
+    borderRadius: "50%",
+    border: "1px solid",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: "2xs",
+    fontWeight: "700",
+    flexShrink: 0,
+  },
+});
+
+const buttonWrap = css({
+  display: "flex",
+  flexDirection: "column",
+  gap: "0.625rem",
+});
 
 interface SlotPopupProps {
   slotKey: SlotKey;
@@ -88,123 +154,66 @@ export const SlotPopup: React.FC<SlotPopupProps> = ({
       open={open}
       onClose={onClose}
       title={
-        <span
-          style={{ display: "flex", alignItems: "center", gap: "0.625rem" }}
-        >
+        <span className={popupTitle}>
           <Icon color={c.light} size={28} />
-          <span style={{ color: c.light }}>
+          <Text className={css({ color: c.light })} variant="slotTitle">
             {isExtra ? "추가 기회 — " : ""}
             {c.fortuneLabel}
-          </span>
+          </Text>
         </span>
       }
     >
-      {/* 상단 색상 라인 */}
+      {/* runtime: slot-colored gradient line */}
       <div
+        className={accentLine}
         style={{
-          height: "0.125rem",
           background: `linear-gradient(90deg, transparent, ${c.color}, transparent)`,
-          marginTop: "-1.375rem",
-          marginBottom: "1.375rem",
-          borderRadius: "0.125rem",
-          opacity: 0.8,
         }}
       />
 
-      {/* 별 조각 획득 안내 */}
       <div
+        className={callout}
         style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "0.75rem",
-          padding: "1rem 1.125rem",
-          borderRadius: "1rem",
           background: c.bg,
-          border: `1px solid ${c.color}30`,
-          marginBottom: "1.25rem",
+          borderColor: `color-mix(in srgb, ${c.color} 19%, transparent)`,
         }}
       >
         <StarFragmentIcon color={c.color} size={28} />
         <div>
-          <div
-            style={{
-              fontSize: "0.75rem",
-              fontWeight: "700",
-              color: c.light,
-              marginBottom: "0.25rem",
-            }}
-          >
+          <div className={calloutTitle} style={{ color: c.light }}>
             별 조각 +1 획득 가능
           </div>
-          <div
-            style={{
-              fontSize: "0.75rem",
-              color: "var(--colors-fg-muted)",
-              lineHeight: 1.5,
-            }}
-          >
+          <Text variant="muted">
             {isExtra
               ? "추가 기회는 하루 1회만 사용할 수 있어요."
               : "강남철학관 방문 후 별 조각을 수집하세요."}
-          </div>
+          </Text>
         </div>
       </div>
 
-      {/* 진행 단계 */}
-      <div
-        className={css({
-          display: "flex",
-          flexDirection: "column",
-          gap: "0.5rem",
-          marginBottom: "1.375rem",
-        })}
-      >
+      <div className={stepsWrap}>
         {[
           "강남철학관 운세 페이지로 이동",
           "3초 이상 체류하기",
           "돌아와서 별 조각 수령",
         ].map((text, i) => (
-          <div
-            key={i}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "0.75rem",
-              fontSize: "0.75rem",
-            }}
-          >
+          <div className={stepRow} key={text}>
             <div
+              className={stepNumber()}
               style={{
-                width: "1.75rem",
-                height: "1.75rem",
-                borderRadius: "50%",
-                background: `${c.color}15`,
-                border: `1px solid ${c.color}40`,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: "0.625rem",
-                fontWeight: "700",
+                background: `color-mix(in srgb, ${c.color} 8%, transparent)`,
+                borderColor: `color-mix(in srgb, ${c.color} 25%, transparent)`,
                 color: c.light,
-                flexShrink: 0,
               }}
             >
               {i + 1}
             </div>
-            <span style={{ color: "var(--colors-fg-muted)" }}>{text}</span>
+            <Text variant="muted">{text}</Text>
           </div>
         ))}
       </div>
 
-      {/* 버튼 영역 */}
-      <div
-        className={css({
-          display: "flex",
-          flexDirection: "column",
-          gap: "0.625rem",
-        })}
-      >
-        {/* 실제 방문 버튼 */}
+      <div className={buttonWrap}>
         <Button
           variant="gold"
           size="lg"

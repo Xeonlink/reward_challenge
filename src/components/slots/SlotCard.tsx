@@ -1,6 +1,8 @@
 "use client";
 
+import { Text } from "@/components/ui/Text";
 import type { SlotKey, SlotStatus } from "@/lib/slotLogic";
+import { css, cva } from "@/styled/css";
 import React from "react";
 import {
   BonusIcon,
@@ -17,9 +19,7 @@ interface SlotConfig {
   timeLabel: string;
   color: string;
   colorLight: string;
-  colorDim: string;
   glow: string;
-  bg: string;
   bgActive: string;
   Icon: React.FC<{ color: string; size?: number }>;
 }
@@ -31,9 +31,7 @@ const SLOT_CONFIGS: Record<SlotKey, SlotConfig> = {
     timeLabel: "00:00 – 11:59",
     color: "var(--colors-slot-morning)",
     colorLight: "var(--colors-slot-morning-light)",
-    colorDim: "#7A4820",
     glow: "0 0 28px rgba(244,160,90,0.45), 0 0 65px rgba(244,160,90,0.18)",
-    bg: "linear-gradient(145deg, #0F0A04 0%, #1A1008 100%)",
     bgActive: "linear-gradient(145deg, #1A1208 0%, #251A0C 100%)",
     Icon: MorningIcon,
   },
@@ -43,9 +41,7 @@ const SLOT_CONFIGS: Record<SlotKey, SlotConfig> = {
     timeLabel: "12:00 – 17:59",
     color: "var(--colors-slot-lunch)",
     colorLight: "var(--colors-slot-lunch-light)",
-    colorDim: "#18607A",
     glow: "0 0 28px rgba(80,200,232,0.45), 0 0 65px rgba(80,200,232,0.18)",
-    bg: "linear-gradient(145deg, #030C10 0%, #061420 100%)",
     bgActive: "linear-gradient(145deg, #061420 0%, #0A1E30 100%)",
     Icon: LunchIcon,
   },
@@ -55,9 +51,7 @@ const SLOT_CONFIGS: Record<SlotKey, SlotConfig> = {
     timeLabel: "18:00 – 23:59",
     color: "var(--colors-slot-dinner)",
     colorLight: "var(--colors-slot-dinner-light)",
-    colorDim: "#3A2060",
     glow: "0 0 28px rgba(155,114,207,0.45), 0 0 65px rgba(155,114,207,0.18)",
-    bg: "linear-gradient(145deg, #060410 0%, #0E0820 100%)",
     bgActive: "linear-gradient(145deg, #0E0820 0%, #180C30 100%)",
     Icon: DinnerIcon,
   },
@@ -67,13 +61,136 @@ const SLOT_CONFIGS: Record<SlotKey, SlotConfig> = {
     timeLabel: "모든 운세 완료 후",
     color: "var(--colors-slot-bonus)",
     colorLight: "var(--colors-slot-bonus-light)",
-    colorDim: "#7A1848",
     glow: "0 0 28px rgba(232,111,168,0.45), 0 0 65px rgba(232,111,168,0.18)",
-    bg: "linear-gradient(145deg, #100408 0%, #1E0812 100%)",
     bgActive: "linear-gradient(145deg, #1E0812 0%, #280C1A 100%)",
     Icon: BonusIcon,
   },
 };
+
+const slotCard = cva({
+  base: {
+    position: "relative",
+    borderRadius: "lg",
+    padding: "1.875rem 1.25rem 1.375rem",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    gap: "0.625rem",
+    transition: "all 320ms",
+    transitionTimingFunction: "spring",
+    border: "1px solid",
+    overflow: "hidden",
+    userSelect: "none",
+    width: "100%",
+    minWidth: 0,
+  },
+  variants: {
+    status: {
+      inactive: {
+        background: "slot.inactive",
+        borderColor: "slot.inactiveBorder",
+        opacity: 0.7,
+        cursor: "default",
+      },
+      locked: {
+        background: "slot.inactive",
+        borderColor: "slot.inactiveBorder",
+        opacity: 0.55,
+        filter: "grayscale(0.8)",
+        cursor: "not-allowed",
+      },
+      completed: {
+        background: "slot.completed",
+        borderColor: "slot.completedBorder",
+        opacity: 0.88,
+        cursor: "default",
+      },
+      active: {
+        cursor: "pointer",
+        _hover: { transform: "translateY(-5px) scale(1.025)" },
+        _active: { transform: "translateY(-2px) scale(0.98)" },
+      },
+      extra: {
+        background: "slot.extra",
+        borderColor: "slot.extraBorder",
+        boxShadow: "bonus",
+        cursor: "pointer",
+        _hover: { transform: "translateY(-5px) scale(1.025)" },
+        _active: { transform: "translateY(-2px) scale(0.98)" },
+      },
+    },
+  },
+});
+
+const slotCardRing = cva({
+  base: {
+    position: "absolute",
+    inset: "-0.125rem",
+    borderRadius: "1.5rem",
+    border: "1px solid",
+    animation: "glow 2.5s ease-in-out infinite",
+    pointerEvents: "none",
+  },
+});
+
+const cornerBadge = cva({
+  base: {
+    position: "absolute",
+    top: "0.625rem",
+    right: "0.625rem",
+    padding: "0.125rem 0.5rem",
+    borderRadius: "full",
+    fontSize: "2xs",
+    fontWeight: "700",
+    letterSpacing: "0.08em",
+    border: "1px solid",
+  },
+  variants: {
+    tone: {
+      extra: {
+        background:
+          "color-mix(in srgb, var(--colors-slot-bonus) 18%, transparent)",
+        borderColor:
+          "color-mix(in srgb, var(--colors-slot-bonus) 50%, transparent)",
+        color: "slot.bonusLight",
+      },
+      new: {
+        background: "color-mix(in srgb, var(--colors-accent) 18%, transparent)",
+        borderColor:
+          "color-mix(in srgb, var(--colors-accent) 50%, transparent)",
+        color: "accent",
+        animation: "bounce 1.2s ease infinite",
+      },
+    },
+  },
+});
+
+const checkBadge = css({
+  position: "absolute",
+  top: "0.625rem",
+  left: "0.625rem",
+});
+
+const iconWrap = cva({
+  base: {
+    position: "relative",
+    transition: "transform 300ms",
+    transitionTimingFunction: "spring",
+  },
+  variants: {
+    pulse: {
+      true: { animation: "orbPulse 2.5s ease-in-out infinite" },
+      false: {},
+    },
+  },
+});
+
+const divider = cva({
+  base: {
+    width: "60%",
+    height: "1px",
+  },
+});
 
 export interface SlotCardProps {
   slotKey: SlotKey;
@@ -95,67 +212,6 @@ export const SlotCard: React.FC<SlotCardProps> = ({
 
   const handleClick = () => {
     if (isClickable) onClick(slotKey);
-  };
-
-  // ── 상태별 카드 스타일 ──
-  const getCardStyle = (): React.CSSProperties => {
-    const base: React.CSSProperties = {
-      position: "relative",
-      borderRadius: "1.375rem",
-      padding: "1.875rem 1.25rem 1.375rem",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      gap: "0.625rem",
-      cursor: isClickable ? "pointer" : "default",
-      transition: "all 320ms cubic-bezier(0.34, 1.56, 0.64, 1)",
-      border: "1px solid",
-      overflow: "hidden",
-      userSelect: "none",
-      width: "100%",
-      minWidth: 0,
-    };
-
-    if (status === "inactive" || status === "locked") {
-      return {
-        ...base,
-        background: "#0A0D20",
-        borderColor: "#181E3C",
-        opacity: status === "locked" ? 0.55 : 0.7,
-        filter: status === "locked" ? "grayscale(0.8)" : "none",
-        cursor: status === "locked" ? "not-allowed" : "default",
-      };
-    }
-
-    if (status === "completed") {
-      return {
-        ...base,
-        background: "linear-gradient(145deg, #061410 0%, #0A1E18 100%)",
-        borderColor: "rgba(92,232,160,0.35)",
-        opacity: 0.88,
-      };
-    }
-
-    if (status === "active") {
-      return {
-        ...base,
-        background: cfg.bgActive,
-        borderColor: `${cfg.color}45`,
-        boxShadow: cfg.glow,
-      };
-    }
-
-    if (status === "extra") {
-      return {
-        ...base,
-        background: "linear-gradient(145deg, #120820 0%, #1C1030 100%)",
-        borderColor: "rgba(232,111,168,0.5)",
-        boxShadow:
-          "0 0 28px rgba(232,111,168,0.4), 0 0 65px rgba(232,111,168,0.15)",
-      };
-    }
-
-    return base;
   };
 
   const iconColor =
@@ -183,7 +239,12 @@ export const SlotCard: React.FC<SlotCardProps> = ({
         ? "var(--colors-fg-dim)"
         : isExtra
           ? "color-mix(in srgb, var(--colors-slot-bonus-light) 50%, transparent)"
-          : `${cfg.color}70`;
+          : `color-mix(in srgb, ${cfg.color} 44%, transparent)`;
+
+  const timeColor =
+    status === "locked" || status === "inactive"
+      ? "var(--colors-fg-dim)"
+      : "var(--colors-fg-muted)";
 
   const statusText =
     status === "completed"
@@ -205,9 +266,39 @@ export const SlotCard: React.FC<SlotCardProps> = ({
           ? "var(--colors-slot-bonus)"
           : cfg.color;
 
+  // runtime: active slot uses per-key gradient, border, glow
+  const activeStyle =
+    status === "active"
+      ? {
+          background: cfg.bgActive,
+          borderColor: `color-mix(in srgb, ${cfg.color} 27%, transparent)`,
+          boxShadow: cfg.glow,
+        }
+      : undefined;
+
+  const ringStyle =
+    status === "active" || status === "extra"
+      ? {
+          borderColor: isExtra
+            ? "color-mix(in srgb, var(--colors-slot-bonus) 30%, transparent)"
+            : `color-mix(in srgb, ${cfg.color} 19%, transparent)`,
+        }
+      : undefined;
+
+  const dividerStyle =
+    status === "active" || status === "extra"
+      ? {
+          background: `linear-gradient(90deg, transparent, color-mix(in srgb, ${isExtra ? "var(--colors-slot-bonus)" : cfg.color} 31%, transparent), transparent)`,
+        }
+      : {
+          background:
+            "color-mix(in srgb, var(--colors-border) 40%, transparent)",
+        };
+
   return (
     <div
-      style={getCardStyle()}
+      className={slotCard({ status })}
+      style={activeStyle}
       onClick={handleClick}
       role={isClickable ? "button" : "presentation"}
       tabIndex={isClickable ? 0 : undefined}
@@ -215,102 +306,27 @@ export const SlotCard: React.FC<SlotCardProps> = ({
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") handleClick();
       }}
-      onMouseEnter={(e) => {
-        if (!isClickable) return;
-        const el = e.currentTarget as HTMLDivElement;
-        el.style.transform = "translateY(-5px) scale(1.025)";
-      }}
-      onMouseLeave={(e) => {
-        const el = e.currentTarget as HTMLDivElement;
-        el.style.transform = "";
-      }}
-      onMouseDown={(e) => {
-        if (!isClickable) return;
-        const el = e.currentTarget as HTMLDivElement;
-        el.style.transform = "translateY(-2px) scale(0.98)";
-      }}
-      onMouseUp={(e) => {
-        if (!isClickable) return;
-        const el = e.currentTarget as HTMLDivElement;
-        el.style.transform = "translateY(-5px) scale(1.025)";
-      }}
     >
-      {/* 활성 펄스 링 */}
       {(status === "active" || status === "extra") && (
-        <div
-          style={{
-            position: "absolute",
-            inset: "-0.125rem",
-            borderRadius: "1.5rem",
-            border: `1px solid ${isExtra ? "rgba(232,111,168,0.3)" : `${cfg.color}30`}`,
-            animation: "glow 2.5s ease-in-out infinite",
-            pointerEvents: "none",
-          }}
-        />
+        <div className={slotCardRing()} style={ringStyle} />
       )}
 
-      {/* 완료 체크 배지 */}
       {status === "completed" && (
-        <div
-          style={{ position: "absolute", top: "0.625rem", left: "0.625rem" }}
-        >
+        <div className={checkBadge}>
           <CheckIcon color="var(--colors-success)" size={20} />
         </div>
       )}
 
-      {/* 추가기회 배지 */}
       {isExtra && status === "extra" && (
-        <div
-          style={{
-            position: "absolute",
-            top: "0.625rem",
-            right: "0.625rem",
-            padding: "0.125rem 0.5rem",
-            borderRadius: "9999px",
-            fontSize: "0.625rem",
-            fontWeight: "700",
-            letterSpacing: "0.08em",
-            background: "rgba(232,111,168,0.18)",
-            border: "1px solid rgba(232,111,168,0.5)",
-            color: "#F4A0C8",
-          }}
-        >
-          추가기회
-        </div>
+        <div className={cornerBadge({ tone: "extra" })}>추가기회</div>
       )}
 
-      {/* NEW 배지 */}
-      {isNew && (
-        <div
-          style={{
-            position: "absolute",
-            top: "0.625rem",
-            right: "0.625rem",
-            padding: "0.125rem 0.5rem",
-            borderRadius: "9999px",
-            fontSize: "0.625rem",
-            fontWeight: "700",
-            letterSpacing: "0.08em",
-            background: "rgba(255,209,102,0.18)",
-            border: "1px solid rgba(255,209,102,0.5)",
-            color: "#FFD166",
-            animation: "bounce 1.2s ease infinite",
-          }}
-        >
-          NEW
-        </div>
-      )}
+      {isNew ? <div className={cornerBadge({ tone: "new" })}>NEW</div> : null}
 
-      {/* 아이콘 */}
       <div
-        style={{
-          position: "relative",
-          transition: "transform 300ms cubic-bezier(0.34, 1.56, 0.64, 1)",
-          animation:
-            status === "active" || status === "extra"
-              ? "orbPulse 2.5s ease-in-out infinite"
-              : undefined,
-        }}
+        className={iconWrap({
+          pulse: status === "active" || status === "extra",
+        })}
       >
         {status === "locked" ? (
           <LockIcon color="var(--colors-fg-muted)" size={36} />
@@ -321,72 +337,23 @@ export const SlotCard: React.FC<SlotCardProps> = ({
         )}
       </div>
 
-      {/* 라벨 */}
-      <div
-        style={{
-          fontFamily: "'Orbitron', sans-serif",
-          fontWeight: "700",
-          fontSize: "0.875rem",
-          letterSpacing: "0.04em",
-          color: labelColor,
-          textAlign: "center",
-        }}
-      >
+      <Text className={css({ color: labelColor })} variant="slotTitle">
         {cfg.label}
-      </div>
+      </Text>
 
-      {/* 서브 라벨 */}
-      <div
-        style={{
-          fontSize: "0.625rem",
-          color: sublabelColor,
-          fontFamily: "'Noto Sans KR', sans-serif",
-          textAlign: "center",
-          letterSpacing: "0.02em",
-        }}
-      >
+      <Text className={css({ color: sublabelColor })} variant="slotMeta">
         {cfg.sublabel}
-      </div>
+      </Text>
 
-      {/* 시간 라벨 */}
-      <div
-        style={{
-          fontSize: "0.625rem",
-          color:
-            status === "locked" || status === "inactive"
-              ? "var(--colors-fg-dim)"
-              : "var(--colors-fg-muted)",
-          fontFamily: "'JetBrains Mono', monospace",
-          textAlign: "center",
-        }}
-      >
+      <Text className={css({ color: timeColor })} variant="slotMetaMono">
         {cfg.timeLabel}
-      </div>
+      </Text>
 
-      {/* 구분선 */}
-      <div
-        style={{
-          width: "60%",
-          height: "1px",
-          background:
-            status === "active" || status === "extra"
-              ? `linear-gradient(90deg, transparent, ${isExtra ? "#E86FA8" : cfg.color}50, transparent)`
-              : "rgba(33,44,92,0.4)",
-        }}
-      />
+      <div className={divider()} style={dividerStyle} />
 
-      {/* 상태 텍스트 */}
-      <div
-        style={{
-          fontSize: "0.625rem",
-          fontWeight: "600",
-          color: statusColor,
-          textAlign: "center",
-          letterSpacing: "0.04em",
-        }}
-      >
+      <Text className={css({ color: statusColor })} variant="slotStatus">
         {statusText}
-      </div>
+      </Text>
     </div>
   );
 };
