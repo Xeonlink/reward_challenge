@@ -201,6 +201,6 @@ export default defineConfig({
     },
   },
   utilities: {},
-  outdir: "styled-system",
+  outdir: "src/styled",
   jsxFramework: "react",
 });
