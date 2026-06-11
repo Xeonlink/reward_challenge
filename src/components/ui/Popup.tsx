@@ -53,10 +53,10 @@ const headerStyle = css({
 });
 
 const titleStyle = css({
-  fontFamily: "var(--fonts-display)",
+  fontFamily: "display",
   fontSize: "1.125rem",
   fontWeight: "700",
-  color: "var(--colors-brand-text)",
+  color: "fg",
   lineHeight: "1.3",
 });
 
@@ -67,7 +67,7 @@ const closeButtonStyle = css({
   borderRadius: "50%",
   border: "1px solid rgba(255,255,255,0.1)",
   background: "rgba(255,255,255,0.05)",
-  color: "var(--colors-brand-textMuted)",
+  color: "fg.muted",
   cursor: "pointer",
   display: "flex",
   alignItems: "center",
@@ -77,7 +77,7 @@ const closeButtonStyle = css({
   lineHeight: "1",
   _hover: {
     background: "rgba(255,255,255,0.12)",
-    color: "var(--colors-brand-text)",
+    color: "fg",
     borderColor: "rgba(255,255,255,0.2)",
   },
 });
