@@ -15,9 +15,11 @@
   "dependencies": {
     "es-toolkit": "^1.47.0",
     "next": "16.2.9",
+    "radix-ui": "^1.5.0",
     "react": "19.2.7",
     "react-dom": "19.2.7",
-    "styled-jsx": "^5.1.6"
+    "styled-jsx": "^5.1.6",
+    "zustand": "^5.0.14"
   },
   "devDependencies": {
     "@pandacss/dev": "^1.11.0",
