@@ -87,9 +87,7 @@ export interface StarData {
 }
 
 export function starFinalPos(i: number) {
-  const r =
-    STAR_MIN_R +
-    (Math.min(i, 149) / 149) * (STAR_MAX_R - STAR_MIN_R);
+  const r = STAR_MIN_R + (Math.min(i, 149) / 149) * (STAR_MAX_R - STAR_MIN_R);
   return {
     x: CANVAS_CX + r * Math.cos(i * GOLDEN_ANGLE),
     y: CANVAS_CY + r * Math.sin(i * GOLDEN_ANGLE),

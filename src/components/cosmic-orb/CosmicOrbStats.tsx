@@ -87,7 +87,11 @@ export function CosmicOrbStats(props: CosmicOrbStatsProps) {
   return (
     <>
       <div className={statsBar}>
-        <Stat label="사이클" value={`Day ${getCycleDay(universe)}`} sub="/ 30" />
+        <Stat
+          label="사이클"
+          value={`Day ${getCycleDay(universe)}`}
+          sub="/ 30"
+        />
         <div className={statDivider} />
         <Stat
           label="별 조각"
