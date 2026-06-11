@@ -86,12 +86,12 @@ pnpm test:e2e:ui
 
 | E2E 스펙 파일                         | README 섹션                                        |
 | ------------------------------------- | -------------------------------------------------- |
-| `e2e/specs/test-methods.spec.ts`      | 테스트 방법 (URL `?test=`, DevTools, localStorage) |
-| `e2e/specs/time-slots.spec.ts`        | 슬롯 시간대                                        |
-| `e2e/specs/extra-opportunity.spec.ts` | 추가기회 케이스                                    |
-| `e2e/specs/reward-flow.spec.ts`       | 보상 수령 Flow                                     |
-| `e2e/specs/universe-stages.spec.ts`   | 우주 성장 단계                                     |
-| `e2e/specs/cycle.spec.ts`             | 30일 사이클                                        |
+| `test/e2e/specs/test-methods.spec.ts`      | 테스트 방법 (URL `?test=`, DevTools, localStorage) |
+| `test/e2e/specs/time-slots.spec.ts`        | 슬롯 시간대                                        |
+| `test/e2e/specs/extra-opportunity.spec.ts` | 추가기회 케이스                                    |
+| `test/e2e/specs/reward-flow.spec.ts`       | 보상 수령 Flow                                     |
+| `test/e2e/specs/universe-stages.spec.ts`   | 우주 성장 단계                                     |
+| `test/e2e/specs/cycle.spec.ts`             | 30일 사이클                                        |
 
 ### URL 파라미터로 시간대 변경
 
