@@ -19,7 +19,11 @@ test.describe("README 우주 성장 단계", () => {
       await seedUniverse(page, { totalStars });
       await page.goto("/");
       await page.waitForLoadState("networkidle");
-      await expect(page.getByText(label)).toBeVisible();
+      await expect(
+        page.locator(`[data-orb-stage="${stage}"]`).getByText(label, {
+          exact: true,
+        }),
+      ).toBeVisible();
       await expectOrbStage(page, stage);
       await expectTotalStars(page, totalStars);
     });
@@ -30,7 +34,11 @@ test.describe("README 우주 성장 단계", () => {
     await page.goto("/");
     await page.waitForLoadState("networkidle");
     await expectOrbStage(page, 1);
-    await expect(page.getByText("별이 태어나고 있어요")).toBeVisible();
+    await expect(
+      page.locator('[data-orb-stage="1"]').getByText("별이 태어나고 있어요", {
+        exact: true,
+      }),
+    ).toBeVisible();
   });
 
   test("경계값 7 — 2단계", async ({ page }) => {
@@ -38,6 +46,10 @@ test.describe("README 우주 성장 단계", () => {
     await page.goto("/");
     await page.waitForLoadState("networkidle");
     await expectOrbStage(page, 2);
-    await expect(page.getByText("별이 자라고 있어요")).toBeVisible();
+    await expect(
+      page.locator('[data-orb-stage="2"]').getByText("별이 자라고 있어요", {
+        exact: true,
+      }),
+    ).toBeVisible();
   });
 });
