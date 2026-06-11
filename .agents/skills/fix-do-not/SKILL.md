@@ -50,8 +50,8 @@ description: Scans the codebase for styling and architecture patterns the user e
 
 | 금지 | 검색 | 수정 |
 |------|------|------|
-| `html { font-size: 16px }` | `font-size: 16px` in `globals.css` | `font-size: 14px` (루트 rem 기준) |
-| `px` 치수 (예외 제외) | `rg '\d+px' src panda.config.ts` | `rem`으로 변환 (`÷14` 후 **0.125rem 배수**로 반올림) |
+| `html { font-size: 14px }` 등 16px 아님 | `font-size:` in `globals.css` `html` | `font-size: 16px` (루트 rem 기준) |
+| `px` 치수 (예외 제외) | `rg '\d+px' src panda.config.ts` | `rem`으로 변환 (`÷16` 후 **0.125rem 배수**로 반올림) |
 | rem 0.125 배수 아님 | 수동: `0.375rem` OK, `0.3rem` NG | 가장 가까운 0.125 배수로 |
 
 **px 예외 (수정하지 않음)**:
@@ -100,7 +100,7 @@ description: Scans the codebase for styling and architecture patterns the user e
 # 한 번에 스캔 (위반 후보; 예외는 수동 확인)
 rg 'globalCss|semanticTokens|defineRecipe' panda.config.ts
 rg '_styles|shellStyles|shellColumnStyle' src
-rg "font-size: 16px" src/app/globals.css
+rg "font-size: (14|15|17)px" src/app/globals.css
 rg '\d+px' src --glob '*.{tsx,ts,css}' | rg -v '100vh|1px|2px|blur|shadow|canvas'
 rg "fontSize: \"0\." src/components
 rg "'Orbitron'|'JetBrains Mono'|var\\(--fonts-" src
