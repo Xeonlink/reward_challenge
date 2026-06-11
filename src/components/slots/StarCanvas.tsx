@@ -4,8 +4,8 @@ import { css } from "@/styled/css";
 import { useEffect, useRef } from "react";
 
 interface Star {
-  x: number;
-  y: number;
+  x: number; // normalized 0–1
+  y: number; // normalized 0–1
   radius: number;
   baseAlpha: number;
   currentAlpha: number;
@@ -43,17 +43,12 @@ export function StarCanvas() {
     const canvasEl = canvasRef.current;
     if (!canvasEl) return;
 
-    const startedAt = performance.now();
-
-    const ctx = canvasEl.getContext("2d");
-    if (!ctx) return;
-
     // Build star list
     const stars: Star[] = Array.from({ length: STAR_COUNT }, (_, i) => {
       const large = Math.random() < 0.12;
       return {
-        x: Math.random() * window.innerWidth,
-        y: Math.random() * window.innerHeight,
+        x: Math.random(),
+        y: Math.random(),
         radius: large ? Math.random() * 1.4 + 1.2 : Math.random() * 0.8 + 0.4,
         baseAlpha: large
           ? Math.random() * 0.5 + 0.5
@@ -65,6 +60,11 @@ export function StarCanvas() {
       };
     });
 
+    // Draw stars
+    const ctx = canvasEl.getContext("2d");
+    if (!ctx) return;
+
+    const startedAt = performance.now();
     const draw = (now: number) => {
       const elapsed = now - startedAt;
       ctx.clearRect(0, 0, canvasEl.width, canvasEl.height);
@@ -86,8 +86,10 @@ export function StarCanvas() {
         ctx.shadowBlur = s.radius > 1.2 ? 7 : 3;
         ctx.shadowColor = "rgba(180,200,255,0.9)";
         ctx.fillStyle = "#D8E4FF";
+        const drawX = s.x * canvasEl.width;
+        const drawY = s.y * canvasEl.height;
         ctx.beginPath();
-        ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+        ctx.arc(drawX, drawY, s.radius, 0, Math.PI * 2);
         ctx.fill();
         ctx.restore();
       }
