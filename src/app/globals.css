@@ -8,8 +8,8 @@
   html.cosmic {
     --colors-bg: #07091a;
     --colors-fg: #ebf0ff;
-    --colors-fg-muted: #6070a8;
-    --colors-fg-dim: #3a4870;
+    --colors-fg-muted: #8a9ac8;
+    --colors-fg-dim: #6a7aa8;
     --colors-surface: #0c1230;
     --colors-surface-high: #131a3e;
     --colors-surface-hover: #1a2248;
@@ -38,8 +38,8 @@
   html.aurora {
     --colors-bg: #041018;
     --colors-fg: #e8f4f8;
-    --colors-fg-muted: #5a8a9a;
-    --colors-fg-dim: #2a4a58;
+    --colors-fg-muted: #7aaaba;
+    --colors-fg-dim: #4a6a78;
     --colors-surface: #081820;
     --colors-surface-high: #0e2430;
     --colors-surface-hover: #142830;
@@ -70,7 +70,7 @@
   /* ── Global rules (reference theme variables) ── */
 
   html {
-    font-size: 16px;
+    font-size: 14px;
     font-family: var(--font-body), var(--font-body-kr), sans-serif;
     color: var(--colors-fg);
     background-color: var(--colors-bg);
@@ -80,8 +80,25 @@
 
   body {
     min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     color: var(--colors-fg);
     background-color: var(--colors-bg);
+  }
+
+  body > header,
+  body > main,
+  body > footer {
+    width: 100%;
+    max-width: 37.125rem;
+    padding-inline: 1rem;
+    box-sizing: border-box;
+  }
+
+  body > main {
+    flex: 1;
+    padding-bottom: 4.5rem;
   }
 
   ::-webkit-scrollbar {
