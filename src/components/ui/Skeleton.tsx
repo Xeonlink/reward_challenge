@@ -39,7 +39,7 @@ const skeleton = cva({
         height: "2.625rem",
         borderRadius: "full",
       },
-      card: { minHeight: "10rem", borderRadius: "lg" },
+      card: { minHeight: "10rem", borderRadius: "3xl" },
       progressLabel: { width: "100%", height: "1rem", borderRadius: "0.5rem" },
       progressBar: { width: "100%", height: "0.375rem", borderRadius: "full" },
     },
