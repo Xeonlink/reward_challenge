@@ -1,0 +1,232 @@
+"use client";
+
+import { Text } from "@/components/ui/Text";
+import { getOrbStage, type UniverseRecord } from "@/lib/slots";
+import { css, cva } from "@/styled/css";
+import { CosmicOrbStats } from "./CosmicOrbStats";
+import { CANVAS_H, CANVAS_W, ORB } from "./orbConfig";
+import { useCosmicOrbCanvas } from "./useCosmicOrbCanvas";
+
+const orbRoot = css({
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  gap: "1rem",
+});
+
+const canvasWrap = css({
+  position: "relative",
+  width: "280px",
+  height: "280px",
+});
+
+const canvasEl = css({
+  position: "absolute",
+  inset: 0,
+  pointerEvents: "none",
+});
+
+const orbWrapCenter = css({
+  position: "absolute",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+});
+
+const cosmicRing = cva({
+  base: {
+    position: "absolute",
+    borderRadius: "50%",
+    border: "1px solid",
+    animation: "cosmicRing 8s linear infinite",
+  },
+  variants: {
+    dashed: {
+      true: {
+        borderStyle: "dashed",
+        opacity: 0.55,
+        animation: "cosmicRing 12s linear infinite reverse",
+      },
+      false: {},
+    },
+  },
+});
+
+const particleOrbit = cva({
+  base: {
+    position: "absolute",
+    borderRadius: "50%",
+    animation: "spin 3.5s linear infinite",
+  },
+  variants: {
+    reverse: {
+      true: { animation: "spin 6s linear infinite reverse" },
+      false: {},
+    },
+  },
+});
+
+const particleDot = css({
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  borderRadius: "50%",
+});
+
+const orbBody = css({
+  borderRadius: "50%",
+  animation: "orbFloat 5s ease-in-out infinite",
+  position: "relative",
+  flexShrink: 0,
+});
+
+const orbSpecular = css({
+  position: "absolute",
+  top: "16%",
+  left: "20%",
+  width: "30%",
+  height: "22%",
+  borderRadius: "50%",
+  background: "rgba(255,255,255,0.22)",
+  filter: "blur(5px)",
+});
+
+const orbAuroraOverlay = css({
+  position: "absolute",
+  inset: 0,
+  borderRadius: "50%",
+  background:
+    "linear-gradient(135deg, rgba(255,230,80,0.20), rgba(200,100,255,0.18), rgba(80,160,255,0.12))",
+  backgroundSize: "200% 200%",
+  animation: "auroraShift 2.5s ease infinite",
+});
+
+type CosmicOrbProps = {
+  universe: UniverseRecord;
+  starsToday: number;
+  lastStarBornAt: number;
+};
+
+export function CosmicOrb(props: CosmicOrbProps) {
+  const { universe, starsToday, lastStarBornAt } = props;
+  const stage = getOrbStage(universe.totalStars);
+  const cfg = ORB[stage];
+  const progress = Math.min(Math.round((universe.totalStars / 150) * 100), 100);
+  const canvasRef = useCosmicOrbCanvas(
+    universe.totalStars,
+    lastStarBornAt,
+    stage,
+  );
+
+  const wrapSize = cfg.size + 40;
+  const wrapOffset = (CANVAS_W - wrapSize) / 2;
+
+  return (
+    <div
+      className={orbRoot}
+      data-orb-stage={stage}
+      data-total-stars={universe.totalStars}
+    >
+      <div className={canvasWrap}>
+        <canvas
+          className={canvasEl}
+          ref={canvasRef}
+          width={CANVAS_W}
+          height={CANVAS_H}
+        />
+
+        <div
+          className={orbWrapCenter}
+          style={{
+            top: wrapOffset,
+            left: wrapOffset,
+            width: wrapSize,
+            height: wrapSize,
+          }}
+        >
+          {stage >= 3 ? (
+            <div
+              className={cosmicRing()}
+              style={{
+                width: cfg.size + 28,
+                height: cfg.size + 28,
+                borderColor: cfg.ringColor,
+              }}
+            />
+          ) : null}
+          {stage >= 4 ? (
+            <div
+              className={cosmicRing({ dashed: true })}
+              style={{
+                width: cfg.size + 16,
+                height: cfg.size + 16,
+                borderColor: cfg.ringColor,
+              }}
+            />
+          ) : null}
+
+          {cfg.particleCount >= 1 ? (
+            <div
+              className={particleOrbit()}
+              style={{ width: cfg.size + 28, height: cfg.size + 28 }}
+            >
+              <div
+                className={particleDot}
+                style={{
+                  marginTop: "-4px",
+                  marginLeft: `${(cfg.size + 28) / 2 - 4}px`,
+                  width: 8,
+                  height: 8,
+                  background: cfg.particleColor ?? "#C589E8",
+                  boxShadow: `0 0 12px ${cfg.particleColor ?? "#C589E8"}, 0 0 24px ${cfg.particleColor ?? "#C589E8"}55`,
+                }}
+              />
+            </div>
+          ) : null}
+          {cfg.particleCount >= 2 ? (
+            <div
+              className={particleOrbit({ reverse: true })}
+              style={{ width: cfg.size + 28, height: cfg.size + 28 }}
+            >
+              <div
+                className={particleDot}
+                style={{
+                  marginTop: "-3px",
+                  marginLeft: `${(cfg.size + 28) / 2 - 3}px`,
+                  width: 6,
+                  height: 6,
+                  background: "#C589E8",
+                  boxShadow: "0 0 10px #C589E8, 0 0 20px #C589E845",
+                }}
+              />
+            </div>
+          ) : null}
+
+          <div
+            className={orbBody}
+            style={{
+              width: cfg.size,
+              height: cfg.size,
+              background: cfg.bg,
+              boxShadow: cfg.glow,
+            }}
+          >
+            <div className={orbSpecular} />
+            {stage === 5 ? <div className={orbAuroraOverlay} /> : null}
+          </div>
+        </div>
+      </div>
+
+      <Text className={css({ color: cfg.labelColor })} variant="stageLabel">
+        {cfg.label}
+      </Text>
+
+      <CosmicOrbStats
+        universe={universe}
+        starsToday={starsToday}
+        stage={stage}
+        progress={progress}
+      />
+    </div>
+  );
+}
