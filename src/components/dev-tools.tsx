@@ -1,4 +1,7 @@
+"use client";
+
 import { Chip } from "@/components/ui/Chip";
+import { UNIVERSE_STORAGE_KEY } from "@/lib/constants";
 import { css } from "@/styled/css";
 
 const TEST_PARAMS = [
@@ -6,6 +9,19 @@ const TEST_PARAMS = [
   { param: "lunch", tone: "lunch" as const },
   { param: "dinner", tone: "dinner" as const },
 ] as const;
+
+const UNIVERSE_PRESETS = [
+  { label: "2단계·15", totalStars: 15 },
+  { label: "3단계·30", totalStars: 30 },
+  { label: "4단계·55", totalStars: 55 },
+  { label: "5단계·80", totalStars: 80 },
+  { label: "우주 초기화", totalStars: 0 },
+] as const;
+
+function applyUniverseStars(totalStars: number) {
+  localStorage.setItem(UNIVERSE_STORAGE_KEY, JSON.stringify({ totalStars }));
+  location.reload();
+}
 
 const rootStyle = css({
   position: "fixed",
@@ -63,13 +79,40 @@ const toolsWrapStyle = css({
   transition: "max-width 200ms ease, opacity 200ms ease",
 });
 
+const toolsStackStyle = css({
+  display: "flex",
+  flexDirection: "column",
+  gap: "2",
+  width: "max-content",
+  maxWidth: "min(100vw - 2rem, 28rem)",
+});
+
 const chipRowStyle = css({
   display: "flex",
   gap: "2",
   flexWrap: "wrap",
   justifyContent: "flex-end",
-  width: "max-content",
-  maxWidth: "min(100vw - 2rem, 24rem)",
+});
+
+const universeButtonStyle = css({
+  display: "inline-flex",
+  alignItems: "center",
+  padding: "0.25rem 0.75rem",
+  borderRadius: "full",
+  fontSize: "xs",
+  fontWeight: "600",
+  fontFamily: "mono",
+  color: "fg.muted",
+  background: "transparent",
+  border: "1px solid",
+  borderColor: "color-mix(in srgb, var(--colors-border) 80%, transparent)",
+  cursor: "pointer",
+  transition: "all 200ms",
+  _hover: {
+    borderColor:
+      "color-mix(in srgb, var(--colors-border-bright) 60%, transparent)",
+    color: "fg",
+  },
 });
 
 export function DevTools() {
@@ -82,15 +125,29 @@ export function DevTools() {
       <div className={panelStyle}>
         <span className={labelStyle}>test</span>
         <div className={toolsWrapStyle} data-dev-tools-chips>
-          <div className={chipRowStyle}>
-            {TEST_PARAMS.map(({ param, tone }) => (
-              <Chip key={param} href={`?test=${param}`} tone={tone}>
-                ?test={param}
+          <div className={toolsStackStyle}>
+            <div className={chipRowStyle}>
+              {TEST_PARAMS.map(({ param, tone }) => (
+                <Chip key={param} href={`?test=${param}`} tone={tone}>
+                  ?test={param}
+                </Chip>
+              ))}
+              <Chip href="/" tone="default">
+                초기화
               </Chip>
-            ))}
-            <Chip href="/" tone="default">
-              초기화
-            </Chip>
+            </div>
+            <div className={chipRowStyle}>
+              {UNIVERSE_PRESETS.map(({ label, totalStars }) => (
+                <button
+                  className={universeButtonStyle}
+                  key={label}
+                  type="button"
+                  onClick={() => applyUniverseStars(totalStars)}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>
