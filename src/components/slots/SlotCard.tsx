@@ -112,7 +112,8 @@ export const SlotCard: React.FC<SlotCardProps> = ({
       border: "1px solid",
       overflow: "hidden",
       userSelect: "none",
-      minWidth: "148px",
+      width: "100%",
+      minWidth: 0,
     };
 
     if (status === "inactive" || status === "locked") {

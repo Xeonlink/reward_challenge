@@ -1,5 +1,6 @@
 "use client";
 
+import { heroZoneStyle, serviceGridStyle } from "@/app/_styles/shellStyles";
 import { useSlots } from "@/hooks/useSlots";
 import { starsFromDay } from "@/lib/slotLogic";
 import { css } from "@/styled/css";
@@ -54,82 +55,73 @@ export const SlotGrid: React.FC<SlotGridProps> = ({ testParam }) => {
         width: "100%",
       })}
     >
-      {/* 우주 Orb */}
-      <CosmicOrb
-        universe={universe}
-        starsToday={starsToday}
-        lastStarBornAt={lastStarBornAt}
-      />
+      <div className={heroZoneStyle}>
+        <CosmicOrb
+          universe={universe}
+          starsToday={starsToday}
+          lastStarBornAt={lastStarBornAt}
+        />
 
-      {/* 현재 시간대 표시 */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "10px",
-          padding: "8px 18px",
-          borderRadius: "9999px",
-          border: "1px solid rgba(33,44,92,0.7)",
-          background: "rgba(12,18,48,0.7)",
-          backdropFilter: "blur(8px)",
-        }}
-      >
         <div
           style={{
-            width: 7,
-            height: 7,
-            borderRadius: "50%",
-            background: t?.color,
-            boxShadow: `0 0 6px ${t?.color}`,
-            animation: "pulse 2s ease infinite",
-          }}
-        />
-        <span
-          style={{
-            fontSize: "0.75rem",
-            color: "#6070A8",
-            fontFamily: "'JetBrains Mono', monospace",
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+            padding: "8px 18px",
+            borderRadius: "9999px",
+            border: "1px solid rgba(33,44,92,0.7)",
+            background: "rgba(12,18,48,0.7)",
+            backdropFilter: "blur(8px)",
           }}
         >
-          현재 시간대:
-        </span>
-        <span
-          style={{
-            fontSize: "0.82rem",
-            fontWeight: "700",
-            color: t?.color,
-            fontFamily: "'Orbitron', sans-serif",
-          }}
-        >
-          {t?.label}
-        </span>
-        {testParam && (
+          <div
+            style={{
+              width: 7,
+              height: 7,
+              borderRadius: "50%",
+              background: t?.color,
+              boxShadow: `0 0 6px ${t?.color}`,
+              animation: "pulse 2s ease infinite",
+            }}
+          />
           <span
             style={{
-              fontSize: "0.62rem",
-              padding: "2px 8px",
-              borderRadius: "9999px",
-              background: "rgba(232,111,168,0.12)",
-              border: "1px solid rgba(232,111,168,0.3)",
-              color: "#F4A0C8",
-              fontWeight: "600",
+              fontSize: "0.75rem",
+              color: "#6070A8",
+              fontFamily: "'JetBrains Mono', monospace",
             }}
           >
-            TEST
+            현재 시간대:
           </span>
-        )}
+          <span
+            style={{
+              fontSize: "0.82rem",
+              fontWeight: "700",
+              color: t?.color,
+              fontFamily: "'Orbitron', sans-serif",
+            }}
+          >
+            {t?.label}
+          </span>
+          {testParam ? (
+            <span
+              style={{
+                fontSize: "0.62rem",
+                padding: "2px 8px",
+                borderRadius: "9999px",
+                background: "rgba(232,111,168,0.12)",
+                border: "1px solid rgba(232,111,168,0.3)",
+                color: "#F4A0C8",
+                fontWeight: "600",
+              }}
+            >
+              TEST
+            </span>
+          ) : null}
+        </div>
       </div>
 
-      {/* 슬롯 카드 */}
-      <div
-        className={css({
-          display: "flex",
-          gap: "14px",
-          flexWrap: "wrap",
-          justifyContent: "center",
-          width: "100%",
-        })}
-      >
+      <div className={serviceGridStyle}>
         {slots.map((slot) => (
           <SlotCard
             key={slot.key}
