@@ -1,19 +1,24 @@
 "use client";
 
+import { CosmicOrb } from "@/components/cosmic-orb/CosmicOrb";
 import { TimeBadge } from "@/components/ui/TimeBadge";
 import { useSlots } from "@/hooks/useSlots";
-import { getTimeOfDayLabel, SLOT_META, starsFromDay } from "@/lib/slots";
+import {
+  getTimeOfDayLabel,
+  getVisitRewardAmount,
+  getVisitRewardLabel,
+  starsFromDay,
+  type TimeOfDay,
+} from "@/lib/slots";
 import { css } from "@/styled/css";
+import { RewardPopup } from "./RewardPopup";
 import { BonusSlotCard } from "./cards/BonusSlotCard";
 import { DinnerSlotCard } from "./cards/DinnerSlotCard";
 import { LunchSlotCard } from "./cards/LunchSlotCard";
 import { MorningSlotCard } from "./cards/MorningSlotCard";
-import { CosmicOrb } from "@/components/cosmic-orb/CosmicOrb";
-import { RewardPopup } from "./RewardPopup";
 import { CycleCompletePopup } from "./sections/CycleCompletePopup";
 import { DailyStarsProgress } from "./sections/DailyStarsProgress";
 import { SlotsCompleteBanner } from "./sections/SlotsCompleteBanner";
-import { SlotsLegend } from "./sections/SlotsLegend";
 
 const rootStyle = css({
   display: "flex",
@@ -42,9 +47,15 @@ interface SlotGridProps {
   testParam?: string | null;
 }
 
+function timeBadgeColor(currentTime: TimeOfDay): string {
+  if (currentTime === "morning") return "var(--colors-slot-morning)";
+  if (currentTime === "lunch") return "var(--colors-slot-lunch)";
+  return "var(--colors-slot-dinner)";
+}
+
 export function SlotGrid({ testParam }: SlotGridProps) {
   const {
-    slots,
+    board,
     currentTime,
     todayRecord,
     universe,
@@ -58,7 +69,6 @@ export function SlotGrid({ testParam }: SlotGridProps) {
   } = useSlots(testParam);
 
   const starsToday = starsFromDay(todayRecord);
-  const slotByKey = Object.fromEntries(slots.map((s) => [s.key, s]));
 
   return (
     <div className={rootStyle}>
@@ -70,7 +80,7 @@ export function SlotGrid({ testParam }: SlotGridProps) {
         />
 
         <TimeBadge
-          slotColor={SLOT_META[currentTime].color}
+          slotColor={timeBadgeColor(currentTime)}
           label={getTimeOfDayLabel(currentTime)}
           testMode={Boolean(testParam)}
         />
@@ -78,26 +88,24 @@ export function SlotGrid({ testParam }: SlotGridProps) {
 
       <div className={serviceGridStyle}>
         <MorningSlotCard
-          status={slotByKey.morning.status}
-          isExtra={slotByKey.morning.isExtra}
+          status={board.morning.status}
+          isExtra={board.morning.isExtra}
           onExternalVisit={handleExternalVisit}
         />
         <LunchSlotCard
-          status={slotByKey.lunch.status}
-          isExtra={slotByKey.lunch.isExtra}
+          status={board.lunch.status}
+          isExtra={board.lunch.isExtra}
           onExternalVisit={handleExternalVisit}
         />
         <DinnerSlotCard
-          status={slotByKey.dinner.status}
-          isExtra={slotByKey.dinner.isExtra}
+          status={board.dinner.status}
+          isExtra={board.dinner.isExtra}
           onExternalVisit={handleExternalVisit}
         />
         <BonusSlotCard
-          status={slotByKey.bonus.status}
+          status={board.bonus.status}
           todayRecord={todayRecord}
-          isNew={
-            slotByKey.bonus.status === "active" && !todayRecord.bonus
-          }
+          isNew={board.bonus.status === "active" && !todayRecord.bonus}
           onExternalVisit={handleExternalVisit}
         />
       </div>
@@ -106,14 +114,15 @@ export function SlotGrid({ testParam }: SlotGridProps) {
 
       {allCompleted ? <SlotsCompleteBanner todayRecord={todayRecord} /> : null}
 
-      <SlotsLegend />
-
       {rewardPopup ? (
         <RewardPopup
-          slotKey={rewardPopup.key}
+          slotLabel={getVisitRewardLabel(rewardPopup.intent)}
+          rewardAmount={getVisitRewardAmount(rewardPopup.intent)}
           success={rewardPopup.success}
           open
-          onClaim={handleRewardClaim}
+          onClaim={() =>
+            handleRewardClaim(rewardPopup.intent, rewardPopup.success)
+          }
         />
       ) : null}
 

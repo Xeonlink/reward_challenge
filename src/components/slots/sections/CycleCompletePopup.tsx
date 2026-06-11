@@ -30,7 +30,9 @@ export function CycleCompletePopup(props: CycleCompletePopupProps) {
         </Text>
       }
     >
-      <div className={css({ textAlign: "center", padding: "0.5rem 0 0.25rem" })}>
+      <div
+        className={css({ textAlign: "center", padding: "0.5rem 0 0.25rem" })}
+      >
         <div className={css({ fontSize: "4xl", marginBottom: "1rem" })}>✨</div>
         <Text
           className={css({
@@ -40,8 +42,7 @@ export function CycleCompletePopup(props: CycleCompletePopupProps) {
           variant="body"
         >
           30일간의 여정을 완주했어요.
-          <br />
-          별 조각이 새롭게 초기화됩니다.
+          <br />별 조각이 새롭게 초기화됩니다.
         </Text>
         <Text className={css({ marginBottom: "1.375rem" })} variant="muted">
           새로운 여정을 시작하세요

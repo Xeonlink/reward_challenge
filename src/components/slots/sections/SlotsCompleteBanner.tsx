@@ -23,7 +23,9 @@ export function SlotsCompleteBanner(props: SlotsCompleteBannerProps) {
 
   return (
     <div className={completeBannerStyle}>
-      <div className={css({ fontSize: "xl", marginBottom: "0.375rem" })}>✨</div>
+      <div className={css({ fontSize: "xl", marginBottom: "0.375rem" })}>
+        ✨
+      </div>
       <Text
         className={css({
           fontFamily: "display",

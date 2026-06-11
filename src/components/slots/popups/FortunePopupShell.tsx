@@ -1,12 +1,9 @@
 "use client";
 
-import { Text } from "@/components/ui/Text";
 import { Popup } from "@/components/ui/Popup";
-import { SLOT_META } from "@/lib/slots";
-import type { SlotKey } from "@/lib/slots";
+import { Text } from "@/components/ui/Text";
 import { css } from "@/styled/css";
-import type { ReactNode } from "react";
-import { SLOT_ICONS } from "../slotIconMap";
+import type { ComponentType, ReactNode } from "react";
 
 const popupTitle = css({
   display: "flex",
@@ -23,7 +20,10 @@ const accentLine = css({
 });
 
 type FortunePopupShellProps = {
-  slotKey: SlotKey;
+  title: string;
+  color: string;
+  colorLight: string;
+  icon: ComponentType<{ color: string; size?: number }>;
   titlePrefix?: string;
   open: boolean;
   onClose: () => void;
@@ -31,9 +31,16 @@ type FortunePopupShellProps = {
 };
 
 export function FortunePopupShell(props: FortunePopupShellProps) {
-  const { slotKey, titlePrefix, open, onClose, children } = props;
-  const cfg = SLOT_META[slotKey];
-  const Icon = SLOT_ICONS[slotKey];
+  const {
+    title,
+    color,
+    colorLight,
+    icon: Icon,
+    titlePrefix,
+    open,
+    onClose,
+    children,
+  } = props;
 
   return (
     <Popup
@@ -41,10 +48,10 @@ export function FortunePopupShell(props: FortunePopupShellProps) {
       onClose={onClose}
       title={
         <span className={popupTitle}>
-          <Icon color={cfg.colorLight} size={28} />
-          <Text className={css({ color: cfg.colorLight })} variant="slotTitle">
+          <Icon color={colorLight} size={28} />
+          <Text className={css({ color: colorLight })} variant="slotTitle">
             {titlePrefix}
-            {cfg.fortuneLabel}
+            {title}
           </Text>
         </span>
       }
@@ -52,7 +59,7 @@ export function FortunePopupShell(props: FortunePopupShellProps) {
       <div
         className={accentLine}
         style={{
-          background: `linear-gradient(90deg, transparent, ${cfg.color}, transparent)`,
+          background: `linear-gradient(90deg, transparent, ${color}, transparent)`,
         }}
       />
       {children}

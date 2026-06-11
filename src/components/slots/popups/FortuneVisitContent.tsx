@@ -2,8 +2,6 @@
 
 import { Button } from "@/components/ui/Button";
 import { Text } from "@/components/ui/Text";
-import { FORTUNE_VISIT_STEPS, SLOT_META } from "@/lib/slots";
-import type { SlotKey } from "@/lib/slots";
 import { css, cva } from "@/styled/css";
 import { StarFragmentIcon } from "../SlotIcons";
 
@@ -59,28 +57,37 @@ const buttonWrap = css({
 });
 
 type FortuneVisitContentProps = {
-  slotKey: SlotKey;
+  color: string;
+  colorLight: string;
+  calloutBg: string;
+  starRewardLabel: string;
   isExtra?: boolean;
   onVisit: () => void;
 };
 
 export function FortuneVisitContent(props: FortuneVisitContentProps) {
-  const { slotKey, isExtra, onVisit } = props;
-  const cfg = SLOT_META[slotKey];
+  const { color, colorLight, calloutBg, starRewardLabel, isExtra, onVisit } =
+    props;
+
+  const stepStyle = {
+    background: `color-mix(in srgb, ${color} 8%, transparent)`,
+    borderColor: `color-mix(in srgb, ${color} 25%, transparent)`,
+    color: colorLight,
+  };
 
   return (
     <>
       <div
         className={callout}
         style={{
-          background: cfg.calloutBg,
-          borderColor: `color-mix(in srgb, ${cfg.color} 19%, transparent)`,
+          background: calloutBg,
+          borderColor: `color-mix(in srgb, ${color} 19%, transparent)`,
         }}
       >
-        <StarFragmentIcon color={cfg.color} size={28} />
+        <StarFragmentIcon color={color} size={28} />
         <div>
-          <div className={calloutTitle} style={{ color: cfg.colorLight }}>
-            {slotKey === "bonus" ? "별 조각 +2 획득 가능" : "별 조각 +1 획득 가능"}
+          <div className={calloutTitle} style={{ color: colorLight }}>
+            {starRewardLabel}
           </div>
           <Text variant="muted">
             {isExtra
@@ -91,21 +98,24 @@ export function FortuneVisitContent(props: FortuneVisitContentProps) {
       </div>
 
       <div className={stepsWrap}>
-        {FORTUNE_VISIT_STEPS.map((text, i) => (
-          <div className={stepRow} key={text}>
-            <div
-              className={stepNumber()}
-              style={{
-                background: `color-mix(in srgb, ${cfg.color} 8%, transparent)`,
-                borderColor: `color-mix(in srgb, ${cfg.color} 25%, transparent)`,
-                color: cfg.colorLight,
-              }}
-            >
-              {i + 1}
-            </div>
-            <Text variant="muted">{text}</Text>
+        <div className={stepRow}>
+          <div className={stepNumber()} style={stepStyle}>
+            1
           </div>
-        ))}
+          <Text variant="muted">강남철학관 운세 페이지로 이동</Text>
+        </div>
+        <div className={stepRow}>
+          <div className={stepNumber()} style={stepStyle}>
+            2
+          </div>
+          <Text variant="muted">3초 이상 체류하기</Text>
+        </div>
+        <div className={stepRow}>
+          <div className={stepNumber()} style={stepStyle}>
+            3
+          </div>
+          <Text variant="muted">돌아와서 별 조각 수령</Text>
+        </div>
       </div>
 
       <div className={buttonWrap}>

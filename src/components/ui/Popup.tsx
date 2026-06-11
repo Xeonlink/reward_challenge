@@ -9,7 +9,6 @@ export interface PopupProps {
   title?: React.ReactNode;
   children: React.ReactNode;
   size?: "sm" | "md" | "lg";
-  closeOnBackdrop?: boolean;
   showClose?: boolean;
   className?: string;
 }
@@ -86,16 +85,17 @@ const bodyStyle = css({
   padding: "1.375rem 1.5rem 1.5rem",
 });
 
-export const Popup: React.FC<PopupProps> = ({
-  open,
-  onClose,
-  title,
-  children,
-  size = "md",
-  closeOnBackdrop = true,
-  showClose = true,
-  className,
-}) => {
+export function Popup(props: PopupProps) {
+  const {
+    open,
+    onClose,
+    title,
+    children,
+    size = "md",
+    showClose = true,
+    className,
+  } = props;
+
   const dialogRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -116,7 +116,7 @@ export const Popup: React.FC<PopupProps> = ({
   return (
     <div
       className={backdropStyle}
-      onClick={closeOnBackdrop ? onClose : undefined}
+      onClick={onClose}
       role="dialog"
       aria-modal="true"
       aria-label={typeof title === "string" ? title : "팝업"}
@@ -126,7 +126,7 @@ export const Popup: React.FC<PopupProps> = ({
         ref={dialogRef}
         onClick={(e) => e.stopPropagation()}
       >
-        {(title || showClose) && (
+        {title || showClose ? (
           <div className={headerStyle}>
             {title && <div className={titleStyle}>{title}</div>}
             {showClose && (
@@ -139,9 +139,9 @@ export const Popup: React.FC<PopupProps> = ({
               </button>
             )}
           </div>
-        )}
+        ) : null}
         <div className={bodyStyle}>{children}</div>
       </div>
     </div>
   );
-};
+}

@@ -84,8 +84,8 @@ pnpm test:e2e
 pnpm test:e2e:ui
 ```
 
-| E2E 스펙 파일                         | README 섹션                                        |
-| ------------------------------------- | -------------------------------------------------- |
+| E2E 스펙 파일                              | README 섹션                                        |
+| ------------------------------------------ | -------------------------------------------------- |
 | `test/e2e/specs/test-methods.spec.ts`      | 테스트 방법 (URL `?test=`, DevTools, localStorage) |
 | `test/e2e/specs/time-slots.spec.ts`        | 슬롯 시간대                                        |
 | `test/e2e/specs/extra-opportunity.spec.ts` | 추가기회 케이스                                    |
@@ -208,7 +208,9 @@ src/
 │   │   └── Popup.tsx
 │   └── slots/
 │       ├── SlotGrid.tsx
-│       ├── SlotCardFrame.tsx
+│       ├── FortuneSlotCardFrame.tsx
+│       ├── BonusSlotCardFrame.tsx
+│       ├── slotCardLayout.ts
 │       ├── RewardPopup.tsx
 │       ├── cards/          # Morning/Lunch/Dinner/BonusSlotCard
 │       ├── popups/         # Fortune/BonusLocked 팝업
@@ -218,5 +220,5 @@ src/
 │   └── slots/              # useUniverse, useCurrentTime, useFortuneVisit
 └── lib/
     ├── slotLogic.ts        # re-export (하위 호환)
-    └── slots/              # 타입, 상태 계산, 보상, 설정
+    └── slots/              # 타입, 상태 계산, 보상, 시간대
 ```

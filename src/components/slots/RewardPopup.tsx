@@ -1,9 +1,7 @@
 "use client";
 
 import { Text } from "@/components/ui/Text";
-import { getTimeOfDayLabel, type SlotKey } from "@/lib/slots";
 import { css, cva } from "@/styled/css";
-import React from "react";
 import { Button } from "../ui/Button";
 import { Popup } from "../ui/Popup";
 import { StarFragmentIcon } from "./SlotIcons";
@@ -100,28 +98,19 @@ const rewardCaption = css({
 });
 
 interface RewardPopupProps {
-  slotKey: SlotKey;
+  slotLabel: string;
+  rewardAmount: number;
   success: boolean;
   open: boolean;
-  onClaim: (key: SlotKey, success: boolean) => void;
+  onClaim: () => void;
 }
 
-export const RewardPopup: React.FC<RewardPopupProps> = ({
-  slotKey,
-  success,
-  open,
-  onClaim,
-}) => {
-  const label = getTimeOfDayLabel(slotKey);
+export function RewardPopup(props: RewardPopupProps) {
+  const { slotLabel, rewardAmount: amount, success, open, onClaim } = props;
   const variant = success ? "success" : "failure";
 
   return (
-    <Popup
-      open={open}
-      onClose={() => onClaim(slotKey, success)}
-      showClose={false}
-      size="sm"
-    >
+    <Popup open={open} onClose={onClaim} showClose={false} size="sm">
       <div className={content}>
         <div className={rewardIcon({ variant })}>
           {success ? (
@@ -165,8 +154,8 @@ export const RewardPopup: React.FC<RewardPopupProps> = ({
           <Text className={css({ lineHeight: 1.6 })} variant="muted">
             {success ? (
               <>
-                <span className={rewardHighlight}>{label} 운세</span>를 통해 별
-                조각을 모았어요.
+                <span className={rewardHighlight}>{slotLabel} 운세</span>를 통해
+                별 조각을 모았어요.
               </>
             ) : (
               <>
@@ -183,7 +172,7 @@ export const RewardPopup: React.FC<RewardPopupProps> = ({
             <Text variant="label">별 조각 획득</Text>
             <div className={rewardAmountRow}>
               <StarFragmentIcon color="var(--colors-accent)" size={28} />
-              <span className={rewardAmount}>+1</span>
+              <span className={rewardAmount}>+{amount}</span>
             </div>
             <span className={rewardCaption}>우주 성장에 기여했어요</span>
           </div>
@@ -193,11 +182,11 @@ export const RewardPopup: React.FC<RewardPopupProps> = ({
           variant={success ? "gold" : "secondary"}
           size="md"
           fullWidth
-          onClick={() => onClaim(slotKey, success)}
+          onClick={onClaim}
         >
           {success ? "확인" : "닫기"}
         </Button>
       </div>
     </Popup>
   );
-};
+}

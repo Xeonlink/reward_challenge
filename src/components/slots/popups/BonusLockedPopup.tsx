@@ -2,10 +2,9 @@
 
 import { Button } from "@/components/ui/Button";
 import { Text } from "@/components/ui/Text";
-import { BONUS_UNLOCK_STEPS, SLOT_META } from "@/lib/slots";
 import type { CompletionRecord } from "@/lib/slots";
 import { css, cva } from "@/styled/css";
-import { CheckIcon, StarFragmentIcon } from "../SlotIcons";
+import { BonusIcon, CheckIcon, StarFragmentIcon } from "../SlotIcons";
 import { FortunePopupShell } from "./FortunePopupShell";
 
 const callout = css({
@@ -67,20 +66,41 @@ type BonusLockedPopupProps = {
 
 export function BonusLockedPopup(props: BonusLockedPopupProps) {
   const { todayRecord, open, onClose } = props;
-  const cfg = SLOT_META.bonus;
+
+  const color = "var(--colors-slot-bonus)";
+  const colorLight = "var(--colors-slot-bonus-light)";
+  const calloutBg =
+    "color-mix(in srgb, var(--colors-slot-bonus) 8%, transparent)";
+
+  const stepStyle = (done: boolean) => ({
+    background: done
+      ? "color-mix(in srgb, var(--colors-success) 12%, transparent)"
+      : `color-mix(in srgb, ${color} 8%, transparent)`,
+    borderColor: done
+      ? "color-mix(in srgb, var(--colors-success) 35%, transparent)"
+      : `color-mix(in srgb, ${color} 25%, transparent)`,
+    color: done ? "var(--colors-success)" : colorLight,
+  });
 
   return (
-    <FortunePopupShell slotKey="bonus" open={open} onClose={onClose}>
+    <FortunePopupShell
+      title="우주의 운세"
+      color={color}
+      colorLight={colorLight}
+      icon={BonusIcon}
+      open={open}
+      onClose={onClose}
+    >
       <div
         className={callout}
         style={{
-          background: cfg.calloutBg,
-          borderColor: `color-mix(in srgb, ${cfg.color} 19%, transparent)`,
+          background: calloutBg,
+          borderColor: `color-mix(in srgb, ${color} 19%, transparent)`,
         }}
       >
-        <StarFragmentIcon color={cfg.color} size={28} />
+        <StarFragmentIcon color={color} size={28} />
         <div>
-          <div className={calloutTitle} style={{ color: cfg.colorLight }}>
+          <div className={calloutTitle} style={{ color: colorLight }}>
             아침·점심·저녁을 모두 완료해야 합니다
           </div>
           <Text variant="muted">
@@ -90,41 +110,63 @@ export function BonusLockedPopup(props: BonusLockedPopupProps) {
       </div>
 
       <div className={stepsWrap}>
-        {BONUS_UNLOCK_STEPS.map(({ key, label }, i) => {
-          const done = todayRecord[key];
-          return (
-            <div className={stepRow} key={key}>
-              <div
-                className={stepNumber()}
-                style={{
-                  background: done
-                    ? "color-mix(in srgb, var(--colors-success) 12%, transparent)"
-                    : `color-mix(in srgb, ${cfg.color} 8%, transparent)`,
-                  borderColor: done
-                    ? "color-mix(in srgb, var(--colors-success) 35%, transparent)"
-                    : `color-mix(in srgb, ${cfg.color} 25%, transparent)`,
-                  color: done ? "var(--colors-success)" : cfg.colorLight,
-                }}
-              >
-                {done ? (
-                  <CheckIcon color="var(--colors-success)" size={14} />
-                ) : (
-                  i + 1
-                )}
-              </div>
-              <Text
-                className={css({
-                  color: done ? "success" : "fg.muted",
-                  textDecoration: done ? "line-through" : undefined,
-                  opacity: done ? 0.85 : 1,
-                })}
-                variant="muted"
-              >
-                {label}
-              </Text>
-            </div>
-          );
-        })}
+        <div className={stepRow}>
+          <div className={stepNumber()} style={stepStyle(todayRecord.morning)}>
+            {todayRecord.morning ? (
+              <CheckIcon color="var(--colors-success)" size={14} />
+            ) : (
+              1
+            )}
+          </div>
+          <Text
+            className={css({
+              color: todayRecord.morning ? "success" : "fg.muted",
+              textDecoration: todayRecord.morning ? "line-through" : undefined,
+              opacity: todayRecord.morning ? 0.85 : 1,
+            })}
+            variant="muted"
+          >
+            아침 운세 수령
+          </Text>
+        </div>
+        <div className={stepRow}>
+          <div className={stepNumber()} style={stepStyle(todayRecord.lunch)}>
+            {todayRecord.lunch ? (
+              <CheckIcon color="var(--colors-success)" size={14} />
+            ) : (
+              2
+            )}
+          </div>
+          <Text
+            className={css({
+              color: todayRecord.lunch ? "success" : "fg.muted",
+              textDecoration: todayRecord.lunch ? "line-through" : undefined,
+              opacity: todayRecord.lunch ? 0.85 : 1,
+            })}
+            variant="muted"
+          >
+            점심 운세 수령
+          </Text>
+        </div>
+        <div className={stepRow}>
+          <div className={stepNumber()} style={stepStyle(todayRecord.dinner)}>
+            {todayRecord.dinner ? (
+              <CheckIcon color="var(--colors-success)" size={14} />
+            ) : (
+              3
+            )}
+          </div>
+          <Text
+            className={css({
+              color: todayRecord.dinner ? "success" : "fg.muted",
+              textDecoration: todayRecord.dinner ? "line-through" : undefined,
+              opacity: todayRecord.dinner ? 0.85 : 1,
+            })}
+            variant="muted"
+          >
+            저녁 운세 수령
+          </Text>
+        </div>
       </div>
 
       <div className={buttonWrap}>
