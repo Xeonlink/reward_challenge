@@ -3,6 +3,7 @@
 import { SlotGrid } from "@/components/slots/SlotGrid";
 import { StarFragmentIcon } from "@/components/slots/SlotIcons";
 import { StarCanvas } from "@/components/slots/StarCanvas";
+import Link from "next/link";
 import { css } from "../../styled-system/css";
 
 type Props = {
@@ -173,7 +174,7 @@ export function SlotPageClient(props: Props) {
               { param: "morning", label: "아침 모드", color: "#F4A05A" },
               { param: "lunch", label: "점심 모드", color: "#50C8E8" },
               { param: "dinner", label: "저녁 모드", color: "#9B72CF" },
-            ].map(({ param, label, color }) => (
+            ].map(({ param, color }) => (
               <a
                 key={param}
                 href={`?test=${param}`}
@@ -196,7 +197,7 @@ export function SlotPageClient(props: Props) {
               </a>
             ))}
             {testParam && (
-              <a
+              <Link
                 href="/"
                 style={{
                   padding: "4px 12px",
@@ -209,7 +210,7 @@ export function SlotPageClient(props: Props) {
                 }}
               >
                 초기화
-              </a>
+              </Link>
             )}
           </div>
         </div>
