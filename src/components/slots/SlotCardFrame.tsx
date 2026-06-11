@@ -1,76 +1,17 @@
 "use client";
 
 import { Text } from "@/components/ui/Text";
-import type { SlotKey, SlotStatus } from "@/lib/slotLogic";
+import { SLOT_META } from "@/lib/slots";
+import type { SlotKey, SlotStatus } from "@/lib/slots";
 import { css, cva } from "@/styled/css";
 import React from "react";
-import {
-  BonusIcon,
-  CheckIcon,
-  DinnerIcon,
-  LockIcon,
-  LunchIcon,
-  MorningIcon,
-} from "./SlotIcons";
-
-interface SlotConfig {
-  label: string;
-  sublabel: string;
-  timeLabel: string;
-  color: string;
-  colorLight: string;
-  glow: string;
-  bgActive: string;
-  Icon: React.FC<{ color: string; size?: number }>;
-}
-
-const SLOT_CONFIGS: Record<SlotKey, SlotConfig> = {
-  morning: {
-    label: "아침 운세",
-    sublabel: "새벽의 기운",
-    timeLabel: "00:00 – 11:59",
-    color: "var(--colors-slot-morning)",
-    colorLight: "var(--colors-slot-morning-light)",
-    glow: "0 0 28px rgba(244,160,90,0.45), 0 0 65px rgba(244,160,90,0.18)",
-    bgActive: "linear-gradient(145deg, #1A1208 0%, #251A0C 100%)",
-    Icon: MorningIcon,
-  },
-  lunch: {
-    label: "정오 운세",
-    sublabel: "하늘의 기운",
-    timeLabel: "12:00 – 17:59",
-    color: "var(--colors-slot-lunch)",
-    colorLight: "var(--colors-slot-lunch-light)",
-    glow: "0 0 28px rgba(80,200,232,0.45), 0 0 65px rgba(80,200,232,0.18)",
-    bgActive: "linear-gradient(145deg, #061420 0%, #0A1E30 100%)",
-    Icon: LunchIcon,
-  },
-  dinner: {
-    label: "저녁 운세",
-    sublabel: "달빛의 기운",
-    timeLabel: "18:00 – 23:59",
-    color: "var(--colors-slot-dinner)",
-    colorLight: "var(--colors-slot-dinner-light)",
-    glow: "0 0 28px rgba(155,114,207,0.45), 0 0 65px rgba(155,114,207,0.18)",
-    bgActive: "linear-gradient(145deg, #0E0820 0%, #180C30 100%)",
-    Icon: DinnerIcon,
-  },
-  bonus: {
-    label: "별 보너스",
-    sublabel: "우주의 기운",
-    timeLabel: "모든 운세 완료 후",
-    color: "var(--colors-slot-bonus)",
-    colorLight: "var(--colors-slot-bonus-light)",
-    glow: "0 0 28px rgba(232,111,168,0.45), 0 0 65px rgba(232,111,168,0.18)",
-    bgActive: "linear-gradient(145deg, #1E0812 0%, #280C1A 100%)",
-    Icon: BonusIcon,
-  },
-};
+import { CheckIcon, LockIcon } from "./SlotIcons";
+import { SLOT_ICONS } from "./slotIconMap";
 
 const slotCard = cva({
   base: {
     position: "relative",
-    borderRadius: "lg",
+    borderRadius: "3xl",
     padding: "1.875rem 1.25rem 1.375rem",
     display: "flex",
     flexDirection: "column",
@@ -79,6 +20,7 @@ const slotCard = cva({
     transition: "all 320ms",
     transitionTimingFunction: "spring",
     border: "1px solid",
+    backgroundClip: "padding-box",
     overflow: "hidden",
     userSelect: "none",
     width: "100%",
@@ -101,7 +43,8 @@ const slotCard = cva({
       },
       lockedBonus: {
         background: "slot.extra",
-        borderColor: "slot.extraBorder",
+        borderColor: "transparent",
+        boxShadow: "0 0 0 1px var(--colors-slot-extraBorder)",
         opacity: 0.82,
         cursor: "pointer",
         _hover: { transform: "translateY(-3px) scale(1.02)" },
@@ -120,24 +63,14 @@ const slotCard = cva({
       },
       extra: {
         background: "slot.extra",
-        borderColor: "slot.extraBorder",
-        boxShadow: "bonus",
+        borderColor: "transparent",
+        boxShadow:
+          "0 0 0 1px var(--colors-slot-extraBorder), 0 0 20px rgba(232,111,168,0.4), 0 0 60px rgba(232,111,168,0.15)",
         cursor: "pointer",
         _hover: { transform: "translateY(-5px) scale(1.025)" },
         _active: { transform: "translateY(-2px) scale(0.98)" },
       },
     },
-  },
-});
-
-const slotCardRing = cva({
-  base: {
-    position: "absolute",
-    inset: "-0.125rem",
-    borderRadius: "1.5rem",
-    border: "1px solid",
-    animation: "glow 2.5s ease-in-out infinite",
-    pointerEvents: "none",
   },
 });
 
@@ -215,30 +148,21 @@ const divider = cva({
   },
 });
 
-export interface SlotCardProps {
+type SlotCardFrameProps = {
   slotKey: SlotKey;
   status: SlotStatus;
   isExtra?: boolean;
-  onClick: (key: SlotKey) => void;
   isNew?: boolean;
-}
+  isClickable: boolean;
+  onPress: () => void;
+};
 
-export const SlotCard: React.FC<SlotCardProps> = ({
-  slotKey,
-  status,
-  isExtra,
-  onClick,
-  isNew,
-}) => {
-  const cfg = SLOT_CONFIGS[slotKey];
+export function SlotCardFrame(props: SlotCardFrameProps) {
+  const { slotKey, status, isExtra, isNew, isClickable, onPress } = props;
+  const cfg = SLOT_META[slotKey];
+  const Icon = SLOT_ICONS[slotKey];
   const isBonusLocked = slotKey === "bonus" && status === "locked";
   const cardStatus = isBonusLocked ? "lockedBonus" : status;
-  const isClickable =
-    status === "active" || status === "extra" || isBonusLocked;
-
-  const handleClick = () => {
-    if (isClickable) onClick(slotKey);
-  };
 
   const iconColor =
     status === "completed"
@@ -303,22 +227,12 @@ export const SlotCard: React.FC<SlotCardProps> = ({
             ? "var(--colors-slot-bonus)"
             : cfg.color;
 
-  // runtime: active slot uses per-key gradient, border, glow
   const activeStyle =
     status === "active"
       ? {
           background: cfg.bgActive,
-          borderColor: `color-mix(in srgb, ${cfg.color} 27%, transparent)`,
-          boxShadow: cfg.glow,
-        }
-      : undefined;
-
-  const ringStyle =
-    status === "active" || status === "extra"
-      ? {
-          borderColor: isExtra
-            ? "color-mix(in srgb, var(--colors-slot-bonus) 30%, transparent)"
-            : `color-mix(in srgb, ${cfg.color} 19%, transparent)`,
+          borderColor: "transparent",
+          boxShadow: `0 0 0 1px color-mix(in srgb, ${cfg.color} 27%, transparent), ${cfg.glow}`,
         }
       : undefined;
 
@@ -336,27 +250,27 @@ export const SlotCard: React.FC<SlotCardProps> = ({
     <div
       className={slotCard({ status: cardStatus })}
       style={activeStyle}
-      onClick={handleClick}
+      onClick={() => {
+        if (isClickable) onPress();
+      }}
       role={isClickable ? "button" : "presentation"}
       tabIndex={isClickable ? 0 : undefined}
       aria-label={`${cfg.label} — ${status}`}
       onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") handleClick();
+        if (e.key === "Enter" || e.key === " ") {
+          if (isClickable) onPress();
+        }
       }}
     >
-      {(status === "active" || status === "extra") && (
-        <div className={slotCardRing()} style={ringStyle} />
-      )}
-
-      {status === "completed" && (
+      {status === "completed" ? (
         <div className={checkBadge}>
           <CheckIcon color="var(--colors-success)" size={20} />
         </div>
-      )}
+      ) : null}
 
-      {isExtra && status === "extra" && (
+      {isExtra && status === "extra" ? (
         <div className={cornerBadge({ tone: "extra" })}>추가기회</div>
-      )}
+      ) : null}
 
       {isNew ? <div className={cornerBadge({ tone: "new" })}>NEW</div> : null}
 
@@ -368,10 +282,10 @@ export const SlotCard: React.FC<SlotCardProps> = ({
         {status === "locked" && !isBonusLocked ? (
           <LockIcon color="var(--colors-fg-muted)" size={36} />
         ) : status === "completed" ? (
-          <cfg.Icon color="var(--colors-success)" size={36} />
+          <Icon color="var(--colors-success)" size={36} />
         ) : (
           <>
-            <cfg.Icon color={iconColor} size={36} />
+            <Icon color={iconColor} size={36} />
             {isBonusLocked ? (
               <div className={lockOverlay}>
                 <LockIcon color="var(--colors-fg-muted)" size={12} />
@@ -400,4 +314,4 @@ export const SlotCard: React.FC<SlotCardProps> = ({
       </Text>
     </div>
   );
-};
+}

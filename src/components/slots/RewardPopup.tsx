@@ -1,8 +1,7 @@
 "use client";
 
 import { Text } from "@/components/ui/Text";
-import type { SlotKey } from "@/lib/slotLogic";
-import { getTimeOfDayLabel } from "@/lib/slotLogic";
+import { getTimeOfDayLabel, type SlotKey } from "@/lib/slots";
 import { css, cva } from "@/styled/css";
 import React from "react";
 import { Button } from "../ui/Button";
