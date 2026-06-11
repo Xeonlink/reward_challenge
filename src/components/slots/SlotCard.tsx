@@ -101,12 +101,12 @@ export const SlotCard: React.FC<SlotCardProps> = ({
   const getCardStyle = (): React.CSSProperties => {
     const base: React.CSSProperties = {
       position: "relative",
-      borderRadius: "20px",
-      padding: "26px 18px 22px",
+      borderRadius: "1.375rem",
+      padding: "1.875rem 1.25rem 1.375rem",
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
-      gap: "10px",
+      gap: "0.625rem",
       cursor: isClickable ? "pointer" : "default",
       transition: "all 320ms cubic-bezier(0.34, 1.56, 0.64, 1)",
       border: "1px solid",
@@ -121,7 +121,7 @@ export const SlotCard: React.FC<SlotCardProps> = ({
         ...base,
         background: "#0A0D20",
         borderColor: "#181E3C",
-        opacity: status === "locked" ? 0.32 : 0.45,
+        opacity: status === "locked" ? 0.55 : 0.7,
         filter: status === "locked" ? "grayscale(0.8)" : "none",
         cursor: status === "locked" ? "not-allowed" : "default",
       };
@@ -160,29 +160,29 @@ export const SlotCard: React.FC<SlotCardProps> = ({
 
   const iconColor =
     status === "completed"
-      ? "#5CE8A0"
+      ? "var(--colors-success)"
       : status === "locked" || status === "inactive"
-        ? "#1A2040"
+        ? "var(--colors-fg-muted)"
         : isExtra
-          ? "#F4A0C8"
+          ? "var(--colors-slot-bonus-light)"
           : cfg.color;
 
   const labelColor =
     status === "completed"
-      ? "#5CE8A0"
+      ? "var(--colors-success)"
       : status === "locked" || status === "inactive"
-        ? "#2A3060"
+        ? "var(--colors-fg-muted)"
         : isExtra
-          ? "#F4A0C8"
+          ? "var(--colors-slot-bonus-light)"
           : cfg.colorLight;
 
   const sublabelColor =
     status === "completed"
-      ? "rgba(92,232,160,0.5)"
+      ? "color-mix(in srgb, var(--colors-success) 50%, transparent)"
       : status === "locked" || status === "inactive"
-        ? "#1A2040"
+        ? "var(--colors-fg-dim)"
         : isExtra
-          ? "rgba(244,160,200,0.5)"
+          ? "color-mix(in srgb, var(--colors-slot-bonus-light) 50%, transparent)"
           : `${cfg.color}70`;
 
   const statusText =
@@ -198,14 +198,12 @@ export const SlotCard: React.FC<SlotCardProps> = ({
 
   const statusColor =
     status === "completed"
-      ? "#5CE8A0"
-      : status === "locked"
-        ? "#2A3060"
+      ? "var(--colors-success)"
+      : status === "locked" || status === "inactive"
+        ? "var(--colors-fg-dim)"
         : status === "extra"
-          ? "#E86FA8"
-          : status === "active"
-            ? cfg.color
-            : "#2A3060";
+          ? "var(--colors-slot-bonus)"
+          : cfg.color;
 
   return (
     <div
@@ -242,8 +240,8 @@ export const SlotCard: React.FC<SlotCardProps> = ({
         <div
           style={{
             position: "absolute",
-            inset: -2,
-            borderRadius: "22px",
+            inset: "-0.125rem",
+            borderRadius: "1.5rem",
             border: `1px solid ${isExtra ? "rgba(232,111,168,0.3)" : `${cfg.color}30`}`,
             animation: "glow 2.5s ease-in-out infinite",
             pointerEvents: "none",
@@ -253,8 +251,10 @@ export const SlotCard: React.FC<SlotCardProps> = ({
 
       {/* 완료 체크 배지 */}
       {status === "completed" && (
-        <div style={{ position: "absolute", top: 10, left: 10 }}>
-          <CheckIcon color="#5CE8A0" size={20} />
+        <div
+          style={{ position: "absolute", top: "0.625rem", left: "0.625rem" }}
+        >
+          <CheckIcon color="var(--colors-success)" size={20} />
         </div>
       )}
 
@@ -263,11 +263,11 @@ export const SlotCard: React.FC<SlotCardProps> = ({
         <div
           style={{
             position: "absolute",
-            top: 10,
-            right: 10,
-            padding: "2px 8px",
+            top: "0.625rem",
+            right: "0.625rem",
+            padding: "0.125rem 0.5rem",
             borderRadius: "9999px",
-            fontSize: "0.58rem",
+            fontSize: "0.625rem",
             fontWeight: "700",
             letterSpacing: "0.08em",
             background: "rgba(232,111,168,0.18)",
@@ -284,11 +284,11 @@ export const SlotCard: React.FC<SlotCardProps> = ({
         <div
           style={{
             position: "absolute",
-            top: 10,
-            right: 10,
-            padding: "2px 8px",
+            top: "0.625rem",
+            right: "0.625rem",
+            padding: "0.125rem 0.5rem",
             borderRadius: "9999px",
-            fontSize: "0.58rem",
+            fontSize: "0.625rem",
             fontWeight: "700",
             letterSpacing: "0.08em",
             background: "rgba(255,209,102,0.18)",
@@ -313,9 +313,9 @@ export const SlotCard: React.FC<SlotCardProps> = ({
         }}
       >
         {status === "locked" ? (
-          <LockIcon color="#1A2040" size={36} />
+          <LockIcon color="var(--colors-fg-muted)" size={36} />
         ) : status === "completed" ? (
-          <cfg.Icon color="#5CE8A0" size={36} />
+          <cfg.Icon color="var(--colors-success)" size={36} />
         ) : (
           <cfg.Icon color={iconColor} size={36} />
         )}
@@ -338,7 +338,7 @@ export const SlotCard: React.FC<SlotCardProps> = ({
       {/* 서브 라벨 */}
       <div
         style={{
-          fontSize: "0.65rem",
+          fontSize: "0.625rem",
           color: sublabelColor,
           fontFamily: "'Noto Sans KR', sans-serif",
           textAlign: "center",
@@ -351,8 +351,11 @@ export const SlotCard: React.FC<SlotCardProps> = ({
       {/* 시간 라벨 */}
       <div
         style={{
-          fontSize: "0.62rem",
-          color: "#2A3060",
+          fontSize: "0.625rem",
+          color:
+            status === "locked" || status === "inactive"
+              ? "var(--colors-fg-dim)"
+              : "var(--colors-fg-muted)",
           fontFamily: "'JetBrains Mono', monospace",
           textAlign: "center",
         }}
@@ -375,7 +378,7 @@ export const SlotCard: React.FC<SlotCardProps> = ({
       {/* 상태 텍스트 */}
       <div
         style={{
-          fontSize: "0.68rem",
+          fontSize: "0.625rem",
           fontWeight: "600",
           color: statusColor,
           textAlign: "center",

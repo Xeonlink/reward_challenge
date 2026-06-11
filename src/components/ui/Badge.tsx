@@ -6,13 +6,13 @@ const badge = cva({
   base: {
     display: "inline-flex",
     alignItems: "center",
-    gap: "7px",
-    padding: "4px 14px",
+    gap: "0.5rem",
+    padding: "0.25rem 0.875rem",
     borderRadius: "full",
-    background: "color-mix(in srgb, var(--colors-accent) 7%, transparent)",
+    background: "color-mix(in srgb, var(--colors-accent) 12%, transparent)",
     border: "1px solid",
-    borderColor: "color-mix(in srgb, var(--colors-accent) 18%, transparent)",
-    marginBottom: "22px",
+    borderColor: "color-mix(in srgb, var(--colors-accent) 28%, transparent)",
+    marginBottom: "1.375rem",
   },
   variants: {
     variant: {
@@ -26,7 +26,7 @@ const badge = cva({
 
 const badgeLabel = cva({
   base: {
-    fontSize: "0.68rem",
+    fontSize: "0.625rem",
     fontWeight: "700",
     letterSpacing: "0.18em",
     textTransform: "uppercase",

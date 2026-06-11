@@ -5,9 +5,9 @@ const chip = cva({
   base: {
     display: "inline-flex",
     alignItems: "center",
-    padding: "4px 12px",
+    padding: "0.25rem 0.75rem",
     borderRadius: "full",
-    fontSize: "0.68rem",
+    fontSize: "0.625rem",
     fontWeight: "600",
     textDecoration: "none",
     transition: "all 200ms",
@@ -30,8 +30,8 @@ const chip = cva({
       lunch: {},
       dinner: {},
       test: {
-        fontSize: "0.62rem",
-        padding: "2px 8px",
+        fontSize: "0.625rem",
+        padding: "0.125rem 0.5rem",
         background:
           "color-mix(in srgb, var(--colors-slot-bonus) 12%, transparent)",
         borderColor:

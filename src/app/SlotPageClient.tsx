@@ -15,9 +15,9 @@ const pageSectionsStyle = css({
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
-  gap: "40px",
+  gap: "2.875rem",
   width: "100%",
-  paddingTop: "20px",
+  paddingTop: "1.375rem",
 });
 
 const heroHeaderStyle = css({
@@ -27,17 +27,17 @@ const heroHeaderStyle = css({
 });
 
 const descriptionStyle = css({
-  fontSize: "0.88rem",
+  fontSize: "0.875rem",
   color: "fg.muted",
   lineHeight: "1.8",
-  maxWidth: "360px",
+  maxWidth: "25.75rem",
   margin: "0 auto",
 });
 
 const devPanelStyle = css({
   width: "100%",
-  padding: "14px 18px",
-  borderRadius: "16px",
+  padding: "1rem 1.125rem",
+  borderRadius: "1rem",
   background: "color-mix(in srgb, var(--colors-surface) 50%, transparent)",
   border: "1px solid",
   borderColor: "color-mix(in srgb, var(--colors-border) 60%, transparent)",
@@ -45,7 +45,7 @@ const devPanelStyle = css({
 
 const chipRowStyle = css({
   display: "flex",
-  gap: "8px",
+  gap: "0.5rem",
   flexWrap: "wrap",
 });
 
@@ -70,7 +70,7 @@ export function SlotPageClient(props: Props) {
       {isDev ? (
         <div className={devPanelStyle}>
           <Text
-            className={css({ display: "block", marginBottom: "8px" })}
+            className={css({ display: "block", marginBottom: "0.5rem" })}
             variant="label"
           >
             테스트 URL 파라미터

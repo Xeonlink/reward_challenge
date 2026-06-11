@@ -24,7 +24,7 @@ const ORB: Record<1 | 2 | 3 | 4 | 5, OrbConfig> = {
     glow: "0 0 14px rgba(100,120,200,0.18)",
     ringColor: "transparent",
     label: "별이 태어나고 있어요",
-    labelColor: "#3A4870",
+    labelColor: "var(--colors-fg-muted)",
     particleColor: null,
     particleCount: 0,
   },
@@ -413,16 +413,16 @@ export function CosmicOrb({
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        gap: "16px",
+        gap: "1rem",
       }}
     >
       <div
         style={{
-          fontSize: "0.7rem",
+          fontSize: "0.75rem",
           fontWeight: "700",
           letterSpacing: "0.15em",
           textTransform: "uppercase",
-          color: "#6070A8",
+          color: "var(--colors-fg-muted)",
         }}
       >
         우주 성장 현황
@@ -581,7 +581,7 @@ export function CosmicOrb({
       {/* Stage label */}
       <div
         style={{
-          fontSize: "0.82rem",
+          fontSize: "0.875rem",
           fontWeight: "600",
           color: cfg.labelColor,
           letterSpacing: "0.02em",
@@ -595,8 +595,8 @@ export function CosmicOrb({
         style={{
           display: "flex",
           alignItems: "center",
-          gap: "20px",
-          padding: "10px 20px",
+          gap: "1.375rem",
+          padding: "0.625rem 1.375rem",
           borderRadius: "9999px",
           background: "rgba(12,18,48,0.8)",
           border: "1px solid rgba(33,44,92,0.8)",
@@ -620,11 +620,11 @@ export function CosmicOrb({
       </div>
 
       {/* Progress bar */}
-      <div style={{ width: "200px" }}>
+      <div style={{ width: "14.25rem" }}>
         <div
           style={{
             width: "100%",
-            height: "3px",
+            height: "0.25rem",
             borderRadius: "9999px",
             background: "rgba(33,44,92,0.6)",
             overflow: "hidden",
@@ -651,9 +651,9 @@ export function CosmicOrb({
           style={{
             display: "flex",
             justifyContent: "space-between",
-            marginTop: "5px",
-            fontSize: "0.6rem",
-            color: "#3A4870",
+            marginTop: "0.375rem",
+            fontSize: "0.625rem",
+            color: "var(--colors-fg-muted)",
           }}
         >
           <span>0</span>
@@ -682,31 +682,33 @@ function Stat({
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        gap: "2px",
+        gap: "0.125rem",
       }}
     >
       <div
         style={{
-          fontSize: "0.6rem",
-          color: "#6070A8",
+          fontSize: "0.625rem",
+          color: "var(--colors-fg-muted)",
           letterSpacing: "0.05em",
         }}
       >
         {label}
       </div>
-      <div style={{ display: "flex", alignItems: "center", gap: "3px" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: "0.25rem" }}>
         {icon}
         <span
           style={{
             fontSize: "0.875rem",
             fontWeight: "700",
-            color: "#EBF0FF",
-            fontFamily: "'Orbitron', sans-serif",
+            color: "var(--colors-fg)",
+            fontFamily: "var(--font-display), sans-serif",
           }}
         >
           {value}
         </span>
-        <span style={{ fontSize: "0.65rem", color: "#6070A8" }}>{sub}</span>
+        <span style={{ fontSize: "0.625rem", color: "var(--colors-fg-muted)" }}>
+          {sub}
+        </span>
       </div>
     </div>
   );
@@ -714,6 +716,12 @@ function Stat({
 
 function Divider() {
   return (
-    <div style={{ width: 1, height: 24, background: "rgba(33,44,92,0.8)" }} />
+    <div
+      style={{
+        width: "0.125rem",
+        height: "1.5rem",
+        background: "rgba(33,44,92,0.8)",
+      }}
+    />
   );
 }

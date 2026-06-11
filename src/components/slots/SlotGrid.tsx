@@ -23,7 +23,7 @@ const rootStyle = css({
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
-  gap: "36px",
+  gap: "2.5rem",
   width: "100%",
 });
 
@@ -31,23 +31,23 @@ const heroZoneStyle = css({
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
-  gap: "20px",
+  gap: "1.375rem",
   width: "100%",
 });
 
 const serviceGridStyle = css({
   display: "grid",
   gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-  gap: "12px",
+  gap: "0.75rem",
   width: "100%",
 });
 
 const progressWrapStyle = css({
   width: "100%",
-  maxWidth: "380px",
+  maxWidth: "27.125rem",
   display: "flex",
   flexDirection: "column",
-  gap: "10px",
+  gap: "0.625rem",
 });
 
 const progressHeaderStyle = css({
@@ -58,14 +58,14 @@ const progressHeaderStyle = css({
 
 const progressTrackStyle = css({
   width: "100%",
-  height: "5px",
+  height: "0.375rem",
   borderRadius: "full",
   background: "color-mix(in srgb, var(--colors-border) 50%, transparent)",
   overflow: "hidden",
 });
 
 const completeBannerStyle = css({
-  padding: "16px 28px",
+  padding: "1rem 2rem",
   borderRadius: "lg",
   border: "1px solid",
   borderColor: "color-mix(in srgb, var(--colors-accent) 25%, transparent)",
@@ -76,11 +76,11 @@ const completeBannerStyle = css({
 
 const legendStyle = css({
   display: "flex",
-  gap: "18px",
+  gap: "1.125rem",
   flexWrap: "wrap",
   justifyContent: "center",
-  padding: "14px 22px",
-  borderRadius: "16px",
+  padding: "1rem 1.375rem",
+  borderRadius: "1rem",
   background: "color-mix(in srgb, var(--colors-surface) 50%, transparent)",
   border: "1px solid",
   borderColor: "color-mix(in srgb, var(--colors-border) 70%, transparent)",
@@ -147,12 +147,12 @@ export const SlotGrid: React.FC<SlotGridProps> = ({ testParam }) => {
 
       <div className={progressWrapStyle}>
         <div className={progressHeaderStyle}>
-          <Text className={css({ fontSize: "0.72rem" })} variant="muted">
+          <Text className={css({ fontSize: "0.75rem" })} variant="muted">
             오늘의 별 조각
           </Text>
           <span
             className={css({
-              fontSize: "0.72rem",
+              fontSize: "0.75rem",
               fontWeight: "700",
               fontFamily: "display",
               color: starsToday >= 5 ? "accent" : "nebula.light",
@@ -189,13 +189,15 @@ export const SlotGrid: React.FC<SlotGridProps> = ({ testParam }) => {
 
       {allCompleted ? (
         <div className={completeBannerStyle}>
-          <div className={css({ fontSize: "1.4rem", marginBottom: "6px" })}>
+          <div
+            className={css({ fontSize: "1.375rem", marginBottom: "0.375rem" })}
+          >
             ✨
           </div>
           <Text
             className={css({
               fontFamily: "display",
-              fontSize: "0.82rem",
+              fontSize: "0.875rem",
               color: "accent",
               fontWeight: "700",
             })}
@@ -204,7 +206,7 @@ export const SlotGrid: React.FC<SlotGridProps> = ({ testParam }) => {
           </Text>
           {!todayRecord.bonus ? (
             <Text
-              className={css({ fontSize: "0.72rem", marginTop: "4px" })}
+              className={css({ fontSize: "0.75rem", marginTop: "0.25rem" })}
               variant="muted"
             >
               별 보너스 슬롯이 해제되었어요
@@ -224,14 +226,14 @@ export const SlotGrid: React.FC<SlotGridProps> = ({ testParam }) => {
             className={css({
               display: "flex",
               alignItems: "center",
-              gap: "6px",
+              gap: "0.375rem",
             })}
             key={label}
           >
             <div
               className={css({
-                width: "8px",
-                height: "8px",
+                width: "0.5rem",
+                height: "0.5rem",
                 borderRadius: "50%",
               })}
               style={{
@@ -239,7 +241,7 @@ export const SlotGrid: React.FC<SlotGridProps> = ({ testParam }) => {
                 boxShadow: `0 0 4px ${color}`,
               }}
             />
-            <Text className={css({ fontSize: "0.68rem" })} variant="dim">
+            <Text className={css({ fontSize: "0.625rem" })} variant="dim">
               {label}
             </Text>
           </div>
@@ -282,22 +284,24 @@ export const SlotGrid: React.FC<SlotGridProps> = ({ testParam }) => {
           </Text>
         }
       >
-        <div className={css({ textAlign: "center", padding: "8px 0 4px" })}>
-          <div className={css({ fontSize: "2.4rem", marginBottom: "14px" })}>
+        <div
+          className={css({ textAlign: "center", padding: "0.5rem 0 0.25rem" })}
+        >
+          <div className={css({ fontSize: "2.375rem", marginBottom: "1rem" })}>
             ✨
           </div>
           <Text
             className={css({
-              fontSize: "0.88rem",
+              fontSize: "0.875rem",
               lineHeight: 1.7,
-              marginBottom: "8px",
+              marginBottom: "0.5rem",
             })}
           >
             30일간의 여정을 완주했어요.
             <br />별 조각이 새롭게 초기화됩니다.
           </Text>
           <Text
-            className={css({ fontSize: "0.75rem", marginBottom: "22px" })}
+            className={css({ fontSize: "0.75rem", marginBottom: "1.375rem" })}
             variant="muted"
           >
             새로운 여정을 시작하세요

@@ -25,7 +25,7 @@ const button = cva({
     display: "inline-flex",
     alignItems: "center",
     justifyContent: "center",
-    gap: "8px",
+    gap: "0.5rem",
     fontFamily: "body",
     fontWeight: "600",
     letterSpacing: "0.02em",
@@ -125,25 +125,25 @@ const button = cva({
     },
     size: {
       sm: {
-        height: "32px",
-        paddingInline: "12px",
+        height: "2.25rem",
+        paddingInline: "0.75rem",
         fontSize: "xs",
         borderRadius: "sm",
       },
       md: {
-        height: "42px",
-        paddingInline: "20px",
+        height: "3rem",
+        paddingInline: "1.375rem",
         fontSize: "sm",
       },
       lg: {
-        height: "52px",
-        paddingInline: "28px",
+        height: "3.75rem",
+        paddingInline: "2rem",
         fontSize: "md",
         borderRadius: "lg",
       },
       xl: {
-        height: "64px",
-        paddingInline: "36px",
+        height: "4.5rem",
+        paddingInline: "2.5rem",
         fontSize: "lg",
         borderRadius: "lg",
       },
@@ -160,8 +160,8 @@ const button = cva({
 
 const spinnerStyle = cva({
   base: {
-    width: "16px",
-    height: "16px",
+    width: "1rem",
+    height: "1rem",
     border: "2px solid rgba(255,255,255,0.3)",
     borderTopColor: "white",
     borderRadius: "50%",

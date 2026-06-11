@@ -79,10 +79,10 @@ export default defineConfig({
           "5xl": { value: "3rem" },
         },
         radii: {
-          sm: { value: "8px" },
-          md: { value: "14px" },
-          lg: { value: "20px" },
-          xl: { value: "28px" },
+          sm: { value: "0.5rem" },
+          md: { value: "1rem" },
+          lg: { value: "1.375rem" },
+          xl: { value: "2rem" },
           full: { value: "9999px" },
         },
         shadows: {

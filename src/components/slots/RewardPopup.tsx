@@ -36,15 +36,15 @@ export const RewardPopup: React.FC<RewardPopupProps> = ({
           flexDirection: "column",
           alignItems: "center",
           textAlign: "center",
-          gap: "18px",
-          paddingTop: "8px",
+          gap: "1.125rem",
+          paddingTop: "0.5rem",
         })}
       >
         {/* 아이콘 영역 */}
         <div
           style={{
-            width: 80,
-            height: 80,
+            width: "5.75rem",
+            height: "5.75rem",
             borderRadius: "50%",
             display: "flex",
             alignItems: "center",
@@ -99,9 +99,9 @@ export const RewardPopup: React.FC<RewardPopupProps> = ({
           <div
             className={css({
               fontFamily: "var(--fonts-display)",
-              fontSize: "1.2rem",
+              fontSize: "1.25rem",
               fontWeight: "700",
-              marginBottom: "6px",
+              marginBottom: "0.375rem",
             })}
             style={{
               color: success ? "var(--colors-accent)" : "var(--colors-danger)",
@@ -111,7 +111,7 @@ export const RewardPopup: React.FC<RewardPopupProps> = ({
           </div>
           <div
             className={css({
-              fontSize: "0.82rem",
+              fontSize: "0.875rem",
               color: "fg.muted",
               lineHeight: "1.6",
             })}
@@ -141,17 +141,17 @@ export const RewardPopup: React.FC<RewardPopupProps> = ({
             style={{
               background: "rgba(255,209,102,0.07)",
               border: "1px solid rgba(255,209,102,0.22)",
-              borderRadius: "16px",
-              padding: "14px 28px",
+              borderRadius: "1rem",
+              padding: "1rem 2rem",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              gap: "6px",
+              gap: "0.375rem",
             }}
           >
             <div
               className={css({
-                fontSize: "0.62rem",
+                fontSize: "0.625rem",
                 color: "fg.muted",
                 textTransform: "uppercase",
                 letterSpacing: "0.12em",
@@ -163,7 +163,7 @@ export const RewardPopup: React.FC<RewardPopupProps> = ({
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: "8px",
+                gap: "0.5rem",
               }}
             >
               <StarFragmentIcon color="var(--colors-accent)" size={28} />
@@ -180,7 +180,7 @@ export const RewardPopup: React.FC<RewardPopupProps> = ({
             </div>
             <div
               style={{
-                fontSize: "0.68rem",
+                fontSize: "0.625rem",
                 color: "rgba(255,209,102,0.5)",
                 fontFamily: "'JetBrains Mono', monospace",
               }}

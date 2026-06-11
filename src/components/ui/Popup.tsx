@@ -21,16 +21,16 @@ const backdropStyle = css({
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  padding: "16px",
+  padding: "1rem",
   background: "rgba(0,0,0,0.75)",
   backdropFilter: "blur(8px)",
   animation: "fadeIn 200ms ease",
 });
 
 const dialogSizes = {
-  sm: css({ maxWidth: "360px" }),
-  md: css({ maxWidth: "480px" }),
-  lg: css({ maxWidth: "600px" }),
+  sm: css({ maxWidth: "25.75rem" }),
+  md: css({ maxWidth: "34.25rem" }),
+  lg: css({ maxWidth: "42.875rem" }),
 };
 
 const dialogStyle = css({
@@ -45,11 +45,11 @@ const dialogStyle = css({
 });
 
 const headerStyle = css({
-  padding: "24px 24px 0",
+  padding: "1.5rem 1.5rem 0",
   display: "flex",
   alignItems: "flex-start",
   justifyContent: "space-between",
-  gap: "16px",
+  gap: "1rem",
 });
 
 const titleStyle = css({
@@ -62,8 +62,8 @@ const titleStyle = css({
 
 const closeButtonStyle = css({
   flexShrink: "0",
-  width: "32px",
-  height: "32px",
+  width: "2.25rem",
+  height: "2.25rem",
   borderRadius: "50%",
   border: "1px solid rgba(255,255,255,0.1)",
   background: "rgba(255,255,255,0.05)",
@@ -83,7 +83,7 @@ const closeButtonStyle = css({
 });
 
 const bodyStyle = css({
-  padding: "20px 24px 24px",
+  padding: "1.375rem 1.5rem 1.5rem",
 });
 
 export const Popup: React.FC<PopupProps> = ({

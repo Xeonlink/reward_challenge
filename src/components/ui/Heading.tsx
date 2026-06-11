@@ -4,11 +4,11 @@ import type { ComponentProps } from "react";
 const heading = cva({
   base: {
     fontFamily: "display",
-    fontSize: "clamp(2rem, 6vw, 3.2rem)",
+    fontSize: "2.25rem",
     fontWeight: "900",
     letterSpacing: "-0.02em",
     lineHeight: 1.1,
-    marginBottom: "6px",
+    marginBottom: "0.375rem",
   },
 });
 

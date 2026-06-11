@@ -5,16 +5,16 @@ const pageSectionsStyle = css({
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
-  gap: "40px",
+  gap: "2.875rem",
   width: "100%",
-  paddingTop: "20px",
+  paddingTop: "1.375rem",
 });
 
 const heroSkeletonStyle = css({
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
-  gap: "14px",
+  gap: "0.875rem",
   width: "100%",
 });
 
@@ -22,28 +22,28 @@ const orbZoneStyle = css({
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
-  gap: "20px",
+  gap: "1.375rem",
   width: "100%",
 });
 
 const cardGridStyle = css({
   display: "grid",
   gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-  gap: "12px",
+  gap: "0.75rem",
   width: "100%",
 });
 
 const progressStyle = css({
   width: "100%",
-  maxWidth: "380px",
+  maxWidth: "27.125rem",
   display: "flex",
   flexDirection: "column",
-  gap: "10px",
+  gap: "0.625rem",
 });
 
 export default function Loading() {
   return (
-    <div className={pageSectionsStyle} aria-hidden="true">
+    <main className={pageSectionsStyle} aria-hidden="true">
       <div className={heroSkeletonStyle}>
         <Skeleton variant="badge" />
         <Skeleton variant="title" />
@@ -67,6 +67,6 @@ export default function Loading() {
         <Skeleton variant="progressLabel" />
         <Skeleton variant="progressBar" />
       </div>
-    </div>
+    </main>
   );
 }

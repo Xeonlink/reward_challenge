@@ -5,8 +5,8 @@ const timeBadge = cva({
   base: {
     display: "flex",
     alignItems: "center",
-    gap: "10px",
-    padding: "8px 18px",
+    gap: "0.625rem",
+    padding: "0.5rem 1.125rem",
     borderRadius: "full",
     border: "1px solid",
     borderColor: "color-mix(in srgb, var(--colors-border) 70%, transparent)",
@@ -17,8 +17,8 @@ const timeBadge = cva({
 
 const dot = cva({
   base: {
-    width: "7px",
-    height: "7px",
+    width: "0.5rem",
+    height: "0.5rem",
     borderRadius: "50%",
     animation: "pulse 2s ease infinite",
   },
@@ -34,7 +34,7 @@ const timeLabel = cva({
 
 const timeValue = cva({
   base: {
-    fontSize: "0.82rem",
+    fontSize: "0.875rem",
     fontWeight: "700",
     fontFamily: "display",
   },
@@ -42,8 +42,8 @@ const timeValue = cva({
 
 const testBadge = cva({
   base: {
-    fontSize: "0.62rem",
-    padding: "2px 8px",
+    fontSize: "0.625rem",
+    padding: "0.125rem 0.5rem",
     borderRadius: "full",
     background: "color-mix(in srgb, var(--colors-slot-bonus) 12%, transparent)",
     border: "1px solid",

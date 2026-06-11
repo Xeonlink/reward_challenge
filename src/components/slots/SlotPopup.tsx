@@ -88,7 +88,9 @@ export const SlotPopup: React.FC<SlotPopupProps> = ({
       open={open}
       onClose={onClose}
       title={
-        <span style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+        <span
+          style={{ display: "flex", alignItems: "center", gap: "0.625rem" }}
+        >
           <Icon color={c.light} size={28} />
           <span style={{ color: c.light }}>
             {isExtra ? "추가 기회 — " : ""}
@@ -100,11 +102,11 @@ export const SlotPopup: React.FC<SlotPopupProps> = ({
       {/* 상단 색상 라인 */}
       <div
         style={{
-          height: "2px",
+          height: "0.125rem",
           background: `linear-gradient(90deg, transparent, ${c.color}, transparent)`,
-          marginTop: "-20px",
-          marginBottom: "20px",
-          borderRadius: "1px",
+          marginTop: "-1.375rem",
+          marginBottom: "1.375rem",
+          borderRadius: "0.125rem",
           opacity: 0.8,
         }}
       />
@@ -114,28 +116,32 @@ export const SlotPopup: React.FC<SlotPopupProps> = ({
         style={{
           display: "flex",
           alignItems: "center",
-          gap: "12px",
-          padding: "14px 16px",
-          borderRadius: "14px",
+          gap: "0.75rem",
+          padding: "1rem 1.125rem",
+          borderRadius: "1rem",
           background: c.bg,
           border: `1px solid ${c.color}30`,
-          marginBottom: "18px",
+          marginBottom: "1.25rem",
         }}
       >
         <StarFragmentIcon color={c.color} size={28} />
         <div>
           <div
             style={{
-              fontSize: "0.78rem",
+              fontSize: "0.75rem",
               fontWeight: "700",
               color: c.light,
-              marginBottom: "3px",
+              marginBottom: "0.25rem",
             }}
           >
             별 조각 +1 획득 가능
           </div>
           <div
-            style={{ fontSize: "0.72rem", color: "#6070A8", lineHeight: 1.5 }}
+            style={{
+              fontSize: "0.75rem",
+              color: "var(--colors-fg-muted)",
+              lineHeight: 1.5,
+            }}
           >
             {isExtra
               ? "추가 기회는 하루 1회만 사용할 수 있어요."
@@ -149,8 +155,8 @@ export const SlotPopup: React.FC<SlotPopupProps> = ({
         className={css({
           display: "flex",
           flexDirection: "column",
-          gap: "8px",
-          marginBottom: "22px",
+          gap: "0.5rem",
+          marginBottom: "1.375rem",
         })}
       >
         {[
@@ -163,21 +169,21 @@ export const SlotPopup: React.FC<SlotPopupProps> = ({
             style={{
               display: "flex",
               alignItems: "center",
-              gap: "12px",
-              fontSize: "0.78rem",
+              gap: "0.75rem",
+              fontSize: "0.75rem",
             }}
           >
             <div
               style={{
-                width: 24,
-                height: 24,
+                width: "1.75rem",
+                height: "1.75rem",
                 borderRadius: "50%",
                 background: `${c.color}15`,
                 border: `1px solid ${c.color}40`,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                fontSize: "0.65rem",
+                fontSize: "0.625rem",
                 fontWeight: "700",
                 color: c.light,
                 flexShrink: 0,
@@ -185,7 +191,7 @@ export const SlotPopup: React.FC<SlotPopupProps> = ({
             >
               {i + 1}
             </div>
-            <span style={{ color: "#8090C0" }}>{text}</span>
+            <span style={{ color: "var(--colors-fg-muted)" }}>{text}</span>
           </div>
         ))}
       </div>
@@ -195,7 +201,7 @@ export const SlotPopup: React.FC<SlotPopupProps> = ({
         className={css({
           display: "flex",
           flexDirection: "column",
-          gap: "10px",
+          gap: "0.625rem",
         })}
       >
         {/* 실제 방문 버튼 */}
