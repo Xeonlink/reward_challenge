@@ -1,7 +1,5 @@
 import { defineConfig } from "@pandacss/dev";
 
-const colorVar = (name: string) => ({ value: `var(--colors-${name})` });
-
 export default defineConfig({
   preflight: true,
   include: ["./src/**/*.{js,jsx,ts,tsx}", "./pages/**/*.{js,jsx,ts,tsx}"],
@@ -10,44 +8,44 @@ export default defineConfig({
     extend: {
       tokens: {
         colors: {
-          bg: colorVar("bg"),
+          bg: { value: "var(--colors-bg)" },
           fg: {
-            DEFAULT: colorVar("fg"),
-            muted: colorVar("fg-muted"),
-            dim: colorVar("fg-dim"),
+            DEFAULT: { value: "var(--colors-fg)" },
+            muted: { value: "var(--colors-fg-muted)" },
+            dim: { value: "var(--colors-fg-dim)" },
           },
           surface: {
-            DEFAULT: colorVar("surface"),
-            high: colorVar("surface-high"),
-            hover: colorVar("surface-hover"),
+            DEFAULT: { value: "var(--colors-surface)" },
+            high: { value: "var(--colors-surface-high)" },
+            hover: { value: "var(--colors-surface-hover)" },
           },
           border: {
-            DEFAULT: colorVar("border"),
-            bright: colorVar("border-bright"),
+            DEFAULT: { value: "var(--colors-border)" },
+            bright: { value: "var(--colors-border-bright)" },
           },
           accent: {
-            DEFAULT: colorVar("accent"),
-            light: colorVar("accent-light"),
-            dark: colorVar("accent-dark"),
+            DEFAULT: { value: "var(--colors-accent)" },
+            light: { value: "var(--colors-accent-light)" },
+            dark: { value: "var(--colors-accent-dark)" },
           },
-          footer: colorVar("footer"),
+          footer: { value: "var(--colors-footer)" },
           nebula: {
-            DEFAULT: colorVar("nebula"),
-            light: colorVar("nebula-light"),
+            DEFAULT: { value: "var(--colors-nebula)" },
+            light: { value: "var(--colors-nebula-light)" },
           },
           cosmic: {
-            DEFAULT: colorVar("cosmic"),
-            light: colorVar("cosmic-light"),
+            DEFAULT: { value: "var(--colors-cosmic)" },
+            light: { value: "var(--colors-cosmic-light)" },
           },
           slot: {
-            morning: colorVar("slot-morning"),
-            morningLight: colorVar("slot-morning-light"),
-            lunch: colorVar("slot-lunch"),
-            lunchLight: colorVar("slot-lunch-light"),
-            dinner: colorVar("slot-dinner"),
-            dinnerLight: colorVar("slot-dinner-light"),
-            bonus: colorVar("slot-bonus"),
-            bonusLight: colorVar("slot-bonus-light"),
+            morning: { value: "var(--colors-slot-morning)" },
+            morningLight: { value: "var(--colors-slot-morning-light)" },
+            lunch: { value: "var(--colors-slot-lunch)" },
+            lunchLight: { value: "var(--colors-slot-lunch-light)" },
+            dinner: { value: "var(--colors-slot-dinner)" },
+            dinnerLight: { value: "var(--colors-slot-dinner-light)" },
+            bonus: { value: "var(--colors-slot-bonus)" },
+            bonusLight: { value: "var(--colors-slot-bonus-light)" },
             inactive: { value: "#0C1230" },
             inactiveBorder: { value: "#1A2348" },
             active: { value: "#131A3E" },
@@ -56,8 +54,8 @@ export default defineConfig({
             extra: { value: "#1A1038" },
             extraBorder: { value: "#E86FA8" },
           },
-          success: colorVar("success"),
-          danger: colorVar("danger"),
+          success: { value: "var(--colors-success)" },
+          danger: { value: "var(--colors-danger)" },
         },
         fonts: {
           display: { value: "var(--font-display), sans-serif" },
