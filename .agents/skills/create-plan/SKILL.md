@@ -1,6 +1,6 @@
 ---
 name: create-plan
-description: Plan 작성 시 작업 완료 후 format, lint, build를 순서대로 실행하여 오류가 없도록 검증 단계를 포함한다. plan을 세우거나 작업 계획을 작성할 때 적용.
+description: Plan 작성 시 작업 완료 후 fix-do-not, format, lint, build를 순서대로 검증한다. plan을 세우거나 작업 계획을 작성할 때 적용.
 ---
 
 # Plan
@@ -14,6 +14,14 @@ plan을 작성할 때 **작업이 모두 끝난 뒤** 반드시 검증 단계를
 - "순서대로 진행해줘", "계획 세워줘" 등 plan 작성이 포함된 요청일 때
 
 ## 검증 규칙
+
+### 1) fix-do-not
+
+[fix-do-not](../fix-do-not/SKILL.md) 스킬을 적용한다.
+
+- plan 구현·리팩터 완료 직후, 커밋·PR 전에 실행
+- 사용자가 대화에서 금지한 패턴(`_styles`, `panda.config` 비대화, px/rem, inline style, 테마 variable 위치 등)이 남아 있으면 **먼저 수정**한 뒤 아래 format/lint/build로 진행
+- 위반 0건(명시적 예외 제외) + `pnpm run build` 통과가 이 단계의 완료 조건
 
 ### 2) format
 
