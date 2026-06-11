@@ -76,7 +76,9 @@ export default function Layout(props: LayoutProps<"/">) {
       lang="ko"
     >
       <body>
+        {/* starlight background. It assume bg is dark. */}
         <StarCanvas />
+
         <header className={siteHeaderStyle}>
           <StarFragmentIcon color="var(--colors-accent)" size={18} />
           <Text variant="brand">별모아</Text>
