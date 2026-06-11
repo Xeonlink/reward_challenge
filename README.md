@@ -65,19 +65,47 @@ npm run prepare
 npm run dev
 ```
 
-접속: http://localhost:3000
+접속: http://localhost:4000
 
 ---
 
 ## 테스트 방법
 
+README에 적힌 동작 스펙(시간대·슬롯·보너스·추가기회·보상 Flow·우주 단계·30일 사이클)은 **Playwright E2E**로 회귀 테스트합니다.
+
+```bash
+# 최초 1회 — Chromium 브라우저 설치
+pnpm exec playwright install chromium
+
+# E2E 전체 실행 (dev 서버 :4000 자동 기동)
+pnpm test:e2e
+
+# UI 모드
+pnpm test:e2e:ui
+```
+
+| E2E 스펙 파일                         | README 섹션                                        |
+| ------------------------------------- | -------------------------------------------------- |
+| `e2e/specs/test-methods.spec.ts`      | 테스트 방법 (URL `?test=`, DevTools, localStorage) |
+| `e2e/specs/time-slots.spec.ts`        | 슬롯 시간대                                        |
+| `e2e/specs/extra-opportunity.spec.ts` | 추가기회 케이스                                    |
+| `e2e/specs/reward-flow.spec.ts`       | 보상 수령 Flow                                     |
+| `e2e/specs/universe-stages.spec.ts`   | 우주 성장 단계                                     |
+| `e2e/specs/cycle.spec.ts`             | 30일 사이클                                        |
+
 ### URL 파라미터로 시간대 변경
+
+### URL 파라미터로 시간대 변경
+
+개발 서버에서 화면 우하단 **test** 버튼에 마우스를 올리면 DevTools 패널이 열립니다.
 
 | URL              | 시뮬레이션  |
 | ---------------- | ----------- |
 | `/?test=morning` | 아침 시간대 |
 | `/?test=lunch`   | 점심 시간대 |
 | `/?test=dinner`  | 저녁 시간대 |
+
+DevTools 1줄: 위 URL 파라미터 Chip · 2줄: 우주 성장 단계 버튼 (`2단계·15` ~ `5단계·80`, `우주 초기화`).
 
 ### 콘솔에서 우주 성장 단계 테스트
 

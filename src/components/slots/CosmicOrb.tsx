@@ -572,7 +572,11 @@ export function CosmicOrb({
   const wrapOffset = (W - wrapSize) / 2;
 
   return (
-    <div className={orbRoot}>
+    <div
+      className={orbRoot}
+      data-orb-stage={stage}
+      data-total-stars={universe.totalStars}
+    >
       <div className={canvasWrap}>
         <canvas className={canvasEl} ref={canvasRef} width={W} height={H} />
 

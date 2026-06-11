@@ -12,7 +12,7 @@ importers:
         version: 1.47.0
       next:
         specifier: 16.2.9
-        version: 16.2.9(@babel/core@7.29.7)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        version: 16.2.9(@babel/core@7.29.7)(@playwright/test@1.60.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       react:
         specifier: 19.2.7
         version: 19.2.7
@@ -26,6 +26,9 @@ importers:
       "@pandacss/dev":
         specifier: ^1.11.0
         version: 1.11.3(typescript@5.9.3)
+      "@playwright/test":
+        specifier: ^1.60.0
+        version: 1.60.0
       "@trivago/prettier-plugin-sort-imports":
         specifier: ^6.0.2
         version: 6.0.2(@vue/compiler-sfc@3.5.25)(prettier@3.8.4)
@@ -1113,6 +1116,14 @@ packages:
         integrity: sha512-tUbxa3WzoCuulP6kcMn7f0uNgLBvu81JAg4sfoUpz6PZE36VHA3k9n6ROEwziTbr7vqgeCj5DYQCUldrVNbEGQ==,
       }
     engines: { node: ">=20" }
+
+  "@playwright/test@1.60.0":
+    resolution:
+      {
+        integrity: sha512-O71yZIbAh/PxDMNGns37GHBIfrVkEVyn+AXyIa5dOTfb4/xNvRWV+Vv/NMbNCtODB/pO7vLlF2OTmMVLhmr7Ag==,
+      }
+    engines: { node: ">=18" }
+    hasBin: true
 
   "@rtsao/scc@1.1.0":
     resolution:
@@ -2512,6 +2523,14 @@ packages:
       }
     engines: { node: ">=14.14" }
 
+  fsevents@2.3.2:
+    resolution:
+      {
+        integrity: sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==,
+      }
+    engines: { node: ^8.16.0 || ^10.6.0 || >=11.0.0 }
+    os: [darwin]
+
   function-bind@1.1.2:
     resolution:
       {
@@ -3638,6 +3657,22 @@ packages:
       {
         integrity: sha512-SIqCzDRg0s9npO5XQ3tNZioRY1uK06lA41ynBC1YmFTmnY6FjUjVt6s4LoADmwoig1qqD0oK8h1p/8mlMx8Oig==,
       }
+
+  playwright-core@1.60.0:
+    resolution:
+      {
+        integrity: sha512-9bW6zvX/m0lEbgTKJ6YppOKx8H3VOPBMOCFh2irXFOT4BbHgrx5hPjwJYLT40Lu+4qtD36qKc/Hn56StUW57IA==,
+      }
+    engines: { node: ">=18" }
+    hasBin: true
+
+  playwright@1.60.0:
+    resolution:
+      {
+        integrity: sha512-hheHdokM8cdqCb0lcE3s+zT4t4W+vvjpGxsZlDnikarzx8tSzMebh3UiFtgqwFwnTnjYQcsyMF8ei2mCO/tpeA==,
+      }
+    engines: { node: ">=18" }
+    hasBin: true
 
   pluralize@8.0.0:
     resolution:
@@ -5190,6 +5225,10 @@ snapshots:
 
   "@pandacss/types@1.11.3": {}
 
+  "@playwright/test@1.60.0":
+    dependencies:
+      playwright: 1.60.0
+
   "@rtsao/scc@1.1.0": {}
 
   "@swc/helpers@0.5.15":
@@ -6230,6 +6269,9 @@ snapshots:
       jsonfile: 6.2.1
       universalify: 2.0.1
 
+  fsevents@2.3.2:
+    optional: true
+
   function-bind@1.1.2: {}
 
   function.prototype.name@1.1.8:
@@ -6668,7 +6710,7 @@ snapshots:
 
   negotiator@1.0.0: {}
 
-  next@16.2.9(@babel/core@7.29.7)(react-dom@19.2.7(react@19.2.7))(react@19.2.7):
+  next@16.2.9(@babel/core@7.29.7)(@playwright/test@1.60.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7):
     dependencies:
       "@next/env": 16.2.9
       "@swc/helpers": 0.5.15
@@ -6687,6 +6729,7 @@ snapshots:
       "@next/swc-linux-x64-musl": 16.2.9
       "@next/swc-win32-arm64-msvc": 16.2.9
       "@next/swc-win32-x64-msvc": 16.2.9
+      "@playwright/test": 1.60.0
       sharp: 0.34.5
     transitivePeerDependencies:
       - "@babel/core"
@@ -6823,6 +6866,14 @@ snapshots:
       confbox: 0.2.4
       exsolve: 1.0.8
       pathe: 2.0.3
+
+  playwright-core@1.60.0: {}
+
+  playwright@1.60.0:
+    dependencies:
+      playwright-core: 1.60.0
+    optionalDependencies:
+      fsevents: 2.3.2
 
   pluralize@8.0.0: {}
 

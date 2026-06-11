@@ -8,7 +8,9 @@
     "start": "next start -p 4000",
     "prepare": "panda codegen",
     "format": "prettier --write .",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui"
   },
   "dependencies": {
     "es-toolkit": "^1.47.0",
@@ -19,6 +21,7 @@
   },
   "devDependencies": {
     "@pandacss/dev": "^1.11.0",
+    "@playwright/test": "^1.60.0",
     "@trivago/prettier-plugin-sort-imports": "^6.0.2",
     "@types/node": "^20",
     "@types/react": "19.2.17",
