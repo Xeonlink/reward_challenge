@@ -1,4 +1,4 @@
-import type { SlotKey, TimeOfDay } from "./types";
+import type { TimeOfDay, VisitIntent } from "./types";
 
 export function getCurrentTimeOfDay(testParam?: string | null): TimeOfDay {
   if (testParam === "morning") return "morning";
@@ -11,12 +11,17 @@ export function getCurrentTimeOfDay(testParam?: string | null): TimeOfDay {
   return "dinner";
 }
 
-export function getTimeOfDayLabel(t: TimeOfDay | SlotKey): string {
-  const map: Record<string, string> = {
-    morning: "아침",
-    lunch: "점심",
-    dinner: "저녁",
-    bonus: "보너스",
-  };
-  return map[t] ?? t;
+export function getTimeOfDayLabel(time: TimeOfDay): string {
+  if (time === "morning") return "아침";
+  if (time === "lunch") return "점심";
+  return "저녁";
+}
+
+export function getVisitRewardLabel(intent: VisitIntent): string {
+  if (intent.kind === "bonus") return "보너스";
+  return getTimeOfDayLabel(intent.time);
+}
+
+export function getVisitRewardAmount(intent: VisitIntent): number {
+  return intent.kind === "bonus" ? 2 : 1;
 }

@@ -1,4 +1,4 @@
-import type { SlotKey, UniverseRecord } from "./types";
+import type { TimeOfDay, UniverseRecord, VisitIntent } from "./types";
 import { EMPTY_DAY } from "./types";
 import { getTodayKey, starsFromDay } from "./universe";
 
@@ -10,21 +10,17 @@ export function canClaimBonus(day: {
   return day.morning && day.lunch && day.dinner;
 }
 
-export function applyRewardClaim(
+export function claimFortuneReward(
   universe: UniverseRecord,
-  key: SlotKey,
+  time: TimeOfDay,
   options: { isExtra: boolean },
 ): { universe: UniverseRecord; gained: number } | null {
   const todayKey = getTodayKey();
   const prevDay = universe.dailyRecord[todayKey] ?? { ...EMPTY_DAY };
 
-  if (key === "bonus" && !canClaimBonus(prevDay)) {
-    return null;
-  }
-
   const updatedDay = {
     ...prevDay,
-    [key]: true,
+    [time]: true,
     extraUsed: prevDay.extraUsed || options.isExtra,
   };
 
@@ -32,14 +28,58 @@ export function applyRewardClaim(
   const newStars = starsFromDay(updatedDay);
   const gained = newStars - prevStars;
 
-  const updatedUniverse: UniverseRecord = {
-    ...universe,
-    totalStars: universe.totalStars + (gained > 0 ? gained : 0),
-    dailyRecord: {
-      ...universe.dailyRecord,
-      [todayKey]: updatedDay,
+  return {
+    universe: {
+      ...universe,
+      totalStars: universe.totalStars + (gained > 0 ? gained : 0),
+      dailyRecord: {
+        ...universe.dailyRecord,
+        [todayKey]: updatedDay,
+      },
     },
+    gained,
+  };
+}
+
+export function claimBonusReward(
+  universe: UniverseRecord,
+): { universe: UniverseRecord; gained: number } | null {
+  const todayKey = getTodayKey();
+  const prevDay = universe.dailyRecord[todayKey] ?? { ...EMPTY_DAY };
+
+  if (!canClaimBonus(prevDay)) {
+    return null;
+  }
+
+  const updatedDay = {
+    ...prevDay,
+    bonus: true,
   };
 
-  return { universe: updatedUniverse, gained };
+  const prevStars = starsFromDay(prevDay);
+  const newStars = starsFromDay(updatedDay);
+  const gained = newStars - prevStars;
+
+  return {
+    universe: {
+      ...universe,
+      totalStars: universe.totalStars + (gained > 0 ? gained : 0),
+      dailyRecord: {
+        ...universe.dailyRecord,
+        [todayKey]: updatedDay,
+      },
+    },
+    gained,
+  };
+}
+
+export function claimVisitReward(
+  universe: UniverseRecord,
+  intent: VisitIntent,
+  options: { isExtra: boolean },
+): { universe: UniverseRecord; gained: number } | null {
+  if (intent.kind === "bonus") {
+    return claimBonusReward(universe);
+  }
+  return claimFortuneReward(universe, intent.time, options);
 }

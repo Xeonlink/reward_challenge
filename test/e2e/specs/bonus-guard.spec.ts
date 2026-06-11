@@ -11,7 +11,7 @@ test.describe("보너스 보상 가드", () => {
     await page.goto("/?test=dinner");
     await page.waitForLoadState("networkidle");
 
-    await simulateVisitReturn(page, "bonus", 4000);
+    await simulateVisitReturn(page, { kind: "bonus" }, 4000);
     await page.getByText("별 조각 획득!").waitFor();
     await claimReward(page);
 

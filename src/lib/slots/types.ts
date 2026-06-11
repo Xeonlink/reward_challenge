@@ -5,14 +5,26 @@ export type SlotStatus =
   | "completed"
   | "extra"
   | "locked";
-export type SlotKey = "morning" | "lunch" | "dinner" | "bonus";
 
-export interface SlotState {
-  key: SlotKey;
+export type VisitIntent =
+  | { kind: "fortune"; time: TimeOfDay }
+  | { kind: "bonus" };
+
+export type FortuneSlotView = {
   status: SlotStatus;
   isExtra?: boolean;
-  canUseExtra?: boolean;
-}
+};
+
+export type BonusSlotView = {
+  status: SlotStatus;
+};
+
+export type SlotBoard = {
+  morning: FortuneSlotView;
+  lunch: FortuneSlotView;
+  dinner: FortuneSlotView;
+  bonus: BonusSlotView;
+};
 
 export interface CompletionRecord {
   morning: boolean;
@@ -20,8 +32,6 @@ export interface CompletionRecord {
   dinner: boolean;
   bonus: boolean;
   extraUsed: boolean;
-  visitStart?: Record<SlotKey, number>;
-  rewardClaimed?: Record<SlotKey, boolean>;
 }
 
 export interface UniverseRecord {

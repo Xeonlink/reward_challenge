@@ -1,7 +1,7 @@
 "use client";
 
 import { Text } from "@/components/ui/Text";
-import { getOrbStage, type UniverseRecord } from "@/lib/slots";
+import type { UniverseRecord } from "@/lib/slots";
 import { css, cva } from "@/styled/css";
 import { CosmicOrbStats } from "./CosmicOrbStats";
 import { CANVAS_H, CANVAS_W, ORB } from "./orbConfig";
@@ -106,6 +106,14 @@ type CosmicOrbProps = {
   starsToday: number;
   lastStarBornAt: number;
 };
+
+function getOrbStage(totalStars: number): 1 | 2 | 3 | 4 | 5 {
+  if (totalStars <= 6) return 1;
+  if (totalStars <= 20) return 2;
+  if (totalStars <= 40) return 3;
+  if (totalStars <= 70) return 4;
+  return 5;
+}
 
 export function CosmicOrb(props: CosmicOrbProps) {
   const { universe, starsToday, lastStarBornAt } = props;

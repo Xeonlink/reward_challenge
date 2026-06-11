@@ -1,71 +1,65 @@
 import type {
   CompletionRecord,
-  SlotKey,
-  SlotState,
+  SlotBoard,
   SlotStatus,
   TimeOfDay,
 } from "./types";
 
-export function computeSlotStates(
+export function computeSlotBoard(
   completion: CompletionRecord,
   currentTime: TimeOfDay,
-): SlotState[] {
+): SlotBoard {
   const { morning, lunch, dinner, extraUsed } = completion;
 
-  const slots: SlotState[] = [
-    { key: "morning", status: "inactive" },
-    { key: "lunch", status: "inactive" },
-    { key: "dinner", status: "inactive" },
-  ];
-
-  const setStatus = (key: SlotKey, status: SlotStatus, isExtra = false) => {
-    const slot = slots.find((s) => s.key === key);
-    if (slot) {
-      slot.status = status;
-      slot.isExtra = isExtra;
-    }
+  const board: SlotBoard = {
+    morning: { status: "inactive" },
+    lunch: { status: "inactive" },
+    dinner: { status: "inactive" },
+    bonus: { status: "locked" },
   };
 
-  if (morning) setStatus("morning", "completed");
-  if (lunch) setStatus("lunch", "completed");
-  if (dinner) setStatus("dinner", "completed");
+  const setFortune = (time: TimeOfDay, status: SlotStatus, isExtra = false) => {
+    board[time] = isExtra ? { status, isExtra: true } : { status };
+  };
 
-  if (!morning && currentTime === "morning") setStatus("morning", "active");
-  if (!lunch && currentTime === "lunch") setStatus("lunch", "active");
-  if (!dinner && currentTime === "dinner") setStatus("dinner", "active");
+  if (morning) setFortune("morning", "completed");
+  if (lunch) setFortune("lunch", "completed");
+  if (dinner) setFortune("dinner", "completed");
+
+  if (!morning && currentTime === "morning") setFortune("morning", "active");
+  if (!lunch && currentTime === "lunch") setFortune("lunch", "active");
+  if (!dinner && currentTime === "dinner") setFortune("dinner", "active");
 
   if (!extraUsed) {
     if (morning && dinner && !lunch) {
-      setStatus("lunch", "extra", true);
+      setFortune("lunch", "extra", true);
     } else if (lunch && dinner && !morning) {
-      setStatus("morning", "extra", true);
+      setFortune("morning", "extra", true);
     } else if (dinner && !morning && !lunch) {
-      setStatus("morning", "locked");
+      setFortune("morning", "locked");
       if (currentTime !== "morning") {
-        setStatus("lunch", "extra", true);
+        setFortune("lunch", "extra", true);
       }
     } else if (lunch && !morning && !dinner) {
-      setStatus("morning", "extra", true);
+      setFortune("morning", "extra", true);
     } else if (lunch && !morning && currentTime !== "morning") {
-      setStatus("morning", "extra", true);
+      setFortune("morning", "extra", true);
     }
   }
 
-  slots.forEach((slot) => {
-    if (slot.status === "inactive") {
+  for (const time of ["morning", "lunch", "dinner"] as const) {
+    if (board[time].status === "inactive") {
       const isPast =
-        (slot.key === "morning" && currentTime !== "morning") ||
-        (slot.key === "lunch" && currentTime === "dinner");
-      if (isPast) slot.status = "locked";
+        (time === "morning" && currentTime !== "morning") ||
+        (time === "lunch" && currentTime === "dinner");
+      if (isPast) board[time] = { status: "locked" };
     }
-  });
+  }
 
-  const result: SlotState[] = [...slots];
   const allThreeDone = morning && lunch && dinner;
-  result.push({
-    key: "bonus",
+  board.bonus = {
     status: completion.bonus ? "completed" : allThreeDone ? "active" : "locked",
-  });
+  };
 
-  return result;
+  return board;
 }

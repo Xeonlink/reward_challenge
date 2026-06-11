@@ -1,10 +1,10 @@
 "use client";
 
 import {
-  applyRewardClaim,
-  computeSlotStates,
+  claimVisitReward,
+  computeSlotBoard,
   getTodayRecord,
-  type SlotKey,
+  type VisitIntent,
 } from "@/lib/slots";
 import { useCallback } from "react";
 import { useCurrentTime } from "./useCurrentTime";
@@ -12,8 +12,12 @@ import { useFortuneVisit } from "./useFortuneVisit";
 import { useUniverse } from "./useUniverse";
 
 export function useSlots(testParam?: string | null) {
-  const { universe, persistUniverse, cycleCompletePopup, closeCycleCompletePopup } =
-    useUniverse();
+  const {
+    universe,
+    persistUniverse,
+    cycleCompletePopup,
+    closeCycleCompletePopup,
+  } = useUniverse();
   const currentTime = useCurrentTime(testParam);
   const {
     rewardPopup,
@@ -24,17 +28,18 @@ export function useSlots(testParam?: string | null) {
   } = useFortuneVisit();
 
   const todayRecord = getTodayRecord(universe);
-  const slots = computeSlotStates(todayRecord, currentTime);
+  const board = computeSlotBoard(todayRecord, currentTime);
   const allCompleted =
     todayRecord.morning && todayRecord.lunch && todayRecord.dinner;
 
   const handleRewardClaim = useCallback(
-    (key: SlotKey, success: boolean) => {
+    (intent: VisitIntent, success: boolean) => {
       if (success) {
-        const slot = slots.find((s) => s.key === key);
-        const result = applyRewardClaim(universe, key, {
-          isExtra: slot?.isExtra ?? false,
-        });
+        const isExtra =
+          intent.kind === "fortune"
+            ? (board[intent.time].isExtra ?? false)
+            : false;
+        const result = claimVisitReward(universe, intent, { isExtra });
         if (result) {
           persistUniverse(result.universe);
           if (result.gained > 0) recordStarBorn();
@@ -42,11 +47,11 @@ export function useSlots(testParam?: string | null) {
       }
       clearRewardPopup();
     },
-    [universe, slots, persistUniverse, recordStarBorn, clearRewardPopup],
+    [universe, board, persistUniverse, recordStarBorn, clearRewardPopup],
   );
 
   return {
-    slots,
+    board,
     currentTime,
     todayRecord,
     universe,

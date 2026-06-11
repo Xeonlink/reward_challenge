@@ -1,12 +1,12 @@
 "use client";
 
 import { FORTUNE_URL, REQUIRED_VISIT_MS } from "@/lib/constants";
-import type { SlotKey } from "@/lib/slots";
+import type { VisitIntent } from "@/lib/slots";
 import { useCallback, useEffect, useState } from "react";
 
 export function useFortuneVisit() {
   const [rewardPopup, setRewardPopup] = useState<{
-    key: SlotKey;
+    intent: VisitIntent;
     success: boolean;
   } | null>(null);
   const [lastStarBornAt, setLastStarBornAt] = useState(0);
@@ -19,14 +19,14 @@ export function useFortuneVisit() {
       if (!visitData) return;
 
       try {
-        const { key, startTime } = JSON.parse(visitData) as {
-          key: SlotKey;
+        const { intent, startTime } = JSON.parse(visitData) as {
+          intent: VisitIntent;
           startTime: number;
         };
         const elapsed = Date.now() - startTime;
         const success = elapsed >= REQUIRED_VISIT_MS;
         sessionStorage.removeItem("byulmoa_visit");
-        setRewardPopup({ key, success });
+        setRewardPopup({ intent, success });
       } catch {
         sessionStorage.removeItem("byulmoa_visit");
       }
@@ -36,10 +36,10 @@ export function useFortuneVisit() {
     return () => document.removeEventListener("visibilitychange", onVisibility);
   }, []);
 
-  const handleExternalVisit = useCallback((key: SlotKey) => {
+  const handleExternalVisit = useCallback((intent: VisitIntent) => {
     sessionStorage.setItem(
       "byulmoa_visit",
-      JSON.stringify({ key, startTime: Date.now() }),
+      JSON.stringify({ intent, startTime: Date.now() }),
     );
     window.open(FORTUNE_URL, "_blank");
   }, []);
