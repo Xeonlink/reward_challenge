@@ -252,6 +252,8 @@ export function CosmicOrb({
   const animRef = useRef<number>(0);
 
   // Sync stage ref every render (safe mutable ref, no re-render triggered)
+
+  // eslint-disable-next-line react-hooks/refs
   stageRef.current = stage;
 
   // Full rebuild — avoids race condition where React batches 0→N and skips prevTotalRef logic
