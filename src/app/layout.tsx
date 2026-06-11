@@ -7,11 +7,9 @@ export const metadata: Metadata = {
     "아침·점심·저녁 운세를 확인하고 별 조각을 모아 우주를 성장시키세요. 30일 사이클.",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function Layout(props: LayoutProps<"/">) {
+  const { children } = props;
+
   return (
     <html lang="ko">
       <body>{children}</body>
