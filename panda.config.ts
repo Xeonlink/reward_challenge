@@ -137,6 +137,11 @@ export default defineConfig({
           from: { transform: "translateY(20px)", opacity: "0" },
           to: { transform: "translateY(0)", opacity: "1" },
         },
+        devToolsReveal: {
+          "0%": { transform: "translateY(0.5rem)", opacity: "0" },
+          "65%": { transform: "translateY(-0.125rem)", opacity: "1" },
+          "100%": { transform: "translateY(0)", opacity: "1" },
+        },
         fadeIn: {
           from: { opacity: "0" },
           to: { opacity: "1" },
