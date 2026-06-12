@@ -97,7 +97,7 @@ pnpm test:e2e:ui
 
 ### URL 파라미터로 시간대 변경
 
-개발 서버에서 화면 우하단 **test** 버튼에 마우스를 올리면 DevTools 패널이 열립니다.
+개발 서버에서 화면 우하단 **개발 도구**를 클릭하면 DevTools 패널이 열리고, 다시 클릭하면 닫힙니다.
 
 | URL              | 시뮬레이션  |
 | ---------------- | ----------- |
@@ -105,7 +105,7 @@ pnpm test:e2e:ui
 | `/?test=lunch`   | 점심 시간대 |
 | `/?test=dinner`  | 저녁 시간대 |
 
-DevTools 1줄: 위 URL 파라미터 Chip · 2줄: 우주 성장 단계 버튼 (`2단계·15` ~ `5단계·80`, `우주 초기화`).
+DevTools 구성: **우주 상태** (오브·별 조각·기록) · **시간대** Chip (아침/점심/저녁·초기화) · **별 개수** 입력 + **적용**(live) / **적용·reload** · **사이클** (우주 초기화, 30일 완료·reload, 완료 팝업).
 
 ### 콘솔에서 우주 성장 단계 테스트
 
@@ -228,16 +228,15 @@ src/
 │   │   └── Popup.tsx
 │   └── slots/
 │       ├── SlotGrid.tsx
-│       ├── BonusSlotCardFrame.tsx
-│       ├── slotCardLayout.ts
-│       ├── RewardPopup.tsx
+│       ├── DailyStarsProgress.tsx
 │       ├── cards/          # Morning/Lunch/Dinner/BonusSlotCard
-│       ├── popups/         # Fortune/BonusLocked 팝업
-│       └── sections/       # 진행률, 완료 배너, 범례
+│       └── popups/         # Fortune/BonusLocked 팝업
 ├── hooks/
-│   ├── useSlots.ts         # re-export
-│   └── slots/              # useUniverse, useCurrentTime, useFortuneVisit
+│   ├── useUniverse.ts
+│   ├── useCurrentTime.ts
+│   ├── useFortuneVisit.ts
+│   └── useStarsFromDay.ts
 └── lib/
-    ├── slotLogic.ts        # re-export (하위 호환)
-    └── slots/              # 타입, 상태 계산, 보상, 시간대
+    ├── constants.ts
+    └── universe.ts
 ```
