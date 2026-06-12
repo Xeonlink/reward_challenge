@@ -22,10 +22,10 @@ export function MorningSlotCard() {
   const status = useMemo(() => {
     if (record.morning) return "completed";
     if (currentTime === "morning") return "active";
-    if (currentTime === "lunch") return "extra";
+    if (currentTime === "lunch" && record.lunch) return "extra";
     if (currentTime === "dinner") return "locked";
     return "inactive";
-  }, [record.morning, currentTime]);
+  }, [record.morning, record.lunch, currentTime]);
 
   const iconColor = useMemo(() => {
     if (status === "completed") return "var(--colors-success)";

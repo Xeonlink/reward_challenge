@@ -23,9 +23,9 @@ export function LunchSlotCard() {
     if (record.lunch) return "completed";
     if (currentTime === "morning") return "inactive";
     if (currentTime === "lunch") return "active";
-    if (currentTime === "dinner") return "extra";
+    if (currentTime === "dinner" && record.dinner) return "extra";
     return "inactive";
-  }, [record.lunch, currentTime]);
+  }, [record.lunch, record.dinner, currentTime]);
 
   const iconColor = useMemo(() => {
     if (status === "completed") return "var(--colors-success)";
