@@ -5,20 +5,21 @@ import {
   CANVAS_W,
   PLANETS,
   type StarData,
-} from "../orbConfig";
+} from "./orbConfig";
+
+const cores: Record<number, [number, number, number]> = {
+  1: [80, 100, 200],
+  2: [90, 130, 230],
+  3: [155, 100, 230],
+  4: [200, 130, 245],
+  5: [255, 215, 80],
+};
 
 export function drawCore(
   ctx: CanvasRenderingContext2D,
   ts: number,
   stage: number,
 ) {
-  const cores: Record<number, [number, number, number]> = {
-    1: [80, 100, 200],
-    2: [90, 130, 230],
-    3: [155, 100, 230],
-    4: [200, 130, 245],
-    5: [255, 215, 80],
-  };
   const [r, g, b] = cores[stage] ?? cores[5];
   const pulse = 0.38 + 0.18 * Math.sin(ts * 0.0017);
   const radius = stage >= 5 ? 95 : 72;

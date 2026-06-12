@@ -10,7 +10,7 @@ import {
   drawNebula,
   drawPlanets,
   drawSettledStars,
-} from "./canvas/draw";
+} from "./draw";
 import {
   CANVAS_H,
   CANVAS_W,
