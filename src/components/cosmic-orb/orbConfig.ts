@@ -1,12 +1,10 @@
-export interface OrbConfig {
+interface OrbConfig {
   size: number;
   bg: string;
   glow: string;
   ringColor: string;
   label: string;
   labelColor: string;
-  particleColor: string | null;
-  particleCount: number;
 }
 
 export const ORB: Record<1 | 2 | 3 | 4 | 5, OrbConfig> = {
@@ -17,8 +15,6 @@ export const ORB: Record<1 | 2 | 3 | 4 | 5, OrbConfig> = {
     ringColor: "transparent",
     label: "별이 태어나고 있어요",
     labelColor: "var(--colors-fg-muted)",
-    particleColor: null,
-    particleCount: 0,
   },
   2: {
     size: 80,
@@ -27,8 +23,6 @@ export const ORB: Record<1 | 2 | 3 | 4 | 5, OrbConfig> = {
     ringColor: "rgba(123,141,224,0.22)",
     label: "별이 자라고 있어요",
     labelColor: "#7B8DE0",
-    particleColor: null,
-    particleCount: 0,
   },
   3: {
     size: 96,
@@ -37,8 +31,6 @@ export const ORB: Record<1 | 2 | 3 | 4 | 5, OrbConfig> = {
     ringColor: "rgba(155,114,207,0.30)",
     label: "별이 빛나고 있어요",
     labelColor: "#C3A4EA",
-    particleColor: null,
-    particleCount: 0,
   },
   4: {
     size: 112,
@@ -47,8 +39,6 @@ export const ORB: Record<1 | 2 | 3 | 4 | 5, OrbConfig> = {
     ringColor: "rgba(197,137,232,0.38)",
     label: "별이 눈부셔요",
     labelColor: "#DEB0F8",
-    particleColor: "#C589E8",
-    particleCount: 1,
   },
   5: {
     size: 132,
@@ -57,27 +47,17 @@ export const ORB: Record<1 | 2 | 3 | 4 | 5, OrbConfig> = {
     ringColor: "rgba(255,209,102,0.45)",
     label: "우주의 별이 되었어요",
     labelColor: "#FFD166",
-    particleColor: "#FFD166",
-    particleCount: 2,
   },
 };
 
-export const CANVAS_W = 280;
+export const CANVAS_W = 300;
 export const CANVAS_H = 280;
 export const CANVAS_CX = CANVAS_W / 2;
 export const CANVAS_CY = CANVAS_H / 2;
-export const STAR_MIN_R = 74;
-export const STAR_MAX_R = 132;
+const STAR_MIN_R = 74;
+const STAR_MAX_R = 132;
 export const STAR_ANIM_MS = 1200;
-export const GOLDEN_ANGLE = 2.399963;
-
-export const ORB_R: Record<number, number> = {
-  1: 32,
-  2: 40,
-  3: 48,
-  4: 56,
-  5: 66,
-};
+const GOLDEN_ANGLE = 2.399963;
 
 export interface StarData {
   finalX: number;

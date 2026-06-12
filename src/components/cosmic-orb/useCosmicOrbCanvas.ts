@@ -14,7 +14,7 @@ import {
 import {
   CANVAS_H,
   CANVAS_W,
-  ORB_R,
+  ORB,
   STAR_ANIM_MS,
   starFinalPos,
   starSize,
@@ -46,7 +46,7 @@ export function useCosmicOrbCanvas(totalStars: number, stage: number) {
     const draw = (ts: number) => {
       ctx.clearRect(0, 0, CANVAS_W, CANVAS_H);
       const s = stageRef.current;
-      const orbR = ORB_R[s] ?? 66;
+      const orbR = ORB[s as 1 | 2 | 3 | 4 | 5].size / 2;
       const stars = starsRef.current;
 
       drawCore(ctx, ts, s);
