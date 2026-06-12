@@ -17,6 +17,13 @@ const content = css({
   paddingTop: "0.5rem",
 });
 
+const mutedGroup = css({
+  display: "flex",
+  flexDirection: "column",
+  gap: "0.25rem",
+  lineHeight: 1.5,
+});
+
 export function CycleCompletePopup() {
   const modal = useModal();
   const startNewCycle = useUniverse((state) => state.actions.startNewCycle);
@@ -39,8 +46,10 @@ export function CycleCompletePopup() {
         <Text className={css({ lineHeight: 1.7 })} variant="body">
           30일간의 여정을 완주했어요.
         </Text>
-        <Text variant="muted">별 조각이 새롭게 초기화됩니다.</Text>
-        <Text variant="muted">새로운 여정을 시작하세요</Text>
+        <div className={mutedGroup}>
+          <Text variant="muted">별 조각이 새롭게 초기화됩니다.</Text>
+          <Text variant="muted">새로운 여정을 시작하세요</Text>
+        </div>
         <div className={buttonWrap}>
           <Button
             variant="gold"
