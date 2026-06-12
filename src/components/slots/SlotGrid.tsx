@@ -4,6 +4,7 @@ import { CosmicOrb } from "@/components/cosmic-orb/CosmicOrb";
 import { useModal } from "@/components/modal";
 import { useUniverse } from "@/hooks/useUniverse";
 import { useUniverseAge } from "@/hooks/useUniverseDays";
+import { CYCLE_DAY_GOAL, CYCLE_STAR_GOAL } from "@/lib/constants";
 import { css } from "@/styled/css";
 import { useEffect } from "react";
 import { CosmicOrbProgress } from "../cosmic-orb/CosmicOrbProgress";
@@ -43,14 +44,15 @@ export function SlotGrid() {
   const modal = useModal();
   const universeAge = useUniverseAge();
   const record = useUniverse((state) => state.record);
+  const totalStars = useUniverse((state) => state.totalStars);
 
   const allCompleted = record.morning && record.lunch && record.dinner;
 
   useEffect(() => {
-    if (universeAge >= 30) {
+    if (universeAge >= CYCLE_DAY_GOAL && totalStars >= CYCLE_STAR_GOAL) {
       modal.open(<CycleCompletePopup />);
     }
-  }, [modal, universeAge]);
+  }, [modal, universeAge, totalStars]);
 
   return (
     <div className={rootStyle}>

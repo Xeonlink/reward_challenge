@@ -1,3 +1,4 @@
+import { CYCLE_DAY_GOAL, CYCLE_STAR_GOAL } from "@/lib/constants";
 import { universeStore } from "@/lib/universe";
 import { css, cva } from "@/styled/css";
 import { useStore } from "zustand";
@@ -48,7 +49,10 @@ const statSub = css({
 export function CosmicOrbProgress() {
   const universe = useStore(universeStore);
 
-  const progress = Math.min(Math.round((universe.totalStars / 150) * 100), 100);
+  const progress = Math.min(
+    Math.round((universe.totalStars / CYCLE_STAR_GOAL) * 100),
+    100,
+  );
   const stage = getOrbStage(universe.totalStars);
 
   return (
@@ -61,8 +65,10 @@ export function CosmicOrbProgress() {
       </div>
       <div className={progressLabels}>
         <span className={statSub}>0</span>
-        <span className={statSub}>30일 목표 150개</span>
-        <span className={statSub}>150</span>
+        <span className={statSub}>
+          {CYCLE_DAY_GOAL}일 목표 {CYCLE_STAR_GOAL}개
+        </span>
+        <span className={statSub}>{CYCLE_STAR_GOAL}</span>
       </div>
     </div>
   );
