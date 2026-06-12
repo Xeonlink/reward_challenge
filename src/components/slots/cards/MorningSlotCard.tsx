@@ -13,6 +13,8 @@ import { checkBadge, cornerBadge, divider, iconWrap, slotCard } from "./_style";
 const color = "var(--colors-slot-morning)";
 const colorLight = "var(--colors-slot-morning-light)";
 
+const SLOT_TITLE = "아침 운세";
+
 export function MorningSlotCard() {
   const record = useUniverse((state) => state.record);
   const currentTime = useCurrentTime();
@@ -103,6 +105,7 @@ export function MorningSlotCard() {
   return (
     <button
       className={cx(slotCard({ status }))}
+      aria-label={`${SLOT_TITLE} — ${status}`}
       type="button"
       style={activeStyle}
       disabled={["completed", "inactive", "locked"].includes(status)}
@@ -127,7 +130,7 @@ export function MorningSlotCard() {
       </div>
 
       <Text className={css({ color: labelColor })} variant="slotTitle">
-        아침 운세
+        {SLOT_TITLE}
       </Text>
 
       <Text className={css({ color: sublabelColor })} variant="slotMeta">

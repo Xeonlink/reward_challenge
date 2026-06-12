@@ -20,6 +20,8 @@ import {
 const color = "var(--colors-slot-bonus)";
 const colorLight = "var(--colors-slot-bonus-light)";
 
+const SLOT_TITLE = "별 보너스";
+
 export function BonusSlotCard() {
   const record = useUniverse((state) => state.record);
 
@@ -27,7 +29,7 @@ export function BonusSlotCard() {
     if (record.bonus) return "completed";
     if (record.morning && record.lunch && record.dinner) return "active";
     return "locked";
-  }, [record]);
+  }, [record.morning, record.lunch, record.dinner, record.bonus]);
 
   const cardStatus = status === "locked" ? "lockedBonus" : status;
 
@@ -104,6 +106,7 @@ export function BonusSlotCard() {
   return (
     <button
       className={cx(slotCard({ status: cardStatus }))}
+      aria-label={`${SLOT_TITLE} — ${status}`}
       type="button"
       style={activeStyle}
       disabled={["completed", "inactive"].includes(status)}
@@ -129,7 +132,7 @@ export function BonusSlotCard() {
       </div>
 
       <Text className={css({ color: labelColor })} variant="slotTitle">
-        별 보너스
+        {SLOT_TITLE}
       </Text>
 
       <Text className={css({ color: sublabelColor })} variant="slotMeta">

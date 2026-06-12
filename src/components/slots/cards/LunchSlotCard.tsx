@@ -13,12 +13,15 @@ import { checkBadge, cornerBadge, divider, iconWrap, slotCard } from "./_style";
 const color = "var(--colors-slot-lunch)";
 const colorLight = "var(--colors-slot-lunch-light)";
 
+const SLOT_TITLE = "정오 운세";
+
 export function LunchSlotCard() {
   const record = useUniverse((state) => state.record);
   const currentTime = useCurrentTime();
 
   const status = useMemo(() => {
     if (record.lunch) return "completed";
+    if (currentTime === "morning") return "inactive";
     if (currentTime === "lunch") return "active";
     if (currentTime === "dinner") return "extra";
     return "inactive";
@@ -96,6 +99,7 @@ export function LunchSlotCard() {
   return (
     <button
       className={cx(slotCard({ status }))}
+      aria-label={`${SLOT_TITLE} — ${status}`}
       type="button"
       style={activeStyle}
       disabled={["completed", "inactive", "locked"].includes(status)}
@@ -120,7 +124,7 @@ export function LunchSlotCard() {
       </div>
 
       <Text className={css({ color: labelColor })} variant="slotTitle">
-        정오 운세
+        {SLOT_TITLE}
       </Text>
 
       <Text className={css({ color: sublabelColor })} variant="slotMeta">
