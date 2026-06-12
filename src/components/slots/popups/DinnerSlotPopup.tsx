@@ -62,7 +62,7 @@ export function DinnerSlotPopup() {
   };
 
   return (
-    <Popup>
+    <Popup size="wide">
       <div className={headerStyle}>
         <span className={popupTitle}>
           <DinnerIcon color={colorLight} size={28} />

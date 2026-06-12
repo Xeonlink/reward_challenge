@@ -125,7 +125,7 @@ export function RewardSuccessPopup(props: RewardSuccessPopupProps) {
             별 조각 획득!
           </div>
           <Text className={css({ lineHeight: 1.6 })} variant="muted">
-            <span className={rewardHighlight}>{slotLabel} 운세</span>를 통해 별
+            <span className={rewardHighlight}>{slotLabel}</span>를 통해 별
             조각을 모았어요.
           </Text>
         </div>

@@ -16,6 +16,7 @@ import {
   callout,
   calloutTitle,
   closeButtonStyle,
+  extraNotice,
   headerStyle,
   popupTitle,
   stepNumber,
@@ -66,7 +67,7 @@ export function MorningSlotPopup() {
   };
 
   return (
-    <Popup>
+    <Popup size="wide">
       <div className={headerStyle}>
         <span className={popupTitle}>
           <MorningIcon color={colorLight} size={28} />
@@ -96,7 +97,7 @@ export function MorningSlotPopup() {
       </div>
 
       {isExtra ? (
-        <Text className={css({ marginBottom: "1.25rem" })} variant="muted">
+        <Text className={extraNotice} variant="muted">
           추가 기회는 하루 1회만 사용할 수 있어요.
         </Text>
       ) : null}

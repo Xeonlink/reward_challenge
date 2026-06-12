@@ -78,7 +78,7 @@ export function BonusSlotPopup() {
   };
 
   return (
-    <Popup>
+    <Popup size="wide">
       <div className={headerStyle}>
         <span className={popupTitle}>
           <BonusIcon color={colorLight} size={28} />

@@ -1,21 +1,22 @@
 import { css, cva } from "@/styled/css";
 
 export const headerStyle = css({
-  display: "flex",
-  alignItems: "flex-start",
-  justifyContent: "space-between",
-  gap: "1rem",
-  margin: "-1.375rem -1.5rem 0",
-  padding: "1.5rem 1.5rem 0",
+  position: "relative",
+  marginBottom: "1.25rem",
+  paddingRight: "3rem",
 });
 
 export const popupTitle = css({
   display: "flex",
   alignItems: "center",
   gap: "0.625rem",
+  minWidth: 0,
 });
 
 export const closeButtonStyle = css({
+  position: "absolute",
+  top: 0,
+  right: 0,
   flexShrink: "0",
   width: "2.25rem",
   height: "2.25rem",
@@ -88,4 +89,9 @@ export const buttonWrap = css({
   display: "flex",
   flexDirection: "column",
   gap: "0.625rem",
+});
+
+export const extraNotice = css({
+  display: "block",
+  marginBottom: "2rem",
 });
