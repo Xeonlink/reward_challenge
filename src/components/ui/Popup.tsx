@@ -1,13 +1,8 @@
 "use client";
 
 import { css } from "@/styled/css";
-import type { ReactNode } from "react";
-import { useEffect } from "react";
+import { PropsWithChildren, useEffect } from "react";
 import { useModal } from "../modal";
-
-export interface PopupProps {
-  children: ReactNode;
-}
 
 const modalRoot = css({
   position: "fixed",
@@ -40,8 +35,12 @@ const contentStyle = css({
   boxShadow: "0 25px 60px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.05)",
 });
 
-export function Popup(props: PopupProps) {
-  const { children } = props;
+type Props = PropsWithChildren<{
+  backdrop?: true | "noClose";
+}>;
+
+export function Popup(props: Props) {
+  const { children, backdrop = true } = props;
   const modal = useModal();
 
   useEffect(() => {
@@ -56,18 +55,28 @@ export function Popup(props: PopupProps) {
     };
   }, [modal]);
 
+  const handleBackdropClick = () => {
+    if (backdrop !== "noClose") {
+      modal.closeSelf();
+    }
+  };
+
   return (
     <div className={modalRoot}>
-      <div
-        className={backdropStyle}
-        onClick={() => modal.closeSelf()}
-        aria-hidden="true"
-      />
+      {backdrop ? (
+        <div
+          className={backdropStyle}
+          onClick={handleBackdropClick}
+          aria-hidden="true"
+          aria-label="dialog backdrop"
+        />
+      ) : null}
+
       <div
         className={contentStyle}
         role="dialog"
         aria-modal="true"
-        onClick={(e) => e.stopPropagation()}
+        aria-label="dialog content"
       >
         {children}
       </div>
