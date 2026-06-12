@@ -56,7 +56,7 @@ test.describe("README 슬롯 시간대", () => {
 
   test("추가기회 — Popup 안내 문구", async ({ page }) => {
     await seedToday(page, { lunch: true });
-    await page.goto("/?test=dinner");
+    await page.goto("/?test=lunch");
     await page.waitForLoadState("networkidle");
     await openSlotPopup(page, "아침 운세", "extra");
     await expect(

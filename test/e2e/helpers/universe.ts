@@ -10,61 +10,71 @@ export interface DayRecord {
   lunch: boolean;
   dinner: boolean;
   bonus: boolean;
-  extraUsed: boolean;
+}
+
+export interface UniverseState {
+  totalStars: number;
+  cycleStartDate: string;
+  lastRecordDate: string;
+  record: DayRecord;
 }
 
 export interface UniverseSeed {
   totalStars?: number;
   cycleStartDate?: string;
-  dailyRecord?: Record<string, DayRecord>;
+  lastRecordDate?: string;
+  record?: Partial<DayRecord>;
+}
+
+const emptyRecord = (): DayRecord => ({
+  morning: false,
+  lunch: false,
+  dinner: false,
+  bonus: false,
+});
+
+/** Zustand persist 형식 `{ state, version }` */
+export function buildPersistPayload(seed: UniverseSeed = {}): {
+  state: UniverseState;
+  version: number;
+} {
+  const today = format(new Date(), DATE_FORMAT);
+  return {
+    state: {
+      totalStars: seed.totalStars ?? 0,
+      cycleStartDate: seed.cycleStartDate ?? today,
+      lastRecordDate: seed.lastRecordDate ?? today,
+      record: { ...emptyRecord(), ...seed.record },
+    },
+    version: 1,
+  };
 }
 
 export function todayKey(): string {
   return format(new Date(), DATE_FORMAT);
 }
 
-export function defaultUniverse(overrides: UniverseSeed = {}): {
-  totalStars: number;
-  cycleStartDate: string;
-  dailyRecord: Record<string, DayRecord>;
-} {
-  return {
-    totalStars: overrides.totalStars ?? 0,
-    cycleStartDate: overrides.cycleStartDate ?? format(new Date(), DATE_FORMAT),
-    dailyRecord: overrides.dailyRecord ?? {},
-  };
-}
-
 export async function seedUniverse(
   page: Page,
   overrides: UniverseSeed = {},
 ): Promise<void> {
-  const record = defaultUniverse(overrides);
+  const payload = buildPersistPayload(overrides);
   await page.addInitScript(
     ({ key, data }) => {
       localStorage.setItem(key, JSON.stringify(data));
     },
-    { key: UNIVERSE_STORAGE_KEY, data: record },
+    { key: UNIVERSE_STORAGE_KEY, data: payload },
   );
 }
 
 export async function seedToday(
   page: Page,
   dayRecord: Partial<DayRecord>,
-  universeOverrides: Omit<UniverseSeed, "dailyRecord"> = {},
+  universeOverrides: Omit<UniverseSeed, "record"> = {},
 ): Promise<void> {
-  const today = todayKey();
-  const base: DayRecord = {
-    morning: false,
-    lunch: false,
-    dinner: false,
-    bonus: false,
-    extraUsed: false,
-    ...dayRecord,
-  };
   await seedUniverse(page, {
     ...universeOverrides,
-    dailyRecord: { [today]: base },
+    record: dayRecord,
   });
 }
 

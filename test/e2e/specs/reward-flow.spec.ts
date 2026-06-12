@@ -19,7 +19,7 @@ test.describe("README 보상 수령 Flow", () => {
       page.getByRole("button", { name: "강남철학관 운세 보러 가기" }),
     ).toBeVisible();
     await clickExternalVisit(page);
-    await simulateVisitReturn(page, { kind: "fortune", time: "dinner" }, 4000);
+    await simulateVisitReturn(page, 4000);
     await expect(page.getByText("별 조각 획득!")).toBeVisible();
     await claimReward(page);
     await expectTodayProgress(page, 1);
@@ -30,7 +30,7 @@ test.describe("README 보상 수령 Flow", () => {
     await gotoTestTime(page, "dinner");
     await openSlotPopup(page, "저녁 운세", "active");
     await clickExternalVisit(page);
-    await simulateVisitReturn(page, { kind: "fortune", time: "dinner" }, 1000);
+    await simulateVisitReturn(page, 1000);
     await expect(page.getByText("조건 미충족")).toBeVisible();
     await expect(page.getByText("체류 시간이 부족합니다.")).toBeVisible();
     await claimReward(page);
@@ -53,7 +53,7 @@ test.describe("README 보상 수령 Flow", () => {
 
     await openSlotPopup(page, "별 보너스", "active");
     await clickExternalVisit(page);
-    await simulateVisitReturn(page, { kind: "bonus" }, 4000);
+    await simulateVisitReturn(page, 4000);
     await expect(page.getByText("별 조각 획득!")).toBeVisible();
     await claimReward(page);
     await expectTodayProgress(page, 5);
