@@ -6,10 +6,9 @@ import { Popup } from "@/components/ui/Popup";
 import { Text } from "@/components/ui/Text";
 import { useCurrentTime } from "@/hooks/useCurrentTime";
 import { useUrlVisitor } from "@/hooks/useFortuneVisit";
+import { useUniverse } from "@/hooks/useUniverse";
 import { FORTUNE_URL, REQUIRED_VISIT_MS } from "@/lib/constants";
-import { universeStore } from "@/lib/universe";
 import { css, cx } from "@/styled/css";
-import { useStore } from "zustand";
 import { LunchIcon, StarFragmentIcon } from "../SlotIcons";
 import { RewardFailedPopup, RewardSuccessPopup } from "./RewardPopup";
 import {
@@ -40,22 +39,24 @@ const calloutStyle = css({
 });
 
 export function LunchSlotPopup() {
-  const universe = useStore(universeStore);
+  const record = useUniverse((state) => state.record);
+  const completeFortune = useUniverse((state) => state.actions.completeFortune);
   const currentTime = useCurrentTime();
   const modal = useModal();
   const { tryVisit } = useUrlVisitor();
 
-  const isExtra = !universe.record.lunch && currentTime === "dinner";
+  const isExtra = !record.lunch && currentTime === "dinner";
 
   const handleVisit = async () => {
     const result = await tryVisit(FORTUNE_URL, REQUIRED_VISIT_MS);
     if (result.success) {
+      modal.closeSelf();
       modal.open(
         <RewardSuccessPopup
           slotLabel={title}
           rewardAmount={1}
           onSuccess={() => {
-            universe.actions.completeFortune("lunch");
+            completeFortune("lunch");
           }}
         />,
       );

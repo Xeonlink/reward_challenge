@@ -46,6 +46,7 @@ export function DinnerSlotPopup() {
   const handleVisit = async () => {
     const result = await tryVisit(FORTUNE_URL, REQUIRED_VISIT_MS);
     if (result.success) {
+      modal.closeSelf();
       modal.open(
         <RewardSuccessPopup
           slotLabel={title}

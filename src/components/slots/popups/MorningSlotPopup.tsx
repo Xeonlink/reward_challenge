@@ -1,12 +1,14 @@
+"use client";
+
 import { useModal } from "@/components/modal";
 import { Button } from "@/components/ui/Button";
 import { Popup } from "@/components/ui/Popup";
 import { Text } from "@/components/ui/Text";
+import { useCurrentTime } from "@/hooks/useCurrentTime";
 import { useUrlVisitor } from "@/hooks/useFortuneVisit";
+import { useUniverse } from "@/hooks/useUniverse";
 import { FORTUNE_URL, REQUIRED_VISIT_MS } from "@/lib/constants";
-import { universeStore } from "@/lib/universe";
 import { css, cx } from "@/styled/css";
-import { useStore } from "zustand";
 import { MorningIcon, StarFragmentIcon } from "../SlotIcons";
 import { RewardFailedPopup, RewardSuccessPopup } from "./RewardPopup";
 import {
@@ -23,6 +25,7 @@ import {
 
 const color = "var(--colors-slot-morning)";
 const colorLight = "var(--colors-slot-morning-light)";
+const title = "새벽의 운세";
 
 const stepStyle = css({
   background: `color-mix(in srgb, ${color} 8%, transparent)`,
@@ -36,19 +39,24 @@ const calloutStyle = css({
 });
 
 export function MorningSlotPopup() {
-  const universe = useStore(universeStore);
+  const record = useUniverse((state) => state.record);
+  const completeFortune = useUniverse((state) => state.actions.completeFortune);
+  const currentTime = useCurrentTime();
   const modal = useModal();
   const { tryVisit } = useUrlVisitor();
+
+  const isExtra = !record.morning && currentTime === "lunch";
 
   const handleVisit = async () => {
     const result = await tryVisit(FORTUNE_URL, REQUIRED_VISIT_MS);
     if (result.success) {
+      modal.closeSelf();
       modal.open(
         <RewardSuccessPopup
-          slotLabel="새벽의 운세"
+          slotLabel={title}
           rewardAmount={1}
           onSuccess={() => {
-            universe.actions.completeFortune("morning");
+            completeFortune("morning");
           }}
         />,
       );
@@ -63,7 +71,8 @@ export function MorningSlotPopup() {
         <span className={popupTitle}>
           <MorningIcon color={colorLight} size={28} />
           <Text className={css({ color: colorLight })} variant="slotTitle">
-            새벽의 운세
+            {isExtra ? "추가 기회 — " : null}
+            {title}
           </Text>
         </span>
         <button
@@ -85,6 +94,12 @@ export function MorningSlotPopup() {
           <Text variant="muted">강남철학관 방문 후 별 조각을 수집하세요.</Text>
         </div>
       </div>
+
+      {isExtra ? (
+        <Text className={css({ marginBottom: "1.25rem" })} variant="muted">
+          추가 기회는 하루 1회만 사용할 수 있어요.
+        </Text>
+      ) : null}
 
       <div className={stepsWrap}>
         <div className={stepRow}>
