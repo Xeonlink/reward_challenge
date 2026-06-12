@@ -5,7 +5,7 @@ import { expectTotalStars, seedUniverse } from "../helpers/universe";
 test.describe("README 30일 사이클", () => {
   test("30일 경과 — 완성 팝업 + 리셋", async ({ page }) => {
     await seedUniverse(page, {
-      totalStars: 50,
+      totalStars: 150,
       cycleStartDate: format(subDays(new Date(), 31), "yyyy-MM-dd"),
     });
     await page.goto("/");

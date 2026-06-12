@@ -3,7 +3,11 @@
 import { useModal } from "@/components/modal";
 import { CycleCompletePopup } from "@/components/slots/popups/CycleCompletePopup";
 import { Chip } from "@/components/ui/Chip";
-import { UNIVERSE_STORAGE_KEY } from "@/lib/constants";
+import {
+  CYCLE_DAY_GOAL,
+  CYCLE_STAR_GOAL,
+  UNIVERSE_STORAGE_KEY,
+} from "@/lib/constants";
 import type { DayRecord } from "@/lib/universe";
 import { css } from "@/styled/css";
 import { format, subDays } from "date-fns";
@@ -80,7 +84,8 @@ function triggerCycleCompleteViaStorage() {
   const current = readPersistedUniverse();
   writePersistedUniverse({
     ...current,
-    cycleStartDate: format(subDays(new Date(), 30), "yyyy-MM-dd"),
+    totalStars: CYCLE_STAR_GOAL,
+    cycleStartDate: format(subDays(new Date(), CYCLE_DAY_GOAL), "yyyy-MM-dd"),
   });
   location.reload();
 }
