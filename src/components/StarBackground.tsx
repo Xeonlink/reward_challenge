@@ -18,7 +18,7 @@ const STAR_COUNT = 220;
 const BIRTH_WINDOW = 3200; // ms to birth all stars
 const BIRTH_FADE = 700; // ms per-star fade-in
 
-export function StarCanvas() {
+export function StarBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rafRef = useRef<number>(0);
 

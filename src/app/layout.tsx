@@ -1,4 +1,4 @@
-import { StarCanvas } from "@/components/StarCanvas";
+import { StarBackground } from "@/components/StarBackground";
 import { DevTools } from "@/components/dev-tools";
 import { ModalContainer } from "@/components/modal";
 import { StarFragmentIcon } from "@/components/slots/SlotIcons";
@@ -61,7 +61,7 @@ export default function Layout(props: LayoutProps<"/">) {
     >
       <body className={css({ minHeight: "screen" })}>
         {/* starlight background. It assume bg is dark. */}
-        <StarCanvas />
+        <StarBackground />
 
         <div
           className={css({
