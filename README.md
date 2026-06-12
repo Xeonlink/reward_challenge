@@ -128,8 +128,19 @@ location.reload();
 localStorage.setItem("byulmoa_universe", JSON.stringify({ totalStars: 80 }));
 location.reload();
 
-// 초기화
-localStorage.setItem("byulmoa_universe", JSON.stringify({ totalStars: 0 }));
+// 초기화 (Zustand persist 형식)
+localStorage.setItem(
+  "byulmoa_universe",
+  JSON.stringify({
+    state: {
+      totalStars: 0,
+      cycleStartDate: "2026-06-12",
+      lastRecordDate: "2026-06-12",
+      record: { morning: false, lunch: false, dinner: false, bonus: false },
+    },
+    version: 1,
+  }),
+);
 location.reload();
 ```
 
@@ -163,15 +174,24 @@ location.reload();
 
 ## 추가기회 케이스
 
-| 케이스         | 아침       | 점심     | 저녁 |
-| -------------- | ---------- | -------- | ---- |
-| 점심 완료      | 추가기회   | ✅       | —    |
-| 점심+저녁 완료 | 추가기회   | ✅       | ✅   |
-| 저녁만 완료    | 🔒참여불가 | 추가기회 | ✅   |
-| 점심+저녁 완료 | 추가기회   | ✅       | ✅   |
-| 아침+저녁 완료 | ✅         | 추가기회 | ✅   |
+각 슬롯은 **현재 시간대(`?test=` 또는 실제 시각)** 기준으로 상태가 결정됩니다. 표의 열(아침·점심·저녁)은 해당 시간대에 슬롯이 어떤 상태인지를 뜻합니다.
 
-추가기회 슬롯은 1회만 사용 가능합니다.
+| 슬롯 | 아침 시간 | 점심 시간 | 저녁 시간 |
+| ---- | --------- | --------- | --------- |
+| 아침 | active    | extra     | locked    |
+| 점심 | inactive  | active    | extra     |
+| 저녁 | locked    | locked    | active    |
+
+완료 조합 예시 (`?test=`는 확인 시각):
+
+| 케이스         | test   | 아침       | 점심     | 저녁 |
+| -------------- | ------ | ---------- | -------- | ---- |
+| 점심 완료      | lunch  | 추가기회   | ✅       | —    |
+| 점심+저녁 완료 | dinner | 🔒참여불가 | ✅       | ✅   |
+| 저녁만 완료    | dinner | 🔒참여불가 | 추가기회 | ✅   |
+| 아침+저녁 완료 | dinner | ✅         | 추가기회 | ✅   |
+
+추가기회는 슬롯별 허용 시간대가 겹치지 않아, 같은 순간에 extra 슬롯은 하나뿐입니다.
 
 ---
 
