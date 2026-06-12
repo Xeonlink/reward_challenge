@@ -3,29 +3,27 @@
 import { useModal } from "@/components/modal";
 import { Text } from "@/components/ui/Text";
 import { useCurrentTime } from "@/hooks/useCurrentTime";
-import { universeStore } from "@/lib/universe";
-import { css } from "@/styled/css";
+import { useUniverse } from "@/hooks/useUniverse";
+import { css, cx } from "@/styled/css";
 import { useMemo } from "react";
-import { useStore } from "zustand";
-import { CheckIcon, LockIcon, MorningIcon } from "../SlotIcons";
+import { CheckIcon, MorningIcon } from "../SlotIcons";
 import { MorningSlotPopup } from "../popups/MorningSlotPopup";
 import { checkBadge, cornerBadge, divider, iconWrap, slotCard } from "./_style";
 
+const color = "var(--colors-slot-morning)";
+const colorLight = "var(--colors-slot-morning-light)";
+
 export function MorningSlotCard() {
-  const universe = useStore(universeStore);
+  const record = useUniverse((state) => state.record);
   const currentTime = useCurrentTime();
 
   const status = useMemo(() => {
-    if (universe.record.morning) return "completed";
+    if (record.morning) return "completed";
     if (currentTime === "morning") return "active";
     if (currentTime === "lunch") return "extra";
     if (currentTime === "dinner") return "locked";
     return "inactive";
-  }, [universe.record.morning, currentTime]);
-
-  const color = "var(--colors-slot-morning)";
-  const colorLight = "var(--colors-slot-morning-light)";
-  const isClickable = !["completed", "inactive", "locked"].includes(status);
+  }, [record.morning, currentTime]);
 
   const iconColor = useMemo(() => {
     if (status === "completed") return "var(--colors-success)";
@@ -33,29 +31,29 @@ export function MorningSlotCard() {
     if (status === "inactive") return "var(--colors-fg-muted)";
     if (status === "extra") return "var(--colors-slot-bonus-light)";
     return color;
-  }, [status, color]);
+  }, [status]);
 
   const labelColor = useMemo(() => {
     if (status === "completed") return "var(--colors-success)";
-    if (status === "locked" || status === "inactive")
-      return "var(--colors-fg-muted)";
+    if (status === "locked") return "var(--colors-fg-muted)";
+    if (status === "inactive") return "var(--colors-fg-dim)";
     if (status === "extra") return "var(--colors-slot-bonus-light)";
     return colorLight;
-  }, [status, colorLight]);
+  }, [status]);
 
   const sublabelColor = useMemo(() => {
     if (status === "completed")
       return "color-mix(in srgb, var(--colors-success) 50%, transparent)";
-    if (status === "locked" || status === "inactive")
-      return "var(--colors-fg-dim)";
+    if (status === "locked") return "var(--colors-fg-dim)";
+    if (status === "inactive") return "var(--colors-fg-dim)";
     if (status === "extra")
       return "color-mix(in srgb, var(--colors-slot-bonus-light) 50%, transparent)";
     return `color-mix(in srgb, ${color} 44%, transparent)`;
-  }, [status, color]);
+  }, [status]);
 
   const timeColor = useMemo(() => {
-    if (status === "locked" || status === "inactive")
-      return "var(--colors-fg-dim)";
+    if (status === "locked") return "var(--colors-fg-dim)";
+    if (status === "inactive") return "var(--colors-fg-dim)";
     return "var(--colors-fg-muted)";
   }, [status]);
 
@@ -69,11 +67,11 @@ export function MorningSlotCard() {
 
   const statusColor = useMemo(() => {
     if (status === "completed") return "var(--colors-success)";
-    if (status === "locked" || status === "inactive")
-      return "var(--colors-fg-dim)";
+    if (status === "locked") return "var(--colors-fg-dim)";
+    if (status === "inactive") return "var(--colors-fg-dim)";
     if (status === "extra") return "var(--colors-slot-bonus)";
     return color;
-  }, [status, color]);
+  }, [status]);
 
   const activeStyle = useMemo(() => {
     if (status === "active") {
@@ -84,20 +82,17 @@ export function MorningSlotCard() {
       };
     }
     return undefined;
-  }, [status, color]);
+  }, [status]);
 
-  const isExtra = status === "extra"; // Required here to replace ternary logic
-
-  const dividerStyle = useMemo(() => {
-    if (status === "active" || status === "extra") {
-      return {
-        background: `linear-gradient(90deg, transparent, color-mix(in srgb, ${isExtra ? "var(--colors-slot-bonus)" : color} 31%, transparent), transparent)`,
-      };
+  const dividerBg = useMemo(() => {
+    if (status === "active") {
+      return `linear-gradient(90deg, transparent, color-mix(in srgb, ${color} 31%, transparent), transparent)`;
     }
-    return {
-      background: "color-mix(in srgb, var(--colors-border) 40%, transparent)",
-    };
-  }, [status, color, isExtra]);
+    if (status === "extra") {
+      return `linear-gradient(90deg, transparent, color-mix(in srgb, var(--colors-slot-bonus) 31%, transparent), transparent)`;
+    }
+    return "color-mix(in srgb, var(--colors-border) 40%, transparent)";
+  }, [status]);
 
   const modal = useModal();
 
@@ -107,10 +102,10 @@ export function MorningSlotCard() {
 
   return (
     <button
-      className={slotCard({ status })}
+      className={cx(slotCard({ status }))}
       type="button"
       style={activeStyle}
-      disabled={!isClickable}
+      disabled={["completed", "inactive", "locked"].includes(status)}
       onClick={openMorningFortuneModal}
     >
       {status === "completed" ? (
@@ -119,7 +114,7 @@ export function MorningSlotCard() {
         </div>
       ) : null}
 
-      {isExtra && status === "extra" ? (
+      {status === "extra" ? (
         <div className={cornerBadge({ tone: "extra" })}>추가기회</div>
       ) : null}
 
@@ -128,13 +123,7 @@ export function MorningSlotCard() {
           pulse: status === "active" || status === "extra",
         })}
       >
-        {status === "locked" ? (
-          <LockIcon color="var(--colors-fg-muted)" size={36} />
-        ) : status === "completed" ? (
-          <MorningIcon color="var(--colors-success)" size={36} />
-        ) : (
-          <MorningIcon color={iconColor} size={36} />
-        )}
+        <MorningIcon color={iconColor} size={36} />
       </div>
 
       <Text className={css({ color: labelColor })} variant="slotTitle">
@@ -149,7 +138,7 @@ export function MorningSlotCard() {
         00:00 - 11:59
       </Text>
 
-      <div className={divider()} style={dividerStyle} />
+      <div className={cx(divider(), css({ background: dividerBg }))} />
 
       <Text className={css({ color: statusColor })} variant="slotStatus">
         {statusText}
