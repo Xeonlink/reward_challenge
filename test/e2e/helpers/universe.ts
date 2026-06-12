@@ -1,6 +1,9 @@
 import { expect, type Page } from "@playwright/test";
+import { format } from "date-fns";
 
 export const UNIVERSE_STORAGE_KEY = "byulmoa_universe";
+
+const DATE_FORMAT = "yyyy-MM-dd";
 
 export interface DayRecord {
   morning: boolean;
@@ -17,7 +20,7 @@ export interface UniverseSeed {
 }
 
 export function todayKey(): string {
-  return new Date().toDateString();
+  return format(new Date(), DATE_FORMAT);
 }
 
 export function defaultUniverse(overrides: UniverseSeed = {}): {
@@ -27,7 +30,7 @@ export function defaultUniverse(overrides: UniverseSeed = {}): {
 } {
   return {
     totalStars: overrides.totalStars ?? 0,
-    cycleStartDate: overrides.cycleStartDate ?? new Date().toDateString(),
+    cycleStartDate: overrides.cycleStartDate ?? format(new Date(), DATE_FORMAT),
     dailyRecord: overrides.dailyRecord ?? {},
   };
 }

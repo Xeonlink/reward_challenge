@@ -1,14 +1,12 @@
 import { expect, test } from "@playwright/test";
+import { format, subDays } from "date-fns";
 import { expectTotalStars, seedUniverse } from "../helpers/universe";
 
 test.describe("README 30일 사이클", () => {
   test("30일 경과 — 완성 팝업 + 리셋", async ({ page }) => {
-    const past = new Date();
-    past.setDate(past.getDate() - 31);
-
     await seedUniverse(page, {
       totalStars: 50,
-      cycleStartDate: past.toDateString(),
+      cycleStartDate: format(subDays(new Date(), 31), "yyyy-MM-dd"),
     });
     await page.goto("/");
     await page.waitForLoadState("networkidle");
