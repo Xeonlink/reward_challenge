@@ -9,22 +9,34 @@ import {
 import { immer } from "zustand/middleware/immer";
 import { createStore } from "zustand/vanilla";
 
+export type FortuneSlot = "morning" | "lunch" | "dinner";
+
+export type DayRecord = {
+  morning: boolean;
+  lunch: boolean;
+  dinner: boolean;
+  bonus: boolean;
+};
+
 export type UniverseStore = {
   totalStars: number;
-  cycleStartDate: string; // yyyy-MM-dd
-  lastRecordDate: string; // yyyy-MM-dd
-  record: {
-    morning: boolean;
-    lunch: boolean;
-    dinner: boolean;
-    bonus: boolean;
-  };
+  cycleStartDate: string;
+  lastRecordDate: string;
+  record: DayRecord;
   actions: {
-    completeFortune: (dailyRecordKey: "morning" | "lunch" | "dinner") => void;
+    completeFortune: (slot: FortuneSlot) => void;
     completeBonus: () => void;
     resetUniverse: () => void;
+    startNewCycle: () => void;
   };
 };
+
+const emptyRecord = (): DayRecord => ({
+  morning: false,
+  lunch: false,
+  dinner: false,
+  bonus: false,
+});
 
 export const universeStore = createStore<UniverseStore>()(
   persist(
@@ -33,23 +45,22 @@ export const universeStore = createStore<UniverseStore>()(
         totalStars: 0,
         cycleStartDate: format(new Date(), "yyyy-MM-dd"),
         lastRecordDate: format(new Date(), "yyyy-MM-dd"),
-        record: {
-          morning: false,
-          lunch: false,
-          dinner: false,
-          bonus: false,
-        },
+        record: emptyRecord(),
         actions: {
-          completeFortune: (dailyRecordKey) => {
+          completeFortune: (slot) => {
             set((state) => {
               const currentDate = format(new Date(), "yyyy-MM-dd");
               state.lastRecordDate = currentDate;
-              state.record[dailyRecordKey] = true;
+              state.record[slot] = true;
               state.totalStars += 1;
             });
           },
           completeBonus: () => {
             set((state) => {
+              const { morning, lunch, dinner, bonus } = state.record;
+              if (bonus || !morning || !lunch || !dinner) {
+                return;
+              }
               const currentDate = format(new Date(), "yyyy-MM-dd");
               state.lastRecordDate = currentDate;
               state.record.bonus = true;
@@ -60,12 +71,16 @@ export const universeStore = createStore<UniverseStore>()(
             set((state) => {
               state.totalStars = 0;
               state.lastRecordDate = format(new Date(), "yyyy-MM-dd");
-              state.record = {
-                morning: false,
-                lunch: false,
-                dinner: false,
-                bonus: false,
-              };
+              state.record = emptyRecord();
+            });
+          },
+          startNewCycle: () => {
+            set((state) => {
+              const today = format(new Date(), "yyyy-MM-dd");
+              state.totalStars = 0;
+              state.cycleStartDate = today;
+              state.lastRecordDate = today;
+              state.record = emptyRecord();
             });
           },
         },
@@ -83,6 +98,7 @@ export const universeStore = createStore<UniverseStore>()(
       }),
       migrate: (persistedState, version) => {
         console.log(persistedState, version);
+        return persistedState as UniverseStore;
       },
     },
   ),

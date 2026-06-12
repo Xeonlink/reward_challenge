@@ -4,10 +4,17 @@ import { useModal } from "@/components/modal";
 import { Button } from "@/components/ui/Button";
 import { Popup } from "@/components/ui/Popup";
 import { Text } from "@/components/ui/Text";
+import { useUniverse } from "@/hooks/useUniverse";
 import { css } from "@/styled/css";
 
 export function CycleCompletePopup() {
   const modal = useModal();
+  const startNewCycle = useUniverse((state) => state.actions.startNewCycle);
+
+  const handleStartNewCycle = () => {
+    startNewCycle();
+    modal.closeSelf();
+  };
 
   return (
     <Popup>
@@ -38,7 +45,7 @@ export function CycleCompletePopup() {
         <Text className={css({ marginBottom: "1.375rem" })} variant="muted">
           새로운 여정을 시작하세요
         </Text>
-        <Button variant="gold" size="sm" onClick={() => modal.closeSelf()}>
+        <Button variant="gold" size="sm" onClick={handleStartNewCycle}>
           새 여정 시작
         </Button>
       </div>
