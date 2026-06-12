@@ -6,16 +6,7 @@ import { Popup } from "@/components/ui/Popup";
 import { Text } from "@/components/ui/Text";
 import { useUniverse } from "@/hooks/useUniverse";
 import { css } from "@/styled/css";
-import { buttonWrap } from "./_style";
-
-const content = css({
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  textAlign: "center",
-  gap: "1.125rem",
-  paddingTop: "0.5rem",
-});
+import { buttonWrap, popupPanel } from "./_style";
 
 const mutedGroup = css({
   display: "flex",
@@ -35,7 +26,11 @@ export function CycleCompletePopup() {
 
   return (
     <Popup backdrop="noClose">
-      <div className={content}>
+      <div
+        className={popupPanel({ layout: "centered" })}
+        aria-modal="true"
+        role="dialog"
+      >
         <div className={css({ fontSize: "4xl" })}>✨</div>
         <Text
           className={css({ color: "accent", fontSize: "lg" })}

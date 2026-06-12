@@ -18,6 +18,7 @@ import {
   closeButtonStyle,
   extraNotice,
   headerStyle,
+  popupPanel,
   popupTitle,
   stepNumber,
   stepRow,
@@ -67,66 +68,74 @@ export function MorningSlotPopup() {
   };
 
   return (
-    <Popup size="wide">
-      <div className={headerStyle}>
-        <span className={popupTitle}>
-          <MorningIcon color={colorLight} size={28} />
-          <Text className={css({ color: colorLight })} variant="slotTitle">
-            {isExtra ? "추가 기회 — " : null}
-            {title}
-          </Text>
-        </span>
-        <button
-          className={closeButtonStyle}
-          type="button"
-          onClick={() => modal.closeSelf()}
-        >
-          <span className="sr-only"> 닫기</span>
-          <span>✕</span>
-        </button>
-      </div>
+    <Popup>
+      <div
+        className={popupPanel({ size: "wide" })}
+        aria-modal="true"
+        role="dialog"
+      >
+        <div className={headerStyle}>
+          <span className={popupTitle}>
+            <MorningIcon color={colorLight} size={28} />
+            <Text className={css({ color: colorLight })} variant="slotTitle">
+              {isExtra ? "추가 기회 — " : null}
+              {title}
+            </Text>
+          </span>
+          <button
+            className={closeButtonStyle}
+            type="button"
+            onClick={() => modal.closeSelf()}
+          >
+            <span className="sr-only"> 닫기</span>
+            <span>✕</span>
+          </button>
+        </div>
 
-      <div className={cx(callout(), calloutStyle)}>
-        <StarFragmentIcon color={color} size={28} />
-        <div>
-          <div className={calloutTitle} style={{ color: colorLight }}>
-            별 조각 +1 획득 가능
+        <div className={cx(callout(), calloutStyle)}>
+          <StarFragmentIcon color={color} size={28} />
+          <div>
+            <div className={calloutTitle} style={{ color: colorLight }}>
+              별 조각 +1 획득 가능
+            </div>
+            <Text variant="muted">
+              강남철학관 방문 후 별 조각을 수집하세요.
+            </Text>
           </div>
-          <Text variant="muted">강남철학관 방문 후 별 조각을 수집하세요.</Text>
         </div>
-      </div>
 
-      {isExtra ? (
-        <Text className={extraNotice} variant="muted">
-          추가 기회는 하루 1회만 사용할 수 있어요.
-        </Text>
-      ) : null}
+        {isExtra ? (
+          <Text className={extraNotice} variant="muted">
+            추가 기회는 하루 1회만 사용할 수 있어요.
+          </Text>
+        ) : null}
 
-      <div className={stepsWrap}>
-        <div className={stepRow}>
-          <div className={cx(stepNumber(), stepStyle)}>1</div>
-          <Text variant="muted">강남철학관 운세 페이지로 이동</Text>
+        <div className={stepsWrap}>
+          <div className={stepRow}>
+            <div className={cx(stepNumber(), stepStyle)}>1</div>
+            <Text variant="muted">강남철학관 운세 페이지로 이동</Text>
+          </div>
+          <div className={stepRow}>
+            <div className={cx(stepNumber(), stepStyle)}>2</div>
+            <Text variant="muted">3초 이상 체류하기</Text>
+          </div>
+          <div className={stepRow}>
+            <div className={cx(stepNumber(), stepStyle)}>3</div>
+            <Text variant="muted">돌아와서 별 조각 수령</Text>
+          </div>
         </div>
-        <div className={stepRow}>
-          <div className={cx(stepNumber(), stepStyle)}>2</div>
-          <Text variant="muted">3초 이상 체류하기</Text>
-        </div>
-        <div className={stepRow}>
-          <div className={cx(stepNumber(), stepStyle)}>3</div>
-          <Text variant="muted">돌아와서 별 조각 수령</Text>
-        </div>
-      </div>
 
-      <div className={buttonWrap}>
-        <Button
-          variant="gold"
-          size="lg"
-          fullWidth
-          onClick={handleVisit}
-          leftIcon={<StarFragmentIcon color="#07091A" size={18} />}
-        >
-          강남철학관 운세 보러 가기
-        </Button>
+        <div className={buttonWrap}>
+          <Button
+            variant="gold"
+            size="lg"
+            fullWidth
+            onClick={handleVisit}
+            leftIcon={<StarFragmentIcon color="#07091A" size={18} />}
+          >
+            강남철학관 운세 보러 가기
+          </Button>
+        </div>
       </div>
     </Popup>
   );

@@ -6,15 +6,7 @@ import { css, cva } from "@/styled/css";
 import { Button } from "../../ui/Button";
 import { Popup } from "../../ui/Popup";
 import { StarFragmentIcon } from "../SlotIcons";
-
-const content = css({
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  textAlign: "center",
-  gap: "1.125rem",
-  paddingTop: "0.5rem",
-});
+import { popupPanel } from "./_style";
 
 const rewardIcon = cva({
   base: {
@@ -116,7 +108,11 @@ export function RewardSuccessPopup(props: RewardSuccessPopupProps) {
 
   return (
     <Popup>
-      <div className={content}>
+      <div
+        className={popupPanel({ layout: "centered" })}
+        aria-modal="true"
+        role="dialog"
+      >
         <div className={rewardIcon({ variant: "success" })}>
           <StarFragmentIcon color="var(--colors-accent)" size={40} />
         </div>
@@ -150,7 +146,11 @@ export function RewardFailedPopup() {
 
   return (
     <Popup>
-      <div className={content}>
+      <div
+        className={popupPanel({ layout: "centered" })}
+        aria-modal="true"
+        role="dialog"
+      >
         <div className={rewardIcon({ variant: "failure" })}>
           <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
             <circle
