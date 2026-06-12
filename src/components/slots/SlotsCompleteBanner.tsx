@@ -16,9 +16,10 @@ const root = css({
 export function SlotsCompleteBanner() {
   return (
     <div className={root}>
-      <div className={css({ fontSize: "xl", marginBottom: "0.375rem" })}>
+      <span className={css({ fontSize: "xl", marginBottom: "0.375rem" })}>
         ✨
-      </div>
+      </span>
+      &nbsp;
       <Text
         className={css({
           fontFamily: "display",
@@ -29,10 +30,13 @@ export function SlotsCompleteBanner() {
       >
         오늘의 운세를 모두 확인했어요!
       </Text>
-
-      <Text className={css({ marginTop: "0.25rem" })} variant="muted">
+      &nbsp;
+      <span className={css({ fontSize: "xl", marginBottom: "0.375rem" })}>
+        ✨
+      </span>
+      {/* <Text className={css({ marginTop: "0.25rem" })} variant="muted">
         별 보너스 슬롯이 해제되었어요
-      </Text>
+      </Text> */}
     </div>
   );
 }

@@ -10,7 +10,6 @@ import { useEffect } from "react";
 import { CosmicOrbProgress } from "../cosmic-orb/CosmicOrbProgress";
 import { CosmicOrbStats } from "../cosmic-orb/CosmicOrbStats";
 import { DailyStarsProgress } from "./DailyStarsProgress";
-import { SlotsCompleteBanner } from "./SlotsCompleteBanner";
 import { BonusSlotCard } from "./cards/BonusSlotCard";
 import { DinnerSlotCard } from "./cards/DinnerSlotCard";
 import { LunchSlotCard } from "./cards/LunchSlotCard";
@@ -43,10 +42,7 @@ const serviceGridStyle = css({
 export function SlotGrid() {
   const modal = useModal();
   const universeAge = useUniverseAge();
-  const record = useUniverse((state) => state.record);
   const totalStars = useUniverse((state) => state.totalStars);
-
-  const allCompleted = record.morning && record.lunch && record.dinner;
 
   useEffect(() => {
     if (universeAge >= CYCLE_DAY_GOAL && totalStars >= CYCLE_STAR_GOAL) {
@@ -70,7 +66,6 @@ export function SlotGrid() {
       </div>
 
       <DailyStarsProgress />
-      {allCompleted ? <SlotsCompleteBanner /> : null}
     </div>
   );
 }
