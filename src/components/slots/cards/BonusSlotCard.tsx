@@ -3,7 +3,6 @@
 import { useModal } from "@/components/modal";
 import { Text } from "@/components/ui/Text";
 import { useUniverse } from "@/hooks/useUniverse";
-import { SlotStatus } from "@/lib/types";
 import { css, cx } from "@/styled/css";
 import { useMemo } from "react";
 import { BonusIcon, CheckIcon, LockIcon } from "../SlotIcons";
@@ -19,13 +18,12 @@ import {
 
 const color = "var(--colors-slot-bonus)";
 const colorLight = "var(--colors-slot-bonus-light)";
-
 const SLOT_TITLE = "별 보너스";
 
 export function BonusSlotCard() {
   const record = useUniverse((state) => state.record);
 
-  const status = useMemo((): SlotStatus => {
+  const status = useMemo(() => {
     if (record.bonus) return "completed";
     if (record.morning && record.lunch && record.dinner) return "active";
     return "locked";
@@ -36,14 +34,12 @@ export function BonusSlotCard() {
   const iconColor = useMemo(() => {
     if (status === "completed") return "var(--colors-success)";
     if (status === "locked") return "var(--colors-slot-bonus-light)";
-    if (status === "inactive") return "var(--colors-fg-muted)";
     return color;
   }, [status]);
 
   const labelColor = useMemo(() => {
     if (status === "completed") return "var(--colors-success)";
     if (status === "locked") return "var(--colors-slot-bonus-light)";
-    if (status === "inactive") return "var(--colors-fg-muted)";
     return colorLight;
   }, [status]);
 
@@ -52,27 +48,23 @@ export function BonusSlotCard() {
       return "color-mix(in srgb, var(--colors-success) 50%, transparent)";
     if (status === "locked")
       return "color-mix(in srgb, var(--colors-slot-bonus-light) 50%, transparent)";
-    if (status === "inactive") return "var(--colors-fg-dim)";
     return `color-mix(in srgb, ${color} 44%, transparent)`;
   }, [status]);
 
   const timeColor = useMemo(() => {
     if (status === "locked") return "var(--colors-fg-muted)";
-    if (status === "inactive") return "var(--colors-fg-dim)";
     return "var(--colors-fg-muted)";
   }, [status]);
 
   const statusText = useMemo(() => {
     if (status === "completed") return "수령 완료";
     if (status === "locked") return "탭하여 조건 확인";
-    if (status === "inactive") return "비활성";
     return "탭하여 수령";
   }, [status]);
 
   const statusColor = useMemo(() => {
     if (status === "completed") return "var(--colors-success)";
     if (status === "locked") return "var(--colors-slot-bonus)";
-    if (status === "inactive") return "var(--colors-fg-dim)";
     return color;
   }, [status]);
 

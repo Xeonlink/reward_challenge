@@ -273,68 +273,6 @@ export function BonusIcon({ color, size = 40, className }: IconProps) {
   );
 }
 
-// 추가기회 - 빛나는 별
-export function ExtraIcon({ color, size = 32, className }: IconProps) {
-  return (
-    <svg
-      className={className}
-      width={size}
-      height={size}
-      viewBox="0 0 32 32"
-      fill="none"
-    >
-      <path
-        d="M16,3 L18.5,10.5 L26.5,10.5 L20.2,15.2 L22.7,22.7 L16,18 L9.3,22.7 L11.8,15.2 L5.5,10.5 L13.5,10.5 Z"
-        fill={`${color}35`}
-        stroke={color}
-        strokeWidth="1.6"
-        strokeLinejoin="round"
-      />
-      {/* 반짝임 */}
-      <line
-        x1="16"
-        y1="0"
-        x2="16"
-        y2="3"
-        stroke={color}
-        strokeWidth="1.4"
-        strokeLinecap="round"
-        opacity="0.7"
-      />
-      <line
-        x1="16"
-        y1="29"
-        x2="16"
-        y2="32"
-        stroke={color}
-        strokeWidth="1.4"
-        strokeLinecap="round"
-        opacity="0.7"
-      />
-      <line
-        x1="0"
-        y1="16"
-        x2="3"
-        y2="16"
-        stroke={color}
-        strokeWidth="1.4"
-        strokeLinecap="round"
-        opacity="0.7"
-      />
-      <line
-        x1="29"
-        y1="16"
-        x2="32"
-        y2="16"
-        stroke={color}
-        strokeWidth="1.4"
-        strokeLinecap="round"
-        opacity="0.7"
-      />
-    </svg>
-  );
-}
-
 // 별 조각 아이콘 (보상 표시용)
 export function StarFragmentIcon({
   color = "#FFD166",

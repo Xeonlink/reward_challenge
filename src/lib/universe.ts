@@ -9,7 +9,7 @@ import {
 import { immer } from "zustand/middleware/immer";
 import { createStore } from "zustand/vanilla";
 
-export type FortuneSlot = "morning" | "lunch" | "dinner";
+type FortuneSlot = "morning" | "lunch" | "dinner";
 
 export type DayRecord = {
   morning: boolean;
@@ -96,10 +96,6 @@ export const universeStore = createStore<UniverseStore>()(
         lastRecordDate: state.lastRecordDate,
         record: state.record,
       }),
-      migrate: (persistedState, version) => {
-        console.log(persistedState, version);
-        return persistedState as UniverseStore;
-      },
     },
   ),
 );
