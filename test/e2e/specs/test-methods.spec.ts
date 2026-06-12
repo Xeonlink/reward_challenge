@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import { differenceInDays, parse } from "date-fns";
 import {
   clearAppStorage,
   expectTotalStars,
@@ -14,6 +15,23 @@ async function setDevToolsStars(page: Page, stars: number) {
   await input.fill(String(stars));
 }
 
+async function setDevToolsCycleStart(page: Page, date: string) {
+  await page.getByTestId("dev-tools-cycle-start-input").fill(date);
+}
+
+function starControls(page: Page) {
+  return page.getByTestId("dev-tools-star-input").locator("xpath=..");
+}
+
+function cycleStartControls(page: Page) {
+  return page.getByTestId("dev-tools-cycle-start-input").locator("xpath=..");
+}
+
+function expectedUniverseAge(cycleStartDate: string): number {
+  const start = parse(cycleStartDate, "yyyy-MM-dd", new Date());
+  return differenceInDays(new Date(), start) + 1;
+}
+
 test.describe("README 테스트 방법", () => {
   test("DevTools click — Chip과 별 개수 컨트롤 노출", async ({ page }) => {
     await clearAppStorage(page);
@@ -25,8 +43,9 @@ test.describe("README 테스트 방법", () => {
     await expect(
       page.getByRole("spinbutton", { name: "별 개수" }),
     ).toBeVisible();
+    await expect(page.getByLabel("사이클 시작일")).toBeVisible();
     await expect(
-      page.getByRole("button", { name: "적용", exact: true }),
+      starControls(page).getByRole("button", { name: "적용", exact: true }),
     ).toBeVisible();
     await expect(
       page.getByRole("button", { name: "우주 초기화" }),
@@ -66,7 +85,9 @@ test.describe("README 테스트 방법", () => {
 
       await openDevTools(page);
       await setDevToolsStars(page, stars);
-      await page.getByRole("button", { name: "적용", exact: true }).click();
+      await starControls(page)
+        .getByRole("button", { name: "적용", exact: true })
+        .click();
 
       await expect(page.locator("[data-total-stars]")).toHaveAttribute(
         "data-total-stars",
@@ -85,7 +106,7 @@ test.describe("README 테스트 방법", () => {
 
     await openDevTools(page);
     await setDevToolsStars(page, 42);
-    await page.getByRole("button", { name: "적용·reload" }).click();
+    await starControls(page).getByRole("button", { name: "적용·reload" }).click();
     await page.waitForLoadState("networkidle");
 
     await expectTotalStars(page, 42);
@@ -99,6 +120,50 @@ test.describe("README 테스트 방법", () => {
     await openDevTools(page);
     await page.getByRole("button", { name: "완료 팝업" }).click();
     await expect(page.getByText("우주가 완성되었습니다!")).toBeVisible();
+  });
+
+  test("DevTools 사이클 시작일 적용(live) — Day N 갱신", async ({ page }) => {
+    await clearAppStorage(page);
+    await page.goto("/");
+    await page.waitForLoadState("networkidle");
+
+    const cycleStartDate = "2026-01-01";
+    const expectedDay = expectedUniverseAge(cycleStartDate);
+
+    await openDevTools(page);
+    await setDevToolsCycleStart(page, cycleStartDate);
+    await cycleStartControls(page)
+      .getByRole("button", { name: "적용", exact: true })
+      .click();
+
+    await expect(page.getByText(`Day ${expectedDay}`)).toBeVisible();
+    await expect(page.getByTestId("dev-tools-universe-state")).toContainText(
+      cycleStartDate,
+    );
+  });
+
+  test("DevTools 사이클 시작일 적용·reload — persist 유지", async ({
+    page,
+  }) => {
+    await clearAppStorage(page);
+    await page.goto("/");
+    await page.waitForLoadState("networkidle");
+
+    const cycleStartDate = "2026-01-01";
+
+    await openDevTools(page);
+    await setDevToolsCycleStart(page, cycleStartDate);
+    await cycleStartControls(page)
+      .getByRole("button", { name: "적용·reload" })
+      .click();
+    await page.waitForLoadState("networkidle");
+
+    await expect(page.getByTestId("dev-tools-universe-state")).toContainText(
+      cycleStartDate,
+    );
+    await expect(
+      page.getByText(`Day ${expectedUniverseAge(cycleStartDate)}`),
+    ).toBeVisible();
   });
 
   test("DevTools 30일 완료·reload — loadUniverse 경로로 팝업 표시", async ({

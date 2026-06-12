@@ -15,7 +15,7 @@ import {
 import type { DayRecord } from "@/lib/universe";
 import { universeStore } from "@/lib/universe";
 import { css, cva } from "@/styled/css";
-import { format, subDays } from "date-fns";
+import { format, isValid, parse, subDays } from "date-fns";
 import { useState, type ReactNode } from "react";
 
 const EMPTY_RECORD: DayRecord = {
@@ -109,6 +109,26 @@ function applyUniverseStarsLive(totalStars: number) {
   universeStore.setState((state) => {
     state.totalStars = clamped;
   });
+}
+
+function parseCycleStartDate(value: string): string | null {
+  const trimmed = value.trim();
+  if (trimmed === "") return null;
+  const parsed = parse(trimmed, "yyyy-MM-dd", new Date());
+  if (!isValid(parsed)) return null;
+  return format(parsed, "yyyy-MM-dd");
+}
+
+function applyCycleStartDateLive(cycleStartDate: string) {
+  universeStore.setState((state) => {
+    state.cycleStartDate = cycleStartDate;
+  });
+}
+
+function applyCycleStartDateReload(cycleStartDate: string) {
+  const current = readPersistedUniverse();
+  writePersistedUniverse({ ...current, cycleStartDate });
+  location.reload();
 }
 
 function triggerCycleCompleteViaStorage() {
@@ -415,6 +435,26 @@ const starRowStyle = css({
   alignItems: "center",
 });
 
+const dateInputStyle = css({
+  height: "2.25rem",
+  width: "10rem",
+  paddingX: "0.75rem",
+  borderRadius: "sm",
+  fontSize: "sm",
+  fontWeight: "600",
+  fontFamily: "mono",
+  color: "fg",
+  background: "color-mix(in srgb, var(--colors-surface) 80%, transparent)",
+  border: "1px solid",
+  borderColor: "color-mix(in srgb, var(--colors-border) 60%, transparent)",
+  _focus: {
+    outline: "none",
+    borderColor: "color-mix(in srgb, var(--colors-accent) 45%, transparent)",
+    boxShadow:
+      "0 0 0 2px color-mix(in srgb, var(--colors-accent) 15%, transparent)",
+  },
+});
+
 const starInputStyle = css({
   height: "2.25rem",
   width: "5rem",
@@ -519,6 +559,9 @@ export function DevTools() {
   const modal = useModal();
   const [isOpen, setIsOpen] = useState(false);
   const [starInput, setStarInput] = useState("0");
+  const [cycleStartInput, setCycleStartInput] = useState(() =>
+    format(new Date(), "yyyy-MM-dd"),
+  );
 
   if (process.env.NODE_ENV !== "development") {
     return null;
@@ -540,20 +583,43 @@ export function DevTools() {
     applyUniverseStarsReload(stars);
   };
 
+  const applyCycleStartLive = () => {
+    const date = parseCycleStartDate(cycleStartInput);
+    if (!date) return;
+    setCycleStartInput(date);
+    applyCycleStartDateLive(date);
+  };
+
+  const applyCycleStartReload = () => {
+    const date = parseCycleStartDate(cycleStartInput);
+    if (!date) return;
+    setCycleStartInput(date);
+    applyCycleStartDateReload(date);
+  };
+
   const resetUniverse = () => {
     setStarInput("0");
     applyUniverseStarsLive(0);
+  };
+
+  const togglePanel = () => {
+    setIsOpen((open) => {
+      if (!open) {
+        setCycleStartInput(universeStore.getState().cycleStartDate);
+      }
+      return !open;
+    });
   };
 
   return (
     <div className={rootStyle}>
       <div className={panel({ open: isOpen })}>
         <button
-          aria-expanded={isOpen}
           className={triggerStyle}
+          aria-expanded={isOpen}
           data-testid="dev-tools-trigger"
           type="button"
-          onClick={() => setIsOpen((open) => !open)}
+          onClick={togglePanel}
         >
           <span className={devBadgeStyle}>DEV</span>
           <span className={triggerTitleStyle}>개발 도구</span>
@@ -599,6 +665,30 @@ export function DevTools() {
                   type="button"
                   variant="secondary"
                   onClick={applyReload}
+                >
+                  적용·reload
+                </Button>
+              </div>
+            </DevToolsSection>
+            <div className={dividerStyle} role="separator" />
+            <DevToolsSection title="사이클 시작일">
+              <div className={starRowStyle}>
+                <input
+                  className={dateInputStyle}
+                  aria-label="사이클 시작일"
+                  data-testid="dev-tools-cycle-start-input"
+                  type="date"
+                  value={cycleStartInput}
+                  onChange={(e) => setCycleStartInput(e.target.value)}
+                />
+                <Button size="sm" type="button" onClick={applyCycleStartLive}>
+                  적용
+                </Button>
+                <Button
+                  size="sm"
+                  type="button"
+                  variant="secondary"
+                  onClick={applyCycleStartReload}
                 >
                   적용·reload
                 </Button>
