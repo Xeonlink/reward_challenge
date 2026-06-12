@@ -10,9 +10,6 @@ importers:
       date-fns:
         specifier: ^4.4.0
         version: 4.4.0
-      es-toolkit:
-        specifier: ^1.47.0
-        version: 1.47.0
       immer:
         specifier: ^11.1.8
         version: 11.1.8
@@ -3065,12 +3062,6 @@ packages:
         integrity: sha512-w+5mJ3GuFL+NjVtJlvydShqE1eN3h3PbI7/5LAsYJP/2qtuMXjfL2LpHSRqo4b4eSF5K/DH1JXKUAHSB2UW50g==,
       }
     engines: { node: ">= 0.4" }
-
-  es-toolkit@1.47.0:
-    resolution:
-      {
-        integrity: sha512-n1GuoD0WEQZMBk5tttoZSqwgyLx01oqa5XsBmCHwPyNe1S9jPBEmtR2pSgp2kJuWE3ciFZ6yRHmY4pM4C3OOkw==,
-      }
 
   esbuild@0.25.12:
     resolution:
@@ -7695,8 +7686,6 @@ snapshots:
       is-callable: 1.2.7
       is-date-object: 1.1.0
       is-symbol: 1.1.1
-
-  es-toolkit@1.47.0: {}
 
   esbuild@0.25.12:
     optionalDependencies:

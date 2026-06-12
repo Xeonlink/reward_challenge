@@ -1,7 +1,7 @@
+import { StarCanvas } from "@/components/StarCanvas";
 import { DevTools } from "@/components/dev-tools";
 import { ModalContainer } from "@/components/modal";
 import { StarFragmentIcon } from "@/components/slots/SlotIcons";
-import { StarCanvas } from "@/components/slots/StarCanvas";
 import { Badge } from "@/components/ui/Badge";
 import { Heading } from "@/components/ui/Heading";
 import { Text } from "@/components/ui/Text";
