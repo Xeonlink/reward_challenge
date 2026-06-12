@@ -62,11 +62,6 @@ const text = cva({
         textTransform: "uppercase",
         color: "fg.muted",
       },
-      stageLabel: {
-        fontSize: "sm",
-        fontWeight: "600",
-        letterSpacing: "0.02em",
-      },
     },
   },
   defaultVariants: {
