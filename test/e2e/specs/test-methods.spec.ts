@@ -106,7 +106,9 @@ test.describe("README 테스트 방법", () => {
 
     await openDevTools(page);
     await setDevToolsStars(page, 42);
-    await starControls(page).getByRole("button", { name: "적용·reload" }).click();
+    await starControls(page)
+      .getByRole("button", { name: "적용·reload" })
+      .click();
     await page.waitForLoadState("networkidle");
 
     await expectTotalStars(page, 42);
