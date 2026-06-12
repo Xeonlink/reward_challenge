@@ -1,10 +1,9 @@
 "use client";
 
 import { Text } from "@/components/ui/Text";
-import type { CompletionRecord } from "@/lib/slots";
 import { css } from "@/styled/css";
 
-const completeBannerStyle = css({
+const root = css({
   padding: "1rem 2rem",
   borderRadius: "lg",
   border: "1px solid",
@@ -14,15 +13,9 @@ const completeBannerStyle = css({
   animation: "slideUp 0.5s ease",
 });
 
-type SlotsCompleteBannerProps = {
-  todayRecord: CompletionRecord;
-};
-
-export function SlotsCompleteBanner(props: SlotsCompleteBannerProps) {
-  const { todayRecord } = props;
-
+export function SlotsCompleteBanner() {
   return (
-    <div className={completeBannerStyle}>
+    <div className={root}>
       <div className={css({ fontSize: "xl", marginBottom: "0.375rem" })}>
         ✨
       </div>
@@ -36,11 +29,10 @@ export function SlotsCompleteBanner(props: SlotsCompleteBannerProps) {
       >
         오늘의 운세를 모두 확인했어요!
       </Text>
-      {!todayRecord.bonus ? (
-        <Text className={css({ marginTop: "0.25rem" })} variant="muted">
-          별 보너스 슬롯이 해제되었어요
-        </Text>
-      ) : null}
+
+      <Text className={css({ marginTop: "0.25rem" })} variant="muted">
+        별 보너스 슬롯이 해제되었어요
+      </Text>
     </div>
   );
 }

@@ -2,23 +2,19 @@
 
 import { CosmicOrb } from "@/components/cosmic-orb/CosmicOrb";
 import { useModal } from "@/components/modal";
-import { useSlots } from "@/hooks/useSlots";
-import {
-  getVisitRewardAmount,
-  getVisitRewardLabel,
-  starsFromDay,
-} from "@/lib/slots";
+import { useUniverse } from "@/hooks/useUniverse";
+import { useUniverseAge } from "@/hooks/useUniverseDays";
 import { css } from "@/styled/css";
-import { differenceInDays } from "date-fns";
 import { useEffect } from "react";
-import { RewardPopup } from "./RewardPopup";
+import { CosmicOrbProgress } from "../cosmic-orb/CosmicOrbProgress";
+import { CosmicOrbStats } from "../cosmic-orb/CosmicOrbStats";
+import { DailyStarsProgress } from "./DailyStarsProgress";
+import { SlotsCompleteBanner } from "./SlotsCompleteBanner";
 import { BonusSlotCard } from "./cards/BonusSlotCard";
 import { DinnerSlotCard } from "./cards/DinnerSlotCard";
 import { LunchSlotCard } from "./cards/LunchSlotCard";
 import { MorningSlotCard } from "./cards/MorningSlotCard";
-import { CycleCompletePopup } from "./sections/CycleCompletePopup";
-import { DailyStarsProgress } from "./sections/DailyStarsProgress";
-import { SlotsCompleteBanner } from "./sections/SlotsCompleteBanner";
+import { CycleCompletePopup } from "./popups/CycleCompletePopup";
 
 const rootStyle = css({
   display: "flex",
@@ -43,83 +39,36 @@ const serviceGridStyle = css({
   width: "100%",
 });
 
-interface SlotGridProps {
-  testParam?: string | null;
-}
-
-export function SlotGrid({ testParam }: SlotGridProps) {
+export function SlotGrid() {
   const modal = useModal();
-  const {
-    board,
-    todayRecord,
-    universe,
-    allCompleted,
-    handleExternalVisit,
-    rewardPopup,
-    lastStarBornAt,
-  } = useSlots(testParam);
+  const universeAge = useUniverseAge();
+  const record = useUniverse((state) => state.record);
 
-  const starsToday = starsFromDay(todayRecord);
+  const allCompleted = record.morning && record.lunch && record.dinner;
 
   useEffect(() => {
-    if (!rewardPopup) return;
-
-    const popup = rewardPopup;
-    const dismiss = modal.open(
-      <RewardPopup
-        slotLabel={getVisitRewardLabel(popup.intent)}
-        rewardAmount={getVisitRewardAmount(popup.intent)}
-        success={popup.success}
-        onClaim={() => {}}
-      />,
-    );
-
-    return dismiss;
-  }, [rewardPopup, modal]);
-
-  useEffect(() => {
-    if (differenceInDays(new Date(), universe.cycleStartDate) >= 30) {
+    if (universeAge >= 30) {
       modal.open(<CycleCompletePopup />);
     }
-  }, [modal, universe.cycleStartDate]);
+  }, [modal, universeAge]);
 
   return (
     <div className={rootStyle}>
       <div className={heroZoneStyle}>
-        <CosmicOrb
-          universe={universe}
-          starsToday={starsToday}
-          lastStarBornAt={lastStarBornAt}
-        />
+        <CosmicOrb />
+        <CosmicOrbStats />
+        <CosmicOrbProgress />
       </div>
 
       <div className={serviceGridStyle}>
-        <MorningSlotCard
-          status={board.morning.status}
-          isExtra={board.morning.isExtra}
-          onExternalVisit={handleExternalVisit}
-        />
-        <LunchSlotCard
-          status={board.lunch.status}
-          isExtra={board.lunch.isExtra}
-          onExternalVisit={handleExternalVisit}
-        />
-        <DinnerSlotCard
-          status={board.dinner.status}
-          isExtra={board.dinner.isExtra}
-          onExternalVisit={handleExternalVisit}
-        />
-        <BonusSlotCard
-          status={board.bonus.status}
-          todayRecord={todayRecord}
-          isNew={board.bonus.status === "active" && !todayRecord.bonus}
-          onExternalVisit={handleExternalVisit}
-        />
+        <MorningSlotCard />
+        <LunchSlotCard />
+        <DinnerSlotCard />
+        <BonusSlotCard />
       </div>
 
-      <DailyStarsProgress starsToday={starsToday} />
-
-      {allCompleted ? <SlotsCompleteBanner todayRecord={todayRecord} /> : null}
+      <DailyStarsProgress />
+      {allCompleted ? <SlotsCompleteBanner /> : null}
     </div>
   );
 }

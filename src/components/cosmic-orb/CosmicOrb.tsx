@@ -1,9 +1,9 @@
 "use client";
 
 import { Text } from "@/components/ui/Text";
-import type { UniverseRecord } from "@/lib/slots";
+import { universeStore } from "@/lib/universe";
 import { css, cva } from "@/styled/css";
-import { CosmicOrbStats } from "./CosmicOrbStats";
+import { useStore } from "zustand";
 import { CANVAS_H, CANVAS_W, ORB } from "./orbConfig";
 import { useCosmicOrbCanvas } from "./useCosmicOrbCanvas";
 
@@ -101,13 +101,7 @@ const orbAuroraOverlay = css({
   animation: "auroraShift 2.5s ease infinite",
 });
 
-type CosmicOrbProps = {
-  universe: UniverseRecord;
-  starsToday: number;
-  lastStarBornAt: number;
-};
-
-function getOrbStage(totalStars: number): 1 | 2 | 3 | 4 | 5 {
+export function getOrbStage(totalStars: number): 1 | 2 | 3 | 4 | 5 {
   if (totalStars <= 6) return 1;
   if (totalStars <= 20) return 2;
   if (totalStars <= 40) return 3;
@@ -115,16 +109,11 @@ function getOrbStage(totalStars: number): 1 | 2 | 3 | 4 | 5 {
   return 5;
 }
 
-export function CosmicOrb(props: CosmicOrbProps) {
-  const { universe, starsToday, lastStarBornAt } = props;
+export function CosmicOrb() {
+  const universe = useStore(universeStore);
   const stage = getOrbStage(universe.totalStars);
   const cfg = ORB[stage];
-  const progress = Math.min(Math.round((universe.totalStars / 150) * 100), 100);
-  const canvasRef = useCosmicOrbCanvas(
-    universe.totalStars,
-    lastStarBornAt,
-    stage,
-  );
+  const canvasRef = useCosmicOrbCanvas(universe.totalStars, stage);
 
   const wrapSize = cfg.size + 40;
   const wrapOffset = (CANVAS_W - wrapSize) / 2;
@@ -228,13 +217,6 @@ export function CosmicOrb(props: CosmicOrbProps) {
       <Text className={css({ color: cfg.labelColor })} variant="stageLabel">
         {cfg.label}
       </Text>
-
-      <CosmicOrbStats
-        universe={universe}
-        starsToday={starsToday}
-        stage={stage}
-        progress={progress}
-      />
     </div>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useModal } from "@/components/modal";
-import { CycleCompletePopup } from "@/components/slots/sections/CycleCompletePopup";
+import { CycleCompletePopup } from "@/components/slots/popups/CycleCompletePopup";
 import { Chip } from "@/components/ui/Chip";
 import { UNIVERSE_STORAGE_KEY } from "@/lib/constants";
 import { css } from "@/styled/css";

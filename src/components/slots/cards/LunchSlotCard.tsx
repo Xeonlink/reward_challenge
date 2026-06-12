@@ -2,146 +2,116 @@
 
 import { useModal } from "@/components/modal";
 import { Text } from "@/components/ui/Text";
-import type { SlotStatus, VisitIntent } from "@/lib/slots";
+import { useCurrentTime } from "@/hooks/useCurrentTime";
+import { SlotStatus } from "@/lib/types";
+import { universeStore } from "@/lib/universe";
 import { css } from "@/styled/css";
+import { useMemo } from "react";
+import { useStore } from "zustand";
 import { CheckIcon, LockIcon, LunchIcon } from "../SlotIcons";
-import { FortunePopupShell } from "../popups/FortunePopupShell";
-import { FortuneVisitContent } from "../popups/FortuneVisitContent";
-import {
-  checkBadge,
-  cornerBadge,
-  divider,
-  iconWrap,
-  slotCard,
-} from "../slotCardLayout";
+import { LunchSlotPopup } from "../popups/LunchSlotPopup";
+import { checkBadge, cornerBadge, divider, iconWrap, slotCard } from "./_style";
 
-type LunchSlotCardProps = {
-  status: SlotStatus;
-  isExtra?: boolean;
-  onExternalVisit: (intent: VisitIntent) => void;
-};
+export function LunchSlotCard() {
+  const universe = useStore(universeStore);
+  const currentTime = useCurrentTime();
 
-export function LunchSlotCard(props: LunchSlotCardProps) {
-  const { status, isExtra, onExternalVisit } = props;
-  const modal = useModal();
+  const status = useMemo((): SlotStatus => {
+    if (universe.record.lunch) return "completed";
+    if (currentTime === "lunch") return "active";
+    if (currentTime === "dinner") return "extra";
+    return "inactive";
+  }, [universe.record.lunch, currentTime]);
 
-  const label = "정오 운세";
   const color = "var(--colors-slot-lunch)";
   const colorLight = "var(--colors-slot-lunch-light)";
   const isClickable = !["completed", "inactive", "locked"].includes(status);
 
-  const iconColor =
-    status === "completed"
-      ? "var(--colors-success)"
-      : status === "locked" || status === "inactive"
-        ? "var(--colors-fg-muted)"
-        : isExtra
-          ? "var(--colors-slot-bonus-light)"
-          : color;
+  const iconColor = useMemo(() => {
+    if (status === "completed") return "var(--colors-success)";
+    if (status === "locked") return "var(--colors-fg-muted)";
+    if (status === "inactive") return "var(--colors-fg-muted)";
+    if (status === "extra") return "var(--colors-slot-bonus-light)";
+    return color;
+  }, [status, color]);
 
-  const labelColor =
-    status === "completed"
-      ? "var(--colors-success)"
-      : status === "locked" || status === "inactive"
-        ? "var(--colors-fg-muted)"
-        : isExtra
-          ? "var(--colors-slot-bonus-light)"
-          : colorLight;
+  const labelColor = useMemo(() => {
+    if (status === "completed") return "var(--colors-success)";
+    if (status === "locked" || status === "inactive")
+      return "var(--colors-fg-muted)";
+    if (status === "extra") return "var(--colors-slot-bonus-light)";
+    return colorLight;
+  }, [status, colorLight]);
 
-  const sublabelColor =
-    status === "completed"
-      ? "color-mix(in srgb, var(--colors-success) 50%, transparent)"
-      : status === "locked" || status === "inactive"
-        ? "var(--colors-fg-dim)"
-        : isExtra
-          ? "color-mix(in srgb, var(--colors-slot-bonus-light) 50%, transparent)"
-          : `color-mix(in srgb, ${color} 44%, transparent)`;
+  const sublabelColor = useMemo(() => {
+    if (status === "completed")
+      return "color-mix(in srgb, var(--colors-success) 50%, transparent)";
+    if (status === "locked" || status === "inactive")
+      return "var(--colors-fg-dim)";
+    if (status === "extra")
+      return "color-mix(in srgb, var(--colors-slot-bonus-light) 50%, transparent)";
+    return `color-mix(in srgb, ${color} 44%, transparent)`;
+  }, [status, color]);
 
-  const timeColor =
-    status === "locked" || status === "inactive"
-      ? "var(--colors-fg-dim)"
-      : "var(--colors-fg-muted)";
+  const timeColor = useMemo(() => {
+    if (status === "locked" || status === "inactive")
+      return "var(--colors-fg-dim)";
+    return "var(--colors-fg-muted)";
+  }, [status]);
 
-  const statusText =
-    status === "completed"
-      ? "수령 완료"
-      : status === "locked"
-        ? "참여 불가"
-        : status === "inactive"
-          ? "비활성"
-          : status === "extra"
-            ? "탭하여 참여"
-            : "탭하여 수령";
+  const statusText = useMemo(() => {
+    if (status === "completed") return "수령 완료";
+    if (status === "locked") return "참여 불가";
+    if (status === "inactive") return "비활성";
+    if (status === "extra") return "탭하여 참여";
+    return "탭하여 수령";
+  }, [status]);
 
-  const statusColor =
-    status === "completed"
-      ? "var(--colors-success)"
-      : status === "locked" || status === "inactive"
-        ? "var(--colors-fg-dim)"
-        : status === "extra"
-          ? "var(--colors-slot-bonus)"
-          : color;
+  const statusColor = useMemo(() => {
+    if (status === "completed") return "var(--colors-success)";
+    if (status === "locked" || status === "inactive")
+      return "var(--colors-fg-dim)";
+    if (status === "extra") return "var(--colors-slot-bonus)";
+    return color;
+  }, [status, color]);
 
-  const activeStyle =
-    status === "active"
-      ? {
-          background: "linear-gradient(145deg, #061420 0%, #0A1E30 100%)",
-          borderColor: "transparent",
-          boxShadow: `0 0 0 1px color-mix(in srgb, ${color} 27%, transparent), 0 0 28px rgba(80,200,232,0.45), 0 0 65px rgba(80,200,232,0.18)`,
-        }
-      : undefined;
+  const activeStyle = useMemo(() => {
+    if (status === "active") {
+      return {
+        background: "linear-gradient(145deg, #061420 0%, #0A1E30 100%)",
+        borderColor: "transparent",
+        boxShadow: `0 0 0 1px color-mix(in srgb, ${color} 27%, transparent), 0 0 28px rgba(80,200,232,0.45), 0 0 65px rgba(80,200,232,0.18)`,
+      };
+    }
+    return undefined;
+  }, [status, color]);
 
-  const dividerStyle =
-    status === "active" || status === "extra"
-      ? {
-          background: `linear-gradient(90deg, transparent, color-mix(in srgb, ${isExtra ? "var(--colors-slot-bonus)" : color} 31%, transparent), transparent)`,
-        }
-      : {
-          background:
-            "color-mix(in srgb, var(--colors-border) 40%, transparent)",
-        };
+  const isExtra = status === "extra";
+
+  const dividerStyle = useMemo(() => {
+    if (status === "active" || status === "extra") {
+      return {
+        background: `linear-gradient(90deg, transparent, color-mix(in srgb, ${isExtra ? "var(--colors-slot-bonus)" : color} 31%, transparent), transparent)`,
+      };
+    }
+    return {
+      background: "color-mix(in srgb, var(--colors-border) 40%, transparent)",
+    };
+  }, [status, color, isExtra]);
+
+  const modal = useModal();
 
   const openLunchFortuneModal = () => {
-    if (!isClickable) return;
-
-    const dismiss = modal.open(
-      <FortunePopupShell
-        title="하늘의 운세"
-        color={color}
-        colorLight={colorLight}
-        icon={LunchIcon}
-        titlePrefix={isExtra ? "추가 기회 — " : undefined}
-      >
-        <FortuneVisitContent
-          color={color}
-          colorLight={colorLight}
-          calloutBg="color-mix(in srgb, var(--colors-slot-lunch) 8%, transparent)"
-          starRewardLabel="별 조각 +1 획득 가능"
-          isExtra={isExtra}
-          onVisit={() => {
-            dismiss();
-            onExternalVisit({ kind: "fortune", time: "lunch" });
-          }}
-        />
-      </FortunePopupShell>,
-    );
+    modal.open(<LunchSlotPopup />);
   };
 
   return (
-    <div
+    <button
       className={slotCard({ status })}
+      type="button"
       style={activeStyle}
-      onClick={() => {
-        if (isClickable) openLunchFortuneModal();
-      }}
-      role={isClickable ? "button" : "presentation"}
-      tabIndex={isClickable ? 0 : undefined}
-      aria-label={`${label} — ${status}`}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          if (isClickable) openLunchFortuneModal();
-        }
-      }}
+      disabled={!isClickable}
+      onClick={openLunchFortuneModal}
     >
       {status === "completed" ? (
         <div className={checkBadge}>
@@ -168,7 +138,7 @@ export function LunchSlotCard(props: LunchSlotCardProps) {
       </div>
 
       <Text className={css({ color: labelColor })} variant="slotTitle">
-        {label}
+        정오 운세
       </Text>
 
       <Text className={css({ color: sublabelColor })} variant="slotMeta">
@@ -184,6 +154,6 @@ export function LunchSlotCard(props: LunchSlotCardProps) {
       <Text className={css({ color: statusColor })} variant="slotStatus">
         {statusText}
       </Text>
-    </div>
+    </button>
   );
 }

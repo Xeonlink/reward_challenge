@@ -32,21 +32,6 @@ const text = cva({
         color: "fg.muted",
         letterSpacing: "0.25em",
       },
-      statLabel: {
-        fontSize: "sm",
-        color: "fg.muted",
-        letterSpacing: "0.05em",
-      },
-      statValue: {
-        fontSize: "md",
-        fontFamily: "display",
-        fontWeight: "700",
-        color: "fg",
-      },
-      statSub: {
-        fontSize: "sm",
-        color: "fg.muted",
-      },
       slotTitle: {
         fontFamily: "display",
         fontSize: "sm",

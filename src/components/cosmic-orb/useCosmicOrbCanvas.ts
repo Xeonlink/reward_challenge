@@ -21,11 +21,7 @@ import {
   type StarData,
 } from "./orbConfig";
 
-export function useCosmicOrbCanvas(
-  totalStars: number,
-  lastStarBornAt: number,
-  stage: number,
-) {
+export function useCosmicOrbCanvas(totalStars: number, stage: number) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const starsRef = useRef<StarData[]>([]);
   const stageRef = useRef(stage);
@@ -39,10 +35,7 @@ export function useCosmicOrbCanvas(
       const { x, y } = starFinalPos(i);
       return { finalX: x, finalY: y, born: -1, size: starSize(i) };
     });
-    if (lastStarBornAt > 0 && totalStars > 0) {
-      starsRef.current[totalStars - 1].born = lastStarBornAt;
-    }
-  }, [totalStars, lastStarBornAt]);
+  }, [totalStars]);
 
   useEffect(() => {
     const canvas = canvasRef.current;

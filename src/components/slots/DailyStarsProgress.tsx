@@ -1,6 +1,7 @@
 "use client";
 
 import { Text } from "@/components/ui/Text";
+import { useStarsToday } from "@/hooks/useStarsFromDay";
 import { css } from "@/styled/css";
 
 const progressWrapStyle = css({
@@ -25,12 +26,8 @@ const progressTrackStyle = css({
   overflow: "hidden",
 });
 
-type DailyStarsProgressProps = {
-  starsToday: number;
-};
-
-export function DailyStarsProgress(props: DailyStarsProgressProps) {
-  const { starsToday } = props;
+export function DailyStarsProgress() {
+  const starsToday = useStarsToday();
 
   return (
     <div className={progressWrapStyle}>

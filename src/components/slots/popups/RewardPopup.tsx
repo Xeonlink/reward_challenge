@@ -3,9 +3,9 @@
 import { useModal } from "@/components/modal";
 import { Text } from "@/components/ui/Text";
 import { css, cva } from "@/styled/css";
-import { Button } from "../ui/Button";
-import { Popup } from "../ui/Popup";
-import { StarFragmentIcon } from "./SlotIcons";
+import { Button } from "../../ui/Button";
+import { Popup } from "../../ui/Popup";
+import { StarFragmentIcon } from "../SlotIcons";
 
 const content = css({
   display: "flex",
@@ -98,99 +98,104 @@ const rewardCaption = css({
   fontFamily: "mono",
 });
 
-interface RewardPopupProps {
+interface RewardSuccessPopupProps {
   slotLabel: string;
   rewardAmount: number;
-  success: boolean;
-  onClaim: () => void;
+  onSuccess: () => void;
 }
 
-export function RewardPopup(props: RewardPopupProps) {
-  const { slotLabel, rewardAmount: amount, success, onClaim } = props;
-  const variant = success ? "success" : "failure";
+export function RewardSuccessPopup(props: RewardSuccessPopupProps) {
+  const { slotLabel, rewardAmount: amount, onSuccess } = props;
+
   const modal = useModal();
 
   const handleClaim = () => {
-    onClaim();
+    onSuccess();
     modal.closeSelf();
   };
 
   return (
     <Popup>
       <div className={content}>
-        <div className={rewardIcon({ variant })}>
-          {success ? (
-            <StarFragmentIcon color="var(--colors-accent)" size={40} />
-          ) : (
-            <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-              <circle
-                cx="20"
-                cy="20"
-                r="18"
-                stroke="var(--colors-danger)"
-                strokeWidth="1.5"
-                fill="color-mix(in srgb, var(--colors-danger) 10%, transparent)"
-              />
-              <line
-                x1="13"
-                y1="13"
-                x2="27"
-                y2="27"
-                stroke="var(--colors-danger)"
-                strokeWidth="2"
-                strokeLinecap="round"
-              />
-              <line
-                x1="27"
-                y1="13"
-                x2="13"
-                y2="27"
-                stroke="var(--colors-danger)"
-                strokeWidth="2"
-                strokeLinecap="round"
-              />
-            </svg>
-          )}
+        <div className={rewardIcon({ variant: "success" })}>
+          <StarFragmentIcon color="var(--colors-accent)" size={40} />
         </div>
-
         <div>
-          <div className={rewardTitle({ variant })}>
-            {success ? "별 조각 획득!" : "조건 미충족"}
+          <div className={rewardTitle({ variant: "success" })}>
+            별 조각 획득!
           </div>
           <Text className={css({ lineHeight: 1.6 })} variant="muted">
-            {success ? (
-              <>
-                <span className={rewardHighlight}>{slotLabel} 운세</span>를 통해
-                별 조각을 모았어요.
-              </>
-            ) : (
-              <>
-                체류 시간이 부족합니다.
-                <br />
-                다음에 다시 도전해보세요.
-              </>
-            )}
+            <span className={rewardHighlight}>{slotLabel} 운세</span>를 통해 별
+            조각을 모았어요.
           </Text>
         </div>
-
-        {success ? (
-          <div className={rewardBox}>
-            <Text variant="label">별 조각 획득</Text>
-            <div className={rewardAmountRow}>
-              <StarFragmentIcon color="var(--colors-accent)" size={28} />
-              <span className={rewardAmount}>+{amount}</span>
-            </div>
-            <span className={rewardCaption}>우주 성장에 기여했어요</span>
+        <div className={rewardBox}>
+          <Text variant="label">별 조각 획득</Text>
+          <div className={rewardAmountRow}>
+            <StarFragmentIcon color="var(--colors-accent)" size={28} />
+            <span className={rewardAmount}>+{amount}</span>
           </div>
-        ) : null}
+          <span className={rewardCaption}>우주 성장에 기여했어요</span>
+        </div>
+        <Button variant="gold" size="md" fullWidth onClick={handleClaim}>
+          확인
+        </Button>
+      </div>
+    </Popup>
+  );
+}
 
+export function RewardFailedPopup() {
+  const modal = useModal();
+
+  return (
+    <Popup>
+      <div className={content}>
+        <div className={rewardIcon({ variant: "failure" })}>
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+            <circle
+              cx="20"
+              cy="20"
+              r="18"
+              stroke="var(--colors-danger)"
+              strokeWidth="1.5"
+              fill="color-mix(in srgb, var(--colors-danger) 10%, transparent)"
+            />
+            <line
+              x1="13"
+              y1="13"
+              x2="27"
+              y2="27"
+              stroke="var(--colors-danger)"
+              strokeWidth="2"
+              strokeLinecap="round"
+            />
+            <line
+              x1="27"
+              y1="13"
+              x2="13"
+              y2="27"
+              stroke="var(--colors-danger)"
+              strokeWidth="2"
+              strokeLinecap="round"
+            />
+          </svg>
+        </div>
+        <div>
+          <div className={rewardTitle({ variant: "failure" })}>조건 미충족</div>
+          <Text className={css({ lineHeight: 1.6 })} variant="muted">
+            체류 시간이 부족합니다.
+            <br />
+            다음에 다시 도전해보세요.
+          </Text>
+        </div>
         <Button
-          variant={success ? "gold" : "secondary"}
+          variant="secondary"
           size="md"
           fullWidth
-          onClick={handleClaim}
+          onClick={() => modal.closeSelf()}
         >
-          {success ? "확인" : "닫기"}
+          닫기
         </Button>
       </div>
     </Popup>

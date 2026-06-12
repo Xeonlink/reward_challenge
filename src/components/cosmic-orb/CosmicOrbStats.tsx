@@ -1,9 +1,9 @@
 "use client";
 
-import { Text } from "@/components/ui/Text";
-import { getCycleDay, type UniverseRecord } from "@/lib/slots";
-import { css, cva } from "@/styled/css";
-import type { ReactNode } from "react";
+import { useStarsToday } from "@/hooks/useStarsFromDay";
+import { useUniverse } from "@/hooks/useUniverse";
+import { useUniverseAge } from "@/hooks/useUniverseDays";
+import { css } from "@/styled/css";
 import { StarFragmentIcon } from "../slots/SlotIcons";
 
 const statsBar = css({
@@ -37,107 +37,57 @@ const statDivider = css({
   background: "color-mix(in srgb, var(--colors-border) 80%, transparent)",
 });
 
-const progressWrap = css({ width: "14.25rem" });
-
-const progressTrack = css({
-  width: "100%",
-  height: "0.25rem",
-  borderRadius: "full",
-  background: "color-mix(in srgb, var(--colors-border) 60%, transparent)",
-  overflow: "hidden",
+const statLabel = css({
+  fontSize: "sm",
+  color: "fg.muted",
+  letterSpacing: "0.05em",
 });
 
-const progressFill = cva({
-  base: {
-    height: "100%",
-    borderRadius: "full",
-    transition: "width 800ms",
-    transitionTimingFunction: "spring",
-  },
-  variants: {
-    stage: {
-      high: {
-        background: "linear-gradient(90deg, #7B8DE0, #C589E8, #FFD166)",
-        boxShadow: "0 0 10px rgba(255,209,102,0.7)",
-      },
-      low: {
-        background: "linear-gradient(90deg, #7B8DE0, #C589E8)",
-        boxShadow: "0 0 6px rgba(197,137,232,0.4)",
-      },
-    },
-  },
+const statValue = css({
+  fontSize: "md",
+  fontFamily: "display",
+  fontWeight: "700",
+  color: "fg",
 });
 
-const progressLabels = css({
-  display: "flex",
-  justifyContent: "space-between",
-  marginTop: "0.375rem",
+const statSub = css({
+  fontSize: "sm",
+  color: "fg.muted",
 });
 
-type CosmicOrbStatsProps = {
-  universe: UniverseRecord;
-  starsToday: number;
-  stage: number;
-  progress: number;
-};
-
-export function CosmicOrbStats(props: CosmicOrbStatsProps) {
-  const { universe, starsToday, stage, progress } = props;
+export function CosmicOrbStats() {
+  const totalStars = useUniverse((state) => state.totalStars);
+  const universeAge = useUniverseAge();
+  const starsToday = useStarsToday();
 
   return (
-    <>
-      <div className={statsBar}>
-        <Stat
-          label="사이클"
-          value={`Day ${getCycleDay(universe)}`}
-          sub="/ 30"
-        />
-        <div className={statDivider} />
-        <Stat
-          label="별 조각"
-          value={universe.totalStars.toString()}
-          sub="개"
-          icon={<StarFragmentIcon size={14} color="var(--colors-accent)" />}
-        />
-        <div className={statDivider} />
-        <Stat label="오늘" value={starsToday.toString()} sub="/ 5" />
-      </div>
-
-      <div className={progressWrap}>
-        <div className={progressTrack}>
-          <div
-            className={progressFill({ stage: stage >= 4 ? "high" : "low" })}
-            style={{ width: `${progress}%` }}
-          />
-        </div>
-        <div className={progressLabels}>
-          <Text variant="statSub">0</Text>
-          <Text variant="statSub">30일 목표 150개</Text>
-          <Text variant="statSub">150</Text>
+    <div className={statsBar}>
+      {/* 사이클 */}
+      <div className={statCol}>
+        <span className={statLabel}>사이클</span>
+        <div className={statValueRow}>
+          <span className={statValue}>Day {universeAge}</span>
+          <span className={statSub}>/ 30</span>
         </div>
       </div>
-    </>
-  );
-}
-
-function Stat({
-  label,
-  value,
-  sub,
-  icon,
-}: {
-  label: string;
-  value: string;
-  sub: string;
-  icon?: ReactNode;
-}) {
-  return (
-    <div className={statCol}>
-      <Text variant="statLabel">{label}</Text>
-      <div className={statValueRow}>
-        {icon}
-        <Text variant="statValue">{value}</Text>
-        <Text variant="statSub">{sub}</Text>
+      <div className={statDivider} />
+      {/* 별 조각 */}
+      <div className={statCol}>
+        <span className={statLabel}>별 조각</span>
+        <div className={statValueRow}>
+          <StarFragmentIcon size={14} color="var(--colors-accent)" />
+          <span className={statValue}>{totalStars}</span>
+          <span className={statSub}>개</span>
+        </div>
+      </div>
+      <div className={statDivider} />
+      {/* 오늘 */}
+      <div className={statCol}>
+        <span className={statLabel}>오늘</span>
+        <div className={statValueRow}>
+          <span className={statValue}>{starsToday}</span>
+          <span className={statSub}>/ 5</span>
+        </div>
       </div>
     </div>
   );
