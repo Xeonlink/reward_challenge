@@ -1,5 +1,7 @@
 "use client";
 
+import DinnerIcon from "@/assets/icons/dinner.svg";
+import StarFragmentIcon from "@/assets/icons/star-fragment.svg";
 import { useModal } from "@/components/modal";
 import { Button } from "@/components/ui/Button";
 import { Popup } from "@/components/ui/Popup";
@@ -9,7 +11,6 @@ import { FORTUNE_URL, REQUIRED_VISIT_MS } from "@/lib/constants";
 import { universeStore } from "@/lib/universe";
 import { css, cx } from "@/styled/css";
 import { useStore } from "zustand";
-import { DinnerIcon, StarFragmentIcon } from "../SlotIcons";
 import { RewardFailedPopup, RewardSuccessPopup } from "./RewardPopup";
 import {
   buttonWrap,
@@ -71,7 +72,9 @@ export function DinnerSlotPopup() {
       >
         <div className={headerStyle}>
           <span className={popupTitle}>
-            <DinnerIcon color={colorLight} size={28} />
+            <DinnerIcon
+              className={css({ fontSize: "1.75rem", color: colorLight })}
+            />
             <Text className={css({ color: colorLight })} variant="slotTitle">
               {title}
             </Text>
@@ -87,7 +90,7 @@ export function DinnerSlotPopup() {
         </div>
 
         <div className={cx(callout(), calloutStyle)}>
-          <StarFragmentIcon color={color} size={28} />
+          <StarFragmentIcon className={css({ fontSize: "1.75rem", color })} />
           <div>
             <div className={calloutTitle} style={{ color: colorLight }}>
               별 조각 +1 획득 가능
@@ -119,7 +122,11 @@ export function DinnerSlotPopup() {
             size="lg"
             fullWidth
             onClick={handleVisit}
-            leftIcon={<StarFragmentIcon color="#07091A" size={18} />}
+            leftIcon={
+              <StarFragmentIcon
+                className={css({ fontSize: "1.125rem", color: "bg" })}
+              />
+            }
           >
             강남철학관 운세 보러 가기
           </Button>

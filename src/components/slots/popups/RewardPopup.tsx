@@ -1,11 +1,11 @@
 "use client";
 
+import StarFragmentIcon from "@/assets/icons/star-fragment.svg";
 import { useModal } from "@/components/modal";
 import { Text } from "@/components/ui/Text";
 import { css, cva } from "@/styled/css";
 import { Button } from "../../ui/Button";
 import { Popup } from "../../ui/Popup";
-import { StarFragmentIcon } from "../SlotIcons";
 import { popupPanel } from "./_style";
 
 const rewardIcon = cva({
@@ -114,7 +114,12 @@ export function RewardSuccessPopup(props: RewardSuccessPopupProps) {
         role="dialog"
       >
         <div className={rewardIcon({ variant: "success" })}>
-          <StarFragmentIcon color="var(--colors-accent)" size={40} />
+          <StarFragmentIcon
+            className={css({
+              fontSize: "2.5rem",
+              color: "var(--colors-accent)",
+            })}
+          />
         </div>
         <div>
           <div className={rewardTitle({ variant: "success" })}>
@@ -128,7 +133,12 @@ export function RewardSuccessPopup(props: RewardSuccessPopupProps) {
         <div className={rewardBox}>
           <Text variant="label">별 조각 획득</Text>
           <div className={rewardAmountRow}>
-            <StarFragmentIcon color="var(--colors-accent)" size={28} />
+            <StarFragmentIcon
+              className={css({
+                fontSize: "1.75rem",
+                color: "var(--colors-accent)",
+              })}
+            />
             <span className={rewardAmount}>+{amount}</span>
           </div>
           <span className={rewardCaption}>우주 성장에 기여했어요</span>

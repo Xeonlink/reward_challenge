@@ -1,12 +1,13 @@
 "use client";
 
+import CheckIcon from "@/assets/icons/check.svg";
+import MorningIcon from "@/assets/icons/morning.svg";
 import { useModal } from "@/components/modal";
 import { Text } from "@/components/ui/Text";
 import { useCurrentTime } from "@/hooks/useCurrentTime";
 import { useUniverse } from "@/hooks/useUniverse";
 import { css, cx } from "@/styled/css";
 import { useMemo } from "react";
-import { CheckIcon, MorningIcon } from "../SlotIcons";
 import { MorningSlotPopup } from "../popups/MorningSlotPopup";
 import { checkBadge, cornerBadge, divider, iconWrap, slotCard } from "./_style";
 
@@ -113,7 +114,12 @@ export function MorningSlotCard() {
     >
       {status === "completed" ? (
         <div className={checkBadge}>
-          <CheckIcon color="var(--colors-success)" size={20} />
+          <CheckIcon
+            className={css({
+              fontSize: "1.25rem",
+              color: "var(--colors-success)",
+            })}
+          />
         </div>
       ) : null}
 
@@ -126,7 +132,9 @@ export function MorningSlotCard() {
           pulse: status === "active" || status === "extra",
         })}
       >
-        <MorningIcon color={iconColor} size={36} />
+        <MorningIcon
+          className={css({ fontSize: "2.25rem", color: iconColor })}
+        />
       </div>
 
       <Text className={css({ color: labelColor })} variant="slotTitle">

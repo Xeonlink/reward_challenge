@@ -1,5 +1,8 @@
 "use client";
 
+import BonusIcon from "@/assets/icons/bonus.svg";
+import CheckIcon from "@/assets/icons/check.svg";
+import StarFragmentIcon from "@/assets/icons/star-fragment.svg";
 import { useModal } from "@/components/modal";
 import { Button } from "@/components/ui/Button";
 import { Popup } from "@/components/ui/Popup";
@@ -9,7 +12,6 @@ import { FORTUNE_URL, REQUIRED_VISIT_MS } from "@/lib/constants";
 import { universeStore } from "@/lib/universe";
 import { css, cx } from "@/styled/css";
 import { useStore } from "zustand";
-import { BonusIcon, CheckIcon, StarFragmentIcon } from "../SlotIcons";
 import { RewardFailedPopup, RewardSuccessPopup } from "./RewardPopup";
 import {
   buttonWrap,
@@ -87,7 +89,9 @@ export function BonusSlotPopup() {
       >
         <div className={headerStyle}>
           <span className={popupTitle}>
-            <BonusIcon color={colorLight} size={28} />
+            <BonusIcon
+              className={css({ fontSize: "1.75rem", color: colorLight })}
+            />
             <Text className={css({ color: colorLight })} variant="slotTitle">
               {title}
             </Text>
@@ -105,7 +109,9 @@ export function BonusSlotPopup() {
         {isLocked ? (
           <>
             <div className={cx(callout(), calloutStyle)}>
-              <StarFragmentIcon color={color} size={28} />
+              <StarFragmentIcon
+                className={css({ fontSize: "1.75rem", color })}
+              />
               <div>
                 <div className={calloutTitle} style={{ color: colorLight }}>
                   아침·점심·저녁을 모두 완료해야 합니다
@@ -123,7 +129,12 @@ export function BonusSlotPopup() {
                   style={prerequisiteStepStyle(record.morning)}
                 >
                   {record.morning ? (
-                    <CheckIcon color="var(--colors-success)" size={14} />
+                    <CheckIcon
+                      className={css({
+                        fontSize: "0.875rem",
+                        color: "var(--colors-success)",
+                      })}
+                    />
                   ) : (
                     1
                   )}
@@ -145,7 +156,12 @@ export function BonusSlotPopup() {
                   style={prerequisiteStepStyle(record.lunch)}
                 >
                   {record.lunch ? (
-                    <CheckIcon color="var(--colors-success)" size={14} />
+                    <CheckIcon
+                      className={css({
+                        fontSize: "0.875rem",
+                        color: "var(--colors-success)",
+                      })}
+                    />
                   ) : (
                     2
                   )}
@@ -167,7 +183,12 @@ export function BonusSlotPopup() {
                   style={prerequisiteStepStyle(record.dinner)}
                 >
                   {record.dinner ? (
-                    <CheckIcon color="var(--colors-success)" size={14} />
+                    <CheckIcon
+                      className={css({
+                        fontSize: "0.875rem",
+                        color: "var(--colors-success)",
+                      })}
+                    />
                   ) : (
                     3
                   )}
@@ -199,7 +220,9 @@ export function BonusSlotPopup() {
         ) : (
           <>
             <div className={cx(callout(), calloutStyle)}>
-              <StarFragmentIcon color={color} size={28} />
+              <StarFragmentIcon
+                className={css({ fontSize: "1.75rem", color })}
+              />
               <div>
                 <div className={calloutTitle} style={{ color: colorLight }}>
                   별 조각 +2 획득 가능
@@ -231,7 +254,11 @@ export function BonusSlotPopup() {
                 size="lg"
                 fullWidth
                 onClick={handleVisit}
-                leftIcon={<StarFragmentIcon color="#07091A" size={18} />}
+                leftIcon={
+                  <StarFragmentIcon
+                    className={css({ fontSize: "1.125rem", color: "bg" })}
+                  />
+                }
               >
                 강남철학관 운세 보러 가기
               </Button>

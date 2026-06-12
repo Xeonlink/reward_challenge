@@ -1,11 +1,13 @@
 "use client";
 
+import BonusIcon from "@/assets/icons/bonus.svg";
+import CheckIcon from "@/assets/icons/check.svg";
+import LockIcon from "@/assets/icons/lock.svg";
 import { useModal } from "@/components/modal";
 import { Text } from "@/components/ui/Text";
 import { useUniverse } from "@/hooks/useUniverse";
 import { css, cx } from "@/styled/css";
 import { useMemo } from "react";
-import { BonusIcon, CheckIcon, LockIcon } from "../SlotIcons";
 import { BonusSlotPopup } from "../popups/BonusSlotPopup";
 import {
   checkBadge,
@@ -106,7 +108,12 @@ export function BonusSlotCard() {
     >
       {status === "completed" ? (
         <div className={checkBadge}>
-          <CheckIcon color="var(--colors-success)" size={20} />
+          <CheckIcon
+            className={css({
+              fontSize: "1.25rem",
+              color: "var(--colors-success)",
+            })}
+          />
         </div>
       ) : null}
 
@@ -115,10 +122,15 @@ export function BonusSlotCard() {
       ) : null}
 
       <div className={iconWrap({ pulse: status === "active" })}>
-        <BonusIcon color={iconColor} size={36} />
+        <BonusIcon className={css({ fontSize: "2.25rem", color: iconColor })} />
         {status === "locked" ? (
           <div className={lockOverlay}>
-            <LockIcon color="var(--colors-fg-muted)" size={12} />
+            <LockIcon
+              className={css({
+                fontSize: "0.75rem",
+                color: "var(--colors-fg-muted)",
+              })}
+            />
           </div>
         ) : null}
       </div>

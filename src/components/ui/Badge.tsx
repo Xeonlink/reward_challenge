@@ -1,5 +1,5 @@
-import { StarFragmentIcon } from "@/components/slots/SlotIcons";
-import { cva, cx } from "@/styled/css";
+import StarFragmentIcon from "@/assets/icons/star-fragment.svg";
+import { css, cva, cx } from "@/styled/css";
 import type { ComponentProps } from "react";
 
 const badge = cva({
@@ -46,7 +46,12 @@ export function Badge(props: BadgeProps) {
   return (
     <div className={cx(badge(), className)} {...rest}>
       {showIcon ? (
-        <StarFragmentIcon color="var(--colors-accent)" size={14} />
+        <StarFragmentIcon
+          className={css({
+            fontSize: "0.875rem",
+            color: "var(--colors-accent)",
+          })}
+        />
       ) : null}
       <span className={badgeLabel()}>{label}</span>
     </div>

@@ -25,6 +25,7 @@
   "devDependencies": {
     "@pandacss/dev": "^1.11.0",
     "@playwright/test": "^1.60.0",
+    "@svgr/webpack": "^8.1.0",
     "@trivago/prettier-plugin-sort-imports": "^6.0.2",
     "@types/node": "^20",
     "@types/react": "19.2.17",

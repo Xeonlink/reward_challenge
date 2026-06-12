@@ -1,7 +1,7 @@
+import StarFragmentIcon from "@/assets/icons/star-fragment.svg";
 import { StarBackground } from "@/components/StarBackground";
 import { DevTools } from "@/components/dev-tools";
 import { ModalContainer } from "@/components/modal";
-import { StarFragmentIcon } from "@/components/slots/SlotIcons";
 import { Badge } from "@/components/ui/Badge";
 import { Heading } from "@/components/ui/Heading";
 import { Text } from "@/components/ui/Text";
@@ -88,9 +88,19 @@ export default function Layout(props: LayoutProps<"/">) {
                 gap: "2",
               })}
             >
-              <StarFragmentIcon color="var(--colors-accent)" size={32} />
+              <StarFragmentIcon
+                className={css({
+                  fontSize: "2rem",
+                  color: "var(--colors-accent)",
+                })}
+              />
               <Heading>별모아</Heading>
-              <StarFragmentIcon color="var(--colors-accent)" size={32} />
+              <StarFragmentIcon
+                className={css({
+                  fontSize: "2rem",
+                  color: "var(--colors-accent)",
+                })}
+              />
             </div>
 
             <Text variant="subtitle">BYULMOA</Text>

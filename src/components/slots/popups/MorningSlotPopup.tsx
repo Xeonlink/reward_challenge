@@ -1,5 +1,7 @@
 "use client";
 
+import MorningIcon from "@/assets/icons/morning.svg";
+import StarFragmentIcon from "@/assets/icons/star-fragment.svg";
 import { useModal } from "@/components/modal";
 import { Button } from "@/components/ui/Button";
 import { Popup } from "@/components/ui/Popup";
@@ -9,7 +11,6 @@ import { useUrlVisitor } from "@/hooks/useFortuneVisit";
 import { useUniverse } from "@/hooks/useUniverse";
 import { FORTUNE_URL, REQUIRED_VISIT_MS } from "@/lib/constants";
 import { css, cx } from "@/styled/css";
-import { MorningIcon, StarFragmentIcon } from "../SlotIcons";
 import { RewardFailedPopup, RewardSuccessPopup } from "./RewardPopup";
 import {
   buttonWrap,
@@ -76,7 +77,9 @@ export function MorningSlotPopup() {
       >
         <div className={headerStyle}>
           <span className={popupTitle}>
-            <MorningIcon color={colorLight} size={28} />
+            <MorningIcon
+              className={css({ fontSize: "1.75rem", color: colorLight })}
+            />
             <Text className={css({ color: colorLight })} variant="slotTitle">
               {isExtra ? "추가 기회 — " : null}
               {title}
@@ -93,7 +96,7 @@ export function MorningSlotPopup() {
         </div>
 
         <div className={cx(callout(), calloutStyle)}>
-          <StarFragmentIcon color={color} size={28} />
+          <StarFragmentIcon className={css({ fontSize: "1.75rem", color })} />
           <div>
             <div className={calloutTitle} style={{ color: colorLight }}>
               별 조각 +1 획득 가능
@@ -131,7 +134,11 @@ export function MorningSlotPopup() {
             size="lg"
             fullWidth
             onClick={handleVisit}
-            leftIcon={<StarFragmentIcon color="#07091A" size={18} />}
+            leftIcon={
+              <StarFragmentIcon
+                className={css({ fontSize: "1.125rem", color: "bg" })}
+              />
+            }
           >
             강남철학관 운세 보러 가기
           </Button>

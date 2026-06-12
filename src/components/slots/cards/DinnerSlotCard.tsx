@@ -1,12 +1,13 @@
 "use client";
 
+import CheckIcon from "@/assets/icons/check.svg";
+import DinnerIcon from "@/assets/icons/dinner.svg";
 import { useModal } from "@/components/modal";
 import { Text } from "@/components/ui/Text";
 import { useCurrentTime } from "@/hooks/useCurrentTime";
 import { useUniverse } from "@/hooks/useUniverse";
 import { css, cx } from "@/styled/css";
 import { useMemo } from "react";
-import { CheckIcon, DinnerIcon } from "../SlotIcons";
 import { DinnerSlotPopup } from "../popups/DinnerSlotPopup";
 import { checkBadge, divider, iconWrap, slotCard } from "./_style";
 
@@ -103,12 +104,19 @@ export function DinnerSlotCard() {
     >
       {status === "completed" ? (
         <div className={checkBadge}>
-          <CheckIcon color="var(--colors-success)" size={20} />
+          <CheckIcon
+            className={css({
+              fontSize: "1.25rem",
+              color: "var(--colors-success)",
+            })}
+          />
         </div>
       ) : null}
 
       <div className={iconWrap({ pulse: status === "active" })}>
-        <DinnerIcon color={iconColor} size={36} />
+        <DinnerIcon
+          className={css({ fontSize: "2.25rem", color: iconColor })}
+        />
       </div>
 
       <Text className={css({ color: labelColor })} variant="slotTitle">

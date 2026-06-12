@@ -1,12 +1,13 @@
 "use client";
 
+import CheckIcon from "@/assets/icons/check.svg";
+import LunchIcon from "@/assets/icons/lunch.svg";
 import { useModal } from "@/components/modal";
 import { Text } from "@/components/ui/Text";
 import { useCurrentTime } from "@/hooks/useCurrentTime";
 import { useUniverse } from "@/hooks/useUniverse";
 import { css, cx } from "@/styled/css";
 import { useMemo } from "react";
-import { CheckIcon, LunchIcon } from "../SlotIcons";
 import { LunchSlotPopup } from "../popups/LunchSlotPopup";
 import { checkBadge, cornerBadge, divider, iconWrap, slotCard } from "./_style";
 
@@ -107,7 +108,12 @@ export function LunchSlotCard() {
     >
       {status === "completed" ? (
         <div className={checkBadge}>
-          <CheckIcon color="var(--colors-success)" size={20} />
+          <CheckIcon
+            className={css({
+              fontSize: "1.25rem",
+              color: "var(--colors-success)",
+            })}
+          />
         </div>
       ) : null}
 
@@ -120,7 +126,7 @@ export function LunchSlotCard() {
           pulse: status === "active" || status === "extra",
         })}
       >
-        <LunchIcon color={iconColor} size={36} />
+        <LunchIcon className={css({ fontSize: "2.25rem", color: iconColor })} />
       </div>
 
       <Text className={css({ color: labelColor })} variant="slotTitle">

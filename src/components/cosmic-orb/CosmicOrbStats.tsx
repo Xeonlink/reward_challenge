@@ -1,10 +1,10 @@
 "use client";
 
+import StarFragmentIcon from "@/assets/icons/star-fragment.svg";
 import { useStarsToday } from "@/hooks/useStarsFromDay";
 import { useUniverse } from "@/hooks/useUniverse";
 import { useUniverseAge } from "@/hooks/useUniverseDays";
 import { css } from "@/styled/css";
-import { StarFragmentIcon } from "../slots/SlotIcons";
 
 const statsBar = css({
   width: "100%",
@@ -81,7 +81,7 @@ export function CosmicOrbStats() {
       <div className={statCol}>
         <span className={statLabel}>별 조각</span>
         <div className={statValueRow}>
-          <StarFragmentIcon size={14} color="var(--colors-accent)" />
+          <StarFragmentIcon className={css({ color: "accent" })} />
           <span className={statValue}>{totalStars}</span>
           <span className={statSub}>개</span>
         </div>
