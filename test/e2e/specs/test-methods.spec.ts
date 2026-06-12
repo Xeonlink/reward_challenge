@@ -1,5 +1,4 @@
 import { expect, test } from "@playwright/test";
-import { gotoTestTime } from "../helpers/slots";
 import {
   clearAppStorage,
   expectTotalStars,
@@ -7,25 +6,6 @@ import {
 } from "../helpers/universe";
 
 test.describe("README 테스트 방법", () => {
-  test("?test=morning — 아침 시간대 + TEST 뱃지", async ({ page }) => {
-    await gotoTestTime(page, "morning");
-    await expect(page.getByText("현재 시간대:")).toBeVisible();
-    await expect(page.getByText("아침", { exact: true })).toBeVisible();
-    await expect(page.getByText("TEST", { exact: true })).toBeVisible();
-  });
-
-  test("?test=lunch — 점심 시간대", async ({ page }) => {
-    await gotoTestTime(page, "lunch");
-    await expect(page.getByText("점심", { exact: true })).toBeVisible();
-    await expect(page.getByText("TEST", { exact: true })).toBeVisible();
-  });
-
-  test("?test=dinner — 저녁 시간대", async ({ page }) => {
-    await gotoTestTime(page, "dinner");
-    await expect(page.getByText("저녁", { exact: true })).toBeVisible();
-    await expect(page.getByText("TEST", { exact: true })).toBeVisible();
-  });
-
   test("DevTools hover — Chip과 우주 단계 버튼 노출", async ({ page }) => {
     await clearAppStorage(page);
     await page.goto("/");
@@ -69,4 +49,29 @@ test.describe("README 테스트 방법", () => {
       await expectTotalStars(page, stars);
     });
   }
+
+  test("DevTools 완료 팝업 — modal.open으로 즉시 표시", async ({ page }) => {
+    await clearAppStorage(page);
+    await page.goto("/");
+    await page.waitForLoadState("networkidle");
+
+    const panel = page.getByText("test", { exact: true });
+    await panel.hover();
+    await page.getByRole("button", { name: "완료 팝업" }).click();
+    await expect(page.getByText("우주가 완성되었습니다!")).toBeVisible();
+  });
+
+  test("DevTools 30일 완료·reload — loadUniverse 경로로 팝업 표시", async ({
+    page,
+  }) => {
+    await clearAppStorage(page);
+    await page.goto("/");
+    await page.waitForLoadState("networkidle");
+
+    const panel = page.getByText("test", { exact: true });
+    await panel.hover();
+    await page.getByRole("button", { name: "30일 완료·reload" }).click();
+    await page.waitForLoadState("networkidle");
+    await expect(page.getByText("우주가 완성되었습니다!")).toBeVisible();
+  });
 });

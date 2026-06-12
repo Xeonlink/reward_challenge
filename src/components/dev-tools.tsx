@@ -1,8 +1,11 @@
 "use client";
 
+import { useModal } from "@/components/modal";
+import { CycleCompletePopup } from "@/components/slots/sections/CycleCompletePopup";
 import { Chip } from "@/components/ui/Chip";
 import { UNIVERSE_STORAGE_KEY } from "@/lib/constants";
 import { css } from "@/styled/css";
+import { format, subDays } from "date-fns";
 
 const TEST_PARAMS = [
   { param: "morning", tone: "morning" as const },
@@ -21,6 +24,35 @@ const UNIVERSE_PRESETS = [
 
 function applyUniverseStars(totalStars: number) {
   localStorage.setItem(UNIVERSE_STORAGE_KEY, JSON.stringify({ totalStars }));
+  location.reload();
+}
+
+function triggerCycleCompleteViaStorage() {
+  let existing: {
+    totalStars?: number;
+    cycleStartDate?: string;
+    dailyRecord?: Record<string, unknown>;
+  } = {};
+
+  try {
+    const raw = localStorage.getItem(UNIVERSE_STORAGE_KEY);
+    if (raw) existing = JSON.parse(raw);
+  } catch {
+    // ignore invalid storage
+  }
+
+  localStorage.setItem(
+    UNIVERSE_STORAGE_KEY,
+    JSON.stringify({
+      totalStars:
+        typeof existing.totalStars === "number" ? existing.totalStars : 0,
+      cycleStartDate: format(subDays(new Date(), 30), "yyyy-MM-dd"),
+      dailyRecord:
+        existing.dailyRecord && typeof existing.dailyRecord === "object"
+          ? existing.dailyRecord
+          : {},
+    }),
+  );
   location.reload();
 }
 
@@ -117,9 +149,15 @@ const universeButtonStyle = css({
 });
 
 export function DevTools() {
+  const modal = useModal();
+
   if (process.env.NODE_ENV !== "development") {
     return null;
   }
+
+  const openCycleCompletePopup = () => {
+    modal.open(<CycleCompletePopup />);
+  };
 
   return (
     <div className={rootStyle}>
@@ -148,6 +186,22 @@ export function DevTools() {
                   {label}
                 </button>
               ))}
+            </div>
+            <div className={chipRowStyle}>
+              <button
+                className={universeButtonStyle}
+                type="button"
+                onClick={() => triggerCycleCompleteViaStorage()}
+              >
+                30일 완료·reload
+              </button>
+              <button
+                className={universeButtonStyle}
+                type="button"
+                onClick={() => openCycleCompletePopup()}
+              >
+                완료 팝업
+              </button>
             </div>
           </div>
         </div>
