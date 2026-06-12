@@ -4,8 +4,86 @@ import { useModal } from "@/components/modal";
 import { CycleCompletePopup } from "@/components/slots/popups/CycleCompletePopup";
 import { Chip } from "@/components/ui/Chip";
 import { UNIVERSE_STORAGE_KEY } from "@/lib/constants";
+import type { DayRecord } from "@/lib/universe";
 import { css } from "@/styled/css";
 import { format, subDays } from "date-fns";
+
+const EMPTY_RECORD: DayRecord = {
+  morning: false,
+  lunch: false,
+  dinner: false,
+  bonus: false,
+};
+
+function readPersistedUniverse(): {
+  totalStars: number;
+  cycleStartDate: string;
+  lastRecordDate: string;
+  record: DayRecord;
+} {
+  const today = format(new Date(), "yyyy-MM-dd");
+  const fallback = {
+    totalStars: 0,
+    cycleStartDate: today,
+    lastRecordDate: today,
+    record: { ...EMPTY_RECORD },
+  };
+
+  try {
+    const raw = localStorage.getItem(UNIVERSE_STORAGE_KEY);
+    if (!raw) return fallback;
+    const parsed = JSON.parse(raw) as {
+      state?: Partial<typeof fallback> & { record?: Partial<DayRecord> };
+      totalStars?: number;
+      cycleStartDate?: string;
+      lastRecordDate?: string;
+      record?: Partial<DayRecord>;
+    };
+
+    const flat = parsed.state ?? parsed;
+    return {
+      totalStars:
+        typeof flat.totalStars === "number"
+          ? flat.totalStars
+          : fallback.totalStars,
+      cycleStartDate:
+        typeof flat.cycleStartDate === "string"
+          ? flat.cycleStartDate
+          : fallback.cycleStartDate,
+      lastRecordDate:
+        typeof flat.lastRecordDate === "string"
+          ? flat.lastRecordDate
+          : fallback.lastRecordDate,
+      record: { ...EMPTY_RECORD, ...flat.record },
+    };
+  } catch {
+    return fallback;
+  }
+}
+
+function writePersistedUniverse(
+  state: ReturnType<typeof readPersistedUniverse>,
+): void {
+  localStorage.setItem(
+    UNIVERSE_STORAGE_KEY,
+    JSON.stringify({ state, version: 1 }),
+  );
+}
+
+function applyUniverseStars(totalStars: number) {
+  const current = readPersistedUniverse();
+  writePersistedUniverse({ ...current, totalStars });
+  location.reload();
+}
+
+function triggerCycleCompleteViaStorage() {
+  const current = readPersistedUniverse();
+  writePersistedUniverse({
+    ...current,
+    cycleStartDate: format(subDays(new Date(), 30), "yyyy-MM-dd"),
+  });
+  location.reload();
+}
 
 const TEST_PARAMS = [
   { param: "morning", tone: "morning" as const },
@@ -21,40 +99,6 @@ const UNIVERSE_PRESETS = [
   { label: "5단계·149개", totalStars: 149 },
   { label: "우주 초기화", totalStars: 0 },
 ] as const;
-
-function applyUniverseStars(totalStars: number) {
-  localStorage.setItem(UNIVERSE_STORAGE_KEY, JSON.stringify({ totalStars }));
-  location.reload();
-}
-
-function triggerCycleCompleteViaStorage() {
-  let existing: {
-    totalStars?: number;
-    cycleStartDate?: string;
-    dailyRecord?: Record<string, unknown>;
-  } = {};
-
-  try {
-    const raw = localStorage.getItem(UNIVERSE_STORAGE_KEY);
-    if (raw) existing = JSON.parse(raw);
-  } catch {
-    // ignore invalid storage
-  }
-
-  localStorage.setItem(
-    UNIVERSE_STORAGE_KEY,
-    JSON.stringify({
-      totalStars:
-        typeof existing.totalStars === "number" ? existing.totalStars : 0,
-      cycleStartDate: format(subDays(new Date(), 30), "yyyy-MM-dd"),
-      dailyRecord:
-        existing.dailyRecord && typeof existing.dailyRecord === "object"
-          ? existing.dailyRecord
-          : {},
-    }),
-  );
-  location.reload();
-}
 
 const rootStyle = css({
   position: "fixed",
