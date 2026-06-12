@@ -9,27 +9,19 @@ import {
 import { immer } from "zustand/middleware/immer";
 import { createStore } from "zustand/vanilla";
 
-export interface UniverseRecord {
+export type UniverseStore = {
   totalStars: number;
-  cycleStartDate: string;
-  dailyRecord: {
-    [date: string]: {
-      morning: boolean;
-      lunch: boolean;
-      dinner: boolean;
-      bonus: boolean;
-      extraUsed: boolean;
-    };
+  cycleStartDate: string; // yyyy-MM-dd
+  lastRecordDate: string; // yyyy-MM-dd
+  record: {
+    morning: boolean;
+    lunch: boolean;
+    dinner: boolean;
+    bonus: boolean;
   };
-}
-
-type UniverseStore = UniverseRecord & {
   actions: {
-    setUniverse: (universe: UniverseRecord) => void;
-    completeFortune: (
-      date: string,
-      dailyRecordKey: "morning" | "lunch" | "dinner" | "bonus" | "extraUsed",
-    ) => void;
+    completeFortune: (dailyRecordKey: "morning" | "lunch" | "dinner") => void;
+    completeBonus: () => void;
     resetUniverse: () => void;
   };
 };
@@ -40,40 +32,58 @@ export const universeStore = createStore<UniverseStore>()(
       immer((set) => ({
         totalStars: 0,
         cycleStartDate: format(new Date(), "yyyy-MM-dd"),
-        dailyRecord: {},
+        lastRecordDate: format(new Date(), "yyyy-MM-dd"),
+        record: {
+          morning: false,
+          lunch: false,
+          dinner: false,
+          bonus: false,
+        },
         actions: {
-          setUniverse: (universe: UniverseRecord) => set(universe),
-          completeFortune: (
-            date: string,
-            dailyRecordKey:
-              | "morning"
-              | "lunch"
-              | "dinner"
-              | "bonus"
-              | "extraUsed",
-          ) => {
+          completeFortune: (dailyRecordKey) => {
             set((state) => {
-              state.dailyRecord[date][dailyRecordKey] = true;
+              const currentDate = format(new Date(), "yyyy-MM-dd");
+              state.lastRecordDate = currentDate;
+              state.record[dailyRecordKey] = true;
+              state.totalStars += 1;
+            });
+          },
+          completeBonus: () => {
+            set((state) => {
+              const currentDate = format(new Date(), "yyyy-MM-dd");
+              state.lastRecordDate = currentDate;
+              state.record.bonus = true;
+              state.totalStars += 2;
             });
           },
           resetUniverse: () => {
             set((state) => {
               state.totalStars = 0;
-              state.cycleStartDate = format(new Date(), "yyyy-MM-dd");
-              state.dailyRecord = {};
+              state.lastRecordDate = format(new Date(), "yyyy-MM-dd");
+              state.record = {
+                morning: false,
+                lunch: false,
+                dinner: false,
+                bonus: false,
+              };
             });
           },
         },
       })),
     ),
     {
+      version: 1,
       name: "byulmoa_universe",
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
         totalStars: state.totalStars,
         cycleStartDate: state.cycleStartDate,
-        dailyRecord: state.dailyRecord,
+        lastRecordDate: state.lastRecordDate,
+        record: state.record,
       }),
+      migrate: (persistedState, version) => {
+        console.log(persistedState, version);
+      },
     },
   ),
 );
