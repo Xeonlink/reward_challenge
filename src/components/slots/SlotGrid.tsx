@@ -9,6 +9,7 @@ import {
   starsFromDay,
 } from "@/lib/slots";
 import { css } from "@/styled/css";
+import { differenceInDays } from "date-fns";
 import { useEffect } from "react";
 import { RewardPopup } from "./RewardPopup";
 import { BonusSlotCard } from "./cards/BonusSlotCard";
@@ -53,11 +54,8 @@ export function SlotGrid({ testParam }: SlotGridProps) {
     todayRecord,
     universe,
     allCompleted,
-    handleRewardClaim,
     handleExternalVisit,
     rewardPopup,
-    cycleCompletePopup,
-    closeCycleCompletePopup,
     lastStarBornAt,
   } = useSlots(testParam);
 
@@ -72,20 +70,18 @@ export function SlotGrid({ testParam }: SlotGridProps) {
         slotLabel={getVisitRewardLabel(popup.intent)}
         rewardAmount={getVisitRewardAmount(popup.intent)}
         success={popup.success}
-        onClaim={() => handleRewardClaim(popup.intent, popup.success)}
+        onClaim={() => {}}
       />,
     );
 
     return dismiss;
-  }, [rewardPopup, modal, handleRewardClaim]);
+  }, [rewardPopup, modal]);
 
   useEffect(() => {
-    if (!cycleCompletePopup) return;
-
-    const dismiss = modal.open(<CycleCompletePopup />);
-
-    return dismiss;
-  }, [cycleCompletePopup, modal, closeCycleCompletePopup]);
+    if (differenceInDays(new Date(), universe.cycleStartDate) >= 30) {
+      modal.open(<CycleCompletePopup />);
+    }
+  }, [modal, universe.cycleStartDate]);
 
   return (
     <div className={rootStyle}>

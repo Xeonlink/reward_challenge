@@ -1,8 +1,11 @@
 import { UNIVERSE_STORAGE_KEY } from "@/lib/constants";
+import { differenceInCalendarDays, format, isValid, parse } from "date-fns";
 import { EMPTY_DAY, type CompletionRecord, type UniverseRecord } from "./types";
 
+const DATE_FORMAT = "yyyy-MM-dd";
+
 export function getTodayKey(): string {
-  return new Date().toDateString();
+  return format(new Date(), DATE_FORMAT);
 }
 
 export function getTodayRecord(universe: UniverseRecord): CompletionRecord {
@@ -28,16 +31,16 @@ export function starsFromDay(c: {
 
 export function getCycleDay(universe: UniverseRecord): number {
   if (!universe.cycleStartDate) return 1;
-  const start = new Date(universe.cycleStartDate);
-  if (isNaN(start.getTime())) return 1;
-  const days = Math.floor((Date.now() - start.getTime()) / 86_400_000);
+  const start = parse(universe.cycleStartDate, DATE_FORMAT, new Date());
+  if (!isValid(start)) return 1;
+  const days = differenceInCalendarDays(new Date(), start);
   return Math.min(days + 1, 30);
 }
 
 function defaultUniverse(): UniverseRecord {
   return {
     totalStars: 0,
-    cycleStartDate: new Date().toDateString(),
+    cycleStartDate: format(new Date(), DATE_FORMAT),
     dailyRecord: {},
   };
 }
@@ -56,8 +59,8 @@ export function loadUniverse(): {
     const raw = localStorage.getItem(UNIVERSE_STORAGE_KEY);
     if (!raw) return { record: defaultUniverse(), cycleCompleted: false };
     const parsed: UniverseRecord = JSON.parse(raw);
-    const start = new Date(parsed.cycleStartDate);
-    if (isNaN(start.getTime())) {
+    const start = parse(parsed.cycleStartDate, DATE_FORMAT, new Date());
+    if (!isValid(start)) {
       const totalStars =
         typeof parsed.totalStars === "number" && parsed.totalStars >= 0
           ? parsed.totalStars
@@ -74,7 +77,7 @@ export function loadUniverse(): {
       saveUniverse(recovered);
       return { record: recovered, cycleCompleted: false };
     }
-    const days = Math.floor((Date.now() - start.getTime()) / 86_400_000);
+    const days = differenceInCalendarDays(new Date(), start);
     if (days >= 30) {
       const fresh = defaultUniverse();
       saveUniverse(fresh);
