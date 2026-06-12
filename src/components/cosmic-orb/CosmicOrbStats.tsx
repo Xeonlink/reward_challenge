@@ -7,10 +7,13 @@ import { css } from "@/styled/css";
 import { StarFragmentIcon } from "../slots/SlotIcons";
 
 const statsBar = css({
+  width: "100%",
+  maxWidth: "27.125rem",
   display: "flex",
   alignItems: "center",
+  justifyContent: "space-between",
   gap: "1.375rem",
-  padding: "0.625rem 1.375rem",
+  padding: "0.75rem 1.5rem",
   borderRadius: "full",
   background: "color-mix(in srgb, var(--colors-surface) 80%, transparent)",
   border: "1px solid",
@@ -19,10 +22,12 @@ const statsBar = css({
 });
 
 const statCol = css({
+  flex: "1",
+  minWidth: 0,
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
-  gap: "0.125rem",
+  gap: "0.25rem",
 });
 
 const statValueRow = css({
@@ -32,6 +37,7 @@ const statValueRow = css({
 });
 
 const statDivider = css({
+  flexShrink: 0,
   width: "0.125rem",
   height: "1.5rem",
   background: "color-mix(in srgb, var(--colors-border) 80%, transparent)",
