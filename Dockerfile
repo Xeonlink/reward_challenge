@@ -6,7 +6,7 @@ RUN apk add --no-cache libc6-compat
 RUN corepack enable pnpm
 WORKDIR /app
 
-COPY package.json pnpm-lock.yaml ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml panda.config.ts ./
 
 ### 의존성 캐시: 의존성이 변경된 경우, 직접 revlidate를 해야함
 RUN --mount=type=cache,target=/root/.local/share/pnpm/store \
@@ -17,7 +17,6 @@ FROM base AS builder
 RUN corepack enable pnpm
 WORKDIR /app
 
-COPY --from=db-init /app/sqlite.db ./sqlite.db
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
