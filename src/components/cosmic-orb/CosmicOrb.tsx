@@ -2,7 +2,7 @@
 
 import { useUniverse } from "@/hooks/useUniverse";
 import { css, cva } from "@/styled/css";
-import { CANVAS_H, CANVAS_W, ORB } from "./orbConfig";
+import { CANVAS_H, ORB } from "./orbConfig";
 import { useCosmicOrbCanvas } from "./useCosmicOrbCanvas";
 
 const canvasWrap = css({
@@ -10,14 +10,14 @@ const canvasWrap = css({
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
-  width: `${CANVAS_W}px`,
-  height: `${CANVAS_H}px`,
+  width: `300px`,
+  height: `280px`,
 });
 
 const canvasEl = css({
   position: "absolute",
-  width: `${CANVAS_W}px`,
-  height: `${CANVAS_H}px`,
+  width: `300px`,
+  height: `280px`,
 });
 
 const cosmicRing = cva({
