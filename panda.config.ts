@@ -8,49 +8,44 @@ export default defineConfig({
     extend: {
       tokens: {
         colors: {
-          brand: {
-            // Soft Cosmic (시안B) 배경
-            bg: { value: "#07091A" },
-            surface: { value: "#0C1230" },
-            surfaceHigh: { value: "#131A3E" },
-            border: { value: "#212C5C" },
-            borderBright: { value: "#3A4880" },
-
-            // 텍스트
-            text: { value: "#EBF0FF" },
-            textMuted: { value: "#6070A8" },
-            textDim: { value: "#3A4870" },
-
-            // 별 골드 (소프트)
-            gold: { value: "#FFD166" },
-            goldLight: { value: "#FFE8A0" },
-            goldDark: { value: "#CC9933" },
-
-            // 성운 액센트
-            nebula: { value: "#7B8DE0" },
-            nebulaLight: { value: "#A8B4F0" },
-            cosmic: { value: "#C589E8" },
-            cosmicLight: { value: "#DEB0F8" },
-
-            // 슬롯 색상
-            morning: { value: "#F4A05A" },
-            morningLight: { value: "#FFCB8A" },
-            lunch: { value: "#50C8E8" },
-            lunchLight: { value: "#8DDFF5" },
-            dinner: { value: "#9B72CF" },
-            dinnerLight: { value: "#C3A4EA" },
-            bonus: { value: "#E86FA8" },
-            bonusLight: { value: "#F4A0C8" },
-
-            // 상태
-            success: { value: "#5CE8A0" },
-            danger: { value: "#FF5C7A" },
-
-            // 하위 호환성 유지
-            amber: { value: "#F4A05A" },
-            surfaceHover: { value: "#1A2248" },
+          bg: { value: "var(--colors-bg)" },
+          fg: {
+            DEFAULT: { value: "var(--colors-fg)" },
+            muted: { value: "var(--colors-fg-muted)" },
+            dim: { value: "var(--colors-fg-dim)" },
+          },
+          surface: {
+            DEFAULT: { value: "var(--colors-surface)" },
+            high: { value: "var(--colors-surface-high)" },
+            hover: { value: "var(--colors-surface-hover)" },
+          },
+          border: {
+            DEFAULT: { value: "var(--colors-border)" },
+            bright: { value: "var(--colors-border-bright)" },
+          },
+          accent: {
+            DEFAULT: { value: "var(--colors-accent)" },
+            light: { value: "var(--colors-accent-light)" },
+            dark: { value: "var(--colors-accent-dark)" },
+          },
+          footer: { value: "var(--colors-footer)" },
+          nebula: {
+            DEFAULT: { value: "var(--colors-nebula)" },
+            light: { value: "var(--colors-nebula-light)" },
+          },
+          cosmic: {
+            DEFAULT: { value: "var(--colors-cosmic)" },
+            light: { value: "var(--colors-cosmic-light)" },
           },
           slot: {
+            morning: { value: "var(--colors-slot-morning)" },
+            morningLight: { value: "var(--colors-slot-morning-light)" },
+            lunch: { value: "var(--colors-slot-lunch)" },
+            lunchLight: { value: "var(--colors-slot-lunch-light)" },
+            dinner: { value: "var(--colors-slot-dinner)" },
+            dinnerLight: { value: "var(--colors-slot-dinner-light)" },
+            bonus: { value: "var(--colors-slot-bonus)" },
+            bonusLight: { value: "var(--colors-slot-bonus-light)" },
             inactive: { value: "#0C1230" },
             inactiveBorder: { value: "#1A2348" },
             active: { value: "#131A3E" },
@@ -59,38 +54,41 @@ export default defineConfig({
             extra: { value: "#1A1038" },
             extraBorder: { value: "#E86FA8" },
           },
+          success: { value: "var(--colors-success)" },
+          danger: { value: "var(--colors-danger)" },
         },
         fonts: {
-          display: { value: "'Orbitron', sans-serif" },
-          body: { value: "'DM Sans', 'Noto Sans KR', sans-serif" },
-          mono: { value: "'JetBrains Mono', monospace" },
-        },
-        fontSizes: {
-          "2xs": { value: "0.625rem" },
-          xs: { value: "0.75rem" },
-          sm: { value: "0.875rem" },
-          md: { value: "1rem" },
-          lg: { value: "1.125rem" },
-          xl: { value: "1.25rem" },
-          "2xl": { value: "1.5rem" },
-          "3xl": { value: "1.875rem" },
-          "4xl": { value: "2.25rem" },
-          "5xl": { value: "3rem" },
-        },
-        radii: {
-          sm: { value: "8px" },
-          md: { value: "14px" },
-          lg: { value: "20px" },
-          xl: { value: "28px" },
-          full: { value: "9999px" },
+          display: { value: "var(--font-display), sans-serif" },
+          body: {
+            value: "var(--font-body), var(--font-body-kr), sans-serif",
+          },
+          mono: { value: "var(--font-mono), monospace" },
         },
         shadows: {
-          gold: { value: "0 0 20px rgba(255,209,102,0.4), 0 0 60px rgba(255,209,102,0.15)" },
-          morning: { value: "0 0 20px rgba(244,160,90,0.4), 0 0 60px rgba(244,160,90,0.15)" },
-          lunch: { value: "0 0 20px rgba(80,200,232,0.4), 0 0 60px rgba(80,200,232,0.15)" },
-          dinner: { value: "0 0 20px rgba(155,114,207,0.4), 0 0 60px rgba(155,114,207,0.15)" },
-          bonus: { value: "0 0 20px rgba(232,111,168,0.4), 0 0 60px rgba(232,111,168,0.15)" },
-          nebula: { value: "0 0 30px rgba(123,141,224,0.3), 0 0 80px rgba(123,141,224,0.1)" },
+          gold: {
+            value:
+              "0 0 20px rgba(255,209,102,0.4), 0 0 60px rgba(255,209,102,0.15)",
+          },
+          morning: {
+            value:
+              "0 0 20px rgba(244,160,90,0.4), 0 0 60px rgba(244,160,90,0.15)",
+          },
+          lunch: {
+            value:
+              "0 0 20px rgba(80,200,232,0.4), 0 0 60px rgba(80,200,232,0.15)",
+          },
+          dinner: {
+            value:
+              "0 0 20px rgba(155,114,207,0.4), 0 0 60px rgba(155,114,207,0.15)",
+          },
+          bonus: {
+            value:
+              "0 0 20px rgba(232,111,168,0.4), 0 0 60px rgba(232,111,168,0.15)",
+          },
+          nebula: {
+            value:
+              "0 0 30px rgba(123,141,224,0.3), 0 0 80px rgba(123,141,224,0.1)",
+          },
         },
         durations: {
           fast: { value: "150ms" },
@@ -130,11 +128,19 @@ export default defineConfig({
         },
         glow: {
           "0%, 100%": { boxShadow: "0 0 10px rgba(123,141,224,0.2)" },
-          "50%": { boxShadow: "0 0 30px rgba(197,137,232,0.5), 0 0 60px rgba(123,141,224,0.3)" },
+          "50%": {
+            boxShadow:
+              "0 0 30px rgba(197,137,232,0.5), 0 0 60px rgba(123,141,224,0.3)",
+          },
         },
         slideUp: {
           from: { transform: "translateY(20px)", opacity: "0" },
           to: { transform: "translateY(0)", opacity: "1" },
+        },
+        devToolsReveal: {
+          "0%": { transform: "translateY(0.5rem)", opacity: "0" },
+          "65%": { transform: "translateY(-0.125rem)", opacity: "1" },
+          "100%": { transform: "translateY(0)", opacity: "1" },
         },
         fadeIn: {
           from: { opacity: "0" },
@@ -176,10 +182,14 @@ export default defineConfig({
           "50%": { backgroundPosition: "100% 50%" },
           "100%": { backgroundPosition: "0% 50%" },
         },
+        nebulaGlow: {
+          "0%, 100%": { opacity: "0.06" },
+          "50%": { opacity: "0.12" },
+        },
       },
     },
   },
   utilities: {},
-  outdir: "styled-system",
+  outdir: "src/styled",
   jsxFramework: "react",
 });

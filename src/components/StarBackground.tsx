@@ -1,10 +1,11 @@
 "use client";
 
+import { css } from "@/styled/css";
 import { useEffect, useRef } from "react";
 
 interface Star {
-  x: number;
-  y: number;
+  x: number; // normalized 0–1
+  y: number; // normalized 0–1
   radius: number;
   baseAlpha: number;
   currentAlpha: number;
@@ -15,35 +16,43 @@ interface Star {
 
 const STAR_COUNT = 220;
 const BIRTH_WINDOW = 3200; // ms to birth all stars
-const BIRTH_FADE = 700;    // ms per-star fade-in
+const BIRTH_FADE = 700; // ms per-star fade-in
 
-export function StarCanvas() {
+export function StarBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const rafRef = useRef<number>(0);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    let raf: number;
-    const startedAt = performance.now();
+    const canvasEl = canvasRef.current;
+    if (!canvasEl) return;
 
     const resize = () => {
-      canvas.width  = window.innerWidth;
-      canvas.height = window.innerHeight;
+      canvasEl.width = window.innerWidth;
+      canvasEl.height = window.innerHeight;
     };
+
     resize();
     window.addEventListener("resize", resize);
+
+    return () => {
+      window.removeEventListener("resize", resize);
+    };
+  }, []);
+
+  useEffect(() => {
+    const canvasEl = canvasRef.current;
+    if (!canvasEl) return;
 
     // Build star list
     const stars: Star[] = Array.from({ length: STAR_COUNT }, (_, i) => {
       const large = Math.random() < 0.12;
       return {
-        x: Math.random() * window.innerWidth,
-        y: Math.random() * window.innerHeight,
+        x: Math.random(),
+        y: Math.random(),
         radius: large ? Math.random() * 1.4 + 1.2 : Math.random() * 0.8 + 0.4,
-        baseAlpha: large ? Math.random() * 0.5 + 0.5 : Math.random() * 0.45 + 0.3,
+        baseAlpha: large
+          ? Math.random() * 0.5 + 0.5
+          : Math.random() * 0.45 + 0.3,
         currentAlpha: 0,
         phase: Math.random() * Math.PI * 2,
         speed: Math.random() * 0.0008 + 0.0003,
@@ -51,9 +60,14 @@ export function StarCanvas() {
       };
     });
 
+    // Draw stars
+    const ctx = canvasEl.getContext("2d");
+    if (!ctx) return;
+
+    const startedAt = performance.now();
     const draw = (now: number) => {
       const elapsed = now - startedAt;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.clearRect(0, 0, canvasEl.width, canvasEl.height);
 
       for (const s of stars) {
         if (elapsed < s.birthAt) continue;
@@ -63,41 +77,41 @@ export function StarCanvas() {
           s.currentAlpha = (birthElapsed / BIRTH_FADE) * s.baseAlpha;
         } else {
           // Twinkle via sine wave
-          s.currentAlpha = s.baseAlpha * (0.55 + 0.45 * Math.sin(now * s.speed + s.phase));
+          s.currentAlpha =
+            s.baseAlpha * (0.55 + 0.45 * Math.sin(now * s.speed + s.phase));
         }
 
         ctx.save();
         ctx.globalAlpha = s.currentAlpha;
-        ctx.shadowBlur  = s.radius > 1.2 ? 7 : 3;
+        ctx.shadowBlur = s.radius > 1.2 ? 7 : 3;
         ctx.shadowColor = "rgba(180,200,255,0.9)";
-        ctx.fillStyle   = "#D8E4FF";
+        ctx.fillStyle = "#D8E4FF";
+        const drawX = s.x * canvasEl.width;
+        const drawY = s.y * canvasEl.height;
         ctx.beginPath();
-        ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+        ctx.arc(drawX, drawY, s.radius, 0, Math.PI * 2);
         ctx.fill();
         ctx.restore();
       }
 
-      raf = requestAnimationFrame(draw);
+      rafRef.current = requestAnimationFrame(draw);
     };
 
-    raf = requestAnimationFrame(draw);
+    rafRef.current = requestAnimationFrame(draw);
     return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener("resize", resize);
+      cancelAnimationFrame(rafRef.current);
     };
   }, []);
 
   return (
     <canvas
-      ref={canvasRef}
-      style={{
+      className={css({
         position: "fixed",
         inset: 0,
-        width: "100%",
-        height: "100%",
         zIndex: 0,
         pointerEvents: "none",
-      }}
+      })}
+      ref={canvasRef}
     />
   );
 }

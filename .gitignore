@@ -6,5 +6,9 @@ dist
 .env.local
 .panda
 .DS_Store
-styled-system
+src/styled
 .cursor
+playwright-report
+test-results
+temp
+*.tsbuildinfo

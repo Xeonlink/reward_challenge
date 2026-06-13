@@ -1,147 +1,65 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
-import { css, cx } from "../../../styled-system/css";
+import { css } from "@/styled/css";
+import { PropsWithChildren, useEffect } from "react";
+import { useModal } from "../modal";
 
-export interface PopupProps {
-  open: boolean;
-  onClose: () => void;
-  title?: React.ReactNode;
-  children: React.ReactNode;
-  size?: "sm" | "md" | "lg";
-  closeOnBackdrop?: boolean;
-  showClose?: boolean;
-  className?: string;
-}
-
-const backdropStyle = css({
+const modalRoot = css({
   position: "fixed",
   inset: "0",
   zIndex: "50",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  padding: "16px",
+  padding: "1rem",
+});
+
+const backdropStyle = css({
+  position: "absolute",
+  inset: "0",
   background: "rgba(0,0,0,0.75)",
   backdropFilter: "blur(8px)",
   animation: "fadeIn 200ms ease",
 });
 
-const dialogSizes = {
-  sm: css({ maxWidth: "360px" }),
-  md: css({ maxWidth: "480px" }),
-  lg: css({ maxWidth: "600px" }),
-};
+type Props = PropsWithChildren<{
+  backdrop?: true | "noClose";
+}>;
 
-const dialogStyle = css({
-  width: "100%",
-  background: "linear-gradient(135deg, #12121A 0%, #1C1C2E 100%)",
-  border: "1px solid rgba(255,255,255,0.1)",
-  borderRadius: "var(--radii-xl)",
-  overflow: "hidden",
-  animation: "scaleIn 250ms cubic-bezier(0.34, 1.56, 0.64, 1)",
-  boxShadow: "0 25px 60px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.05)",
-  position: "relative",
-});
-
-const headerStyle = css({
-  padding: "24px 24px 0",
-  display: "flex",
-  alignItems: "flex-start",
-  justifyContent: "space-between",
-  gap: "16px",
-});
-
-const titleStyle = css({
-  fontFamily: "var(--fonts-display)",
-  fontSize: "1.125rem",
-  fontWeight: "700",
-  color: "var(--colors-brand-text)",
-  lineHeight: "1.3",
-});
-
-const closeButtonStyle = css({
-  flexShrink: "0",
-  width: "32px",
-  height: "32px",
-  borderRadius: "50%",
-  border: "1px solid rgba(255,255,255,0.1)",
-  background: "rgba(255,255,255,0.05)",
-  color: "var(--colors-brand-textMuted)",
-  cursor: "pointer",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  transition: "all 200ms",
-  fontSize: "1rem",
-  lineHeight: "1",
-  _hover: {
-    background: "rgba(255,255,255,0.12)",
-    color: "var(--colors-brand-text)",
-    borderColor: "rgba(255,255,255,0.2)",
-  },
-});
-
-const bodyStyle = css({
-  padding: "20px 24px 24px",
-});
-
-export const Popup: React.FC<PopupProps> = ({
-  open,
-  onClose,
-  title,
-  children,
-  size = "md",
-  closeOnBackdrop = true,
-  showClose = true,
-  className,
-}) => {
-  const dialogRef = useRef<HTMLDivElement>(null);
+export function Popup(props: Props) {
+  const { children, backdrop = true } = props;
+  const modal = useModal();
 
   useEffect(() => {
-    if (!open) return;
-    const handleKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+    const handleEscapeKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        modal.closeSelf();
+      }
     };
-    window.addEventListener("keydown", handleKey);
-    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleEscapeKey);
     return () => {
-      window.removeEventListener("keydown", handleKey);
-      document.body.style.overflow = "";
+      window.removeEventListener("keydown", handleEscapeKey);
     };
-  }, [open, onClose]);
+  }, [modal]);
 
-  if (!open) return null;
+  const handleBackdropClick = () => {
+    if (backdrop !== "noClose") {
+      modal.closeSelf();
+    }
+  };
 
   return (
-    <div
-      className={backdropStyle}
-      onClick={closeOnBackdrop ? onClose : undefined}
-      role="dialog"
-      aria-modal="true"
-      aria-label={typeof title === "string" ? title : "팝업"}
-    >
-      <div
-        ref={dialogRef}
-        className={cx(dialogStyle, dialogSizes[size], className)}
-        onClick={(e) => e.stopPropagation()}
-      >
-        {(title || showClose) && (
-          <div className={headerStyle}>
-            {title && <div className={titleStyle}>{title}</div>}
-            {showClose && (
-              <button
-                className={closeButtonStyle}
-                onClick={onClose}
-                aria-label="닫기"
-              >
-                ✕
-              </button>
-            )}
-          </div>
-        )}
-        <div className={bodyStyle}>{children}</div>
-      </div>
+    <div className={modalRoot}>
+      {backdrop ? (
+        <div
+          className={backdropStyle}
+          onClick={handleBackdropClick}
+          aria-hidden="true"
+          aria-label="dialog backdrop"
+        />
+      ) : null}
+
+      {children}
     </div>
   );
-};
+}
