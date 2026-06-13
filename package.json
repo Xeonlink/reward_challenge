@@ -10,7 +10,9 @@
     "format": "prettier --write .",
     "lint": "next lint",
     "test:e2e": "playwright test",
-    "test:e2e:ui": "playwright test --ui"
+    "test:e2e:ui": "playwright test --ui",
+    "docker:build": "docker buildx build --platform linux/amd64 -t registry.ohjimin.com/$npm_package_name:$npm_package_version .",
+    "docker:push": "docker push registry.ohjimin.com/$npm_package_name:$npm_package_version"
   },
   "dependencies": {
     "date-fns": "^4.4.0",
